@@ -1,0 +1,295 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>欢迎您的到来</title>
+<script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+ <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+ <script src="/static/js/bootstrap-treeview.js"></script>
+ <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script> 
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
+<script type="text/javascript" src="/static/js/moment.min.js"></script>
+  <script type="text/javascript" src="/static/js/daterangepicker.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/daterangepicker.css" />
+
+  <script type="text/javascript" src="/static/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+<script type="text/javascript" src="/static/bootstrap-datepicker/bootstrap-datepicker.zh-CN.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/bootstrap-datepicker/bootstrap-datepicker3.css"/> 
+
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap-editable.css"/>
+<link rel="stylesheet" type="text/css" href="/static/css/select2.css"/>
+<link rel="stylesheet" type="text/css" href="/static/css/select2-bootstrap.css"/>
+
+<script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-table-editable.min.js"></script>
+<script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> 
+<script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
+<script type="text/javascript" src="/static/js/select2.js"></script>  
+<!-- <script type="text/javascript" src="/static/js/mindmup-editabletable.js"></script> -->
+<script src="/static/js/jquery.artDialog.js"></script>
+<script src="/static/js/iframeTools.js"></script>
+<script src="/static/js/mifcommon.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="/static/css/MifCommon.css"/>
+<link rel="stylesheet" type="text/css" href="/static/css/idialog.css"/>
+<script src="/static/js/moment-with-locales.min.js"></script>
+</head>
+<body>
+ <div class="row-fluid">
+    <div class="span12">
+    <div class="portlet box grey">
+		<div class="portlet-title">
+
+			<div class="caption"><i class="icon-user"></i>酒店管理</div>
+                <div class="actions">
+				    <a href="#" id="btnAdd" class="btn btn-primary"><i class="icon-plus"></i> 新增</a>
+                    <a href="#" id="btnDelete" class="btn btn-primary"><i class="icon-remove"></i> 删除已选</a>
+                    <a href="#" onclick="toExcel()" class="btn btn-primary"><i class="icon-file"></i> 导出Excel</a>
+                </div>
+		</div>
+
+							<div class="portlet-body">
+                                <div>
+                                    <label>姓名：<input type="text" class="form-control-static" placeholder="请输入姓名" id="txtName" /></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label>出生日期：<input type="text" class="form-control-static" id="txtBirthday" placeholder="请输入日期" /></label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label>
+                                        性别：
+                                        <select id="Gender" name="Gender" style="height:34px"><option value="">-</option>
+                                            <option value="M">男</option>
+                                            <option value="F">女</option>    
+                                        </select>
+                                    </label> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label>地址：<input type="text" class="form-control-static" placeholder="请输入地址" id="txtAddress" /></label>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <label><a href="#" id="btnSearch" class="btn btn-primary"><i class="icon-search"></i> 搜索</a></label>
+                                </div>
+								<table id="table-javascript" data-click-to-select="true"></table>
+
+							</div>
+
+						</div>
+    </div>
+			
+ </div>
+
+    <script type="text/javascript">
+        var $table;
+        $(function () {
+
+            initTable();
+            $("#btnSearch").click(function () {
+                $table.bootstrapTable('refresh');
+            });
+
+            $('#btnAdd').click(function () {
+                // var url = '@Url.Content("~/Welcome/NewRecord/?rnd=")' + Math.random(); ;
+                var url = '/addinline';
+                art.dialog.open(url, { title: "添加新客户", id: 'detail', width: 500, height: 520, lock: true, opacity: 0.3, close: function () { $table.bootstrapTable('refresh'); } });
+            });
+            $('#btnDelete').click(function () {
+                mif.showQueryMessageBox("将删除全部已选记录，是否确认删除？", deleteRecord);
+            });
+            if (document.addEventListener) {
+                //如果是Firefox  
+                document.addEventListener("keypress", enterEvent, true);
+            } else {
+                //如果是IE
+                document.attachEvent("onkeypress", enterEvent);
+            }
+        });
+        //按下Enter搜索
+        function enterEvent(evt) {
+            if (evt.keyCode == 13) {
+                $("#btnSearch").click();
+            }
+        }
+        function initTable() {
+            // var queryUrl = '@Url.Content("~/Welcome/QueryList")' + '?rnd=' + +Math.random();
+            var queryUrl = '/addinline';
+            $table = $('#table-javascript').bootstrapTable({
+                method: 'get',
+                url: queryUrl,
+                height: $(window).height() - 200,
+                striped: true,
+                // pagination: true,
+                // singleSelect: false,
+                // pageSize: 50,
+                // pageList: [10, 50, 100, 200, 500],
+                search: false, //不显示 搜索框
+                showColumns: false, //不显示下拉框（选择显示的列）
+                // sidePagination: "server", //服务端请求
+                // queryParams: queryParams,
+                minimunCountColumns: 2,
+                columns: [{
+                    field: 'Id',
+                    title: '编号'
+                },{
+                    field: 'ProjectNumber',
+                    title: '项目编号'
+                },{
+                    field: 'ProjectName',
+                    title: '项目名称',
+                    formatter:list,
+                },{
+                    field: 'operate',
+                    title: '操作',
+                    width: 100,
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: operateFormatter,
+                    events: operateEvents
+                }],
+                onLoadSuccess:function(){
+
+                },
+                onLoadError: function () {
+                    mif.showErrorMessageBox("数据加载失败！");
+                }
+            });
+
+        }
+        function list(value, row, index) {
+             // return '<i class="glyphicon ' + icon + '"></i> ' + value;
+            return "<select data-index='row'><option>成果类型：</option></select>";
+        } 
+        var data={{.Ratio}};
+              for ( var i = 0; i<data.length; i++) {  
+                $("#row").append('<option>' + data[i].Category + '</option>');
+              // alert(data[i].text)
+                } 
+// $(document).ready(function(){
+            // var data={{.Ratio}};
+              // for ( var i = 0; i<data.length; i++) {  
+                // $("#row").append('<option>' + data[i].Category + '</option>');
+              // alert(data[i].text)
+                // }
+             // }) 
+//这个是显示时间选择
+// function datepicker(value) {
+// $(".datepicker").datepicker({
+               // language: "zh-CN";
+               // autoclose: true;//选中之后自动隐藏日期选择框
+               // clearBtn: true;//清除按钮
+               // todayBtn: 'linked';//今日按钮
+               // format: "yyyy-mm-dd";//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
+            // });
+            // return;
+// }
+        // function queryParams(params) {
+        //     return {
+        //         pageSize: params.pageSize,
+        //         pageIndex: params.pageNumber,
+        //         UserName: $("#txtName").val(),
+        //         Birthday: $("#txtBirthday").val(),
+        //         Gender: $("#Gender").val(),
+        //         Address: $("#txtAddress").val(),
+        //         name: params.sortName,
+        //         order: params.sortOrder
+        //     };
+        // }
+
+        function deleteRecord() {
+            var ids = "";
+            var rows = $table.bootstrapTable('getSelections');
+            for (var i = 0; i < rows.length; i++) {
+                ids += rows[i].id + ',';
+            }
+            ids = ids.substring(0, ids.length - 1);
+           
+            if (ids == "") {
+                mif.showErrorMessageBox("请选择您要删除的记录！");
+                return;
+            }
+
+            // var url = '@Url.Content("~/Welcome/DeleteRecord/")' + ids + '?rnd=' + Math.random();
+            var url='/addinline'
+            mif.ajax(url, null, afterDelete);
+        }
+        //删除完成执行的动作
+        function afterDelete(robj) {
+            if (robj.ExeResult) {
+                mif.showOkMessageBox(robj.Message);
+                $table.bootstrapTable('refresh');
+            }
+            else {
+                mif.showErrorMessageBox(robj.ErrorMessage);
+            }
+        }
+        function nameFormatter(value, row) {
+            var icon = row.id % 2 === 0 ? 'glyphicon-star' : 'glyphicon-star-empty'
+            return '<i class="glyphicon ' + icon + '"></i> ' + value;
+        }
+
+        function sexFormatter(value) {
+            // 16777215 == ffffff in decimal
+            var color = '#' + Math.floor(Math.random() * 6777215).toString(16);
+            var txtSex="保密";
+            if (value == "Gender") {
+                txtSex = "性别";
+            }
+            else if (value == "F") {
+                txtSex = "女";
+                color='Red';
+            }
+            else if (value == "M") {
+                txtSex = "男";
+                color = 'Green';
+            }
+            else {
+                txtSex = "保密";
+                color = 'Yellow';
+            }
+            return '<div  style="color: ' + color + '">' +  txtSex +'</div>';
+        }
+        function priceSorter(a, b) {
+//            a = +a.substring(1); // remove $
+//            b = +b.substring(1);
+//            if (a > b) return 1;
+//            if (a < b) return -1;
+            return 0;
+        }
+        function operateFormatter(value, row, index) {
+            return [
+                                '<a class="edit btn btn-xs btn-default" style="margin-left:10px" href="javascript:void(0)" title="编辑">',
+                                    '<i class="icon-pencil"></i>',
+                                '</a>',
+                                '<a class="remove btn btn-xs btn-default" style="margin-left:10px" href="javascript:void(0)" title="移除">',
+                                    '<i class="icon-remove"></i>',
+                                '</a>'
+                            ].join('');
+        }
+
+        window.operateEvents = {
+            'click .like': function (e, value, row, index) {
+                alert(row.id);
+            },
+            'click .edit': function (e, value, row, index) {
+                // var url = '@Url.Content("~/Welcome/UpdateRecord/")' + row.id + '?rnd=' + Math.random();
+                var url='/addinline'
+                art.dialog.open(url, { title: "编辑客户信息", id: 'detail', width: 500, height: 520, lock: true, opacity: 0.3, close: function () { $table.bootstrapTable('refresh'); } });
+            },
+            'click .remove': function (e, value, row, index) {
+                mif.showQueryMessageBox("将删除本条记录，是否确认删除？", function () {
+                    // var url = '@Url.Content("~/Welcome/DeleteRecord/")' + row.id + '?rnd=' + Math.random();
+                    var url='/addinline'
+                    mif.ajax(url, null, afterDelete);
+                });
+            }
+        };
+        function toExcel() {
+            var UserName = $('#txtName').val();
+            var Birthday = $('#txtBirthday').val();
+            var Gender = $('#Gender').val();
+            var Address = $('#txtAddress').val();
+            var url='/addinline'
+            // var url = '@Url.Content("~/Welcome/QueryList?ToExcel=1")' + '&UserName=' + UserName + '&Birthday=' + Birthday + '&Gender=' + Gender + '&Address=' + Address  + '&rnd=' + +Math.random();
+
+            window.open(url);
+        }
+    </script>
+</body>
+</html>

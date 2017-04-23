@@ -1,0 +1,2177 @@
+body {
+	line-height: 1;
+	font-size: 1.3em;
+}
+.home h3{
+      font-family: 'helveticaneueltstd-th';
+}
+.logo-nova-container{
+    width: 570px;
+    height: 140px;
+    background: url("https://cdn.novamind.com/images/logos-icons/logo-1110x224.png") no-repeat;
+    background-size: 555px 112px;
+    margin:0 auto 0px;
+}
+  .ipad{
+    height: 960px;
+    background: url("https://cdn.novamind.com/images/product-images/novamind-product-image-640.png") no-repeat left top;
+}  
+
+
+.home .entry-header{
+    display: none;
+}
+@media screen and (min-width: 846px){
+.post-120 .content-area, .post-120 .content-sidebar, .post-317 .content-area, .post-317 .content-sidebar {
+   padding-top: 0!important; 
+}
+}
+
+.btn-gt-strted{
+padding: 11px 115px;
+text-align: center;
+margin: 72px auto;
+display: block;
+font-size: 1.5em;
+background: #93cd69;
+}
+.platform-container{
+  /*  padding-top:38px; */
+    float:left;
+}
+.platform-container ul{
+    float: left;
+width: 100%;
+}
+.platform-container ul li{
+float: left;
+list-style: none;
+margin-right: 0px;
+font-size: 1.1em;
+text-align: center;
+padding-top: 20px;
+}
+.platform-container ul li a{
+    margin-left: 10px;
+    text-decoration: none;
+    color: #a1a1a1;
+    padding-top: 85px;
+    width: 80px;
+    float: left;
+   /*  cursor: default; */
+}
+
+
+.win-desk{
+        background: url("https://cdn.novamind.com/images/logos-icons/win-desktop.png") no-repeat top center;
+        background-size: 61px 54px;
+}
+.win-eight{
+        background: url("https://cdn.novamind.com/images/logos-icons/win-modern.png") no-repeat top center;
+        background-size: 52px 55px;
+}
+.android-tab{
+        background: url("https://cdn.novamind.com/images/logos-icons/android.png") no-repeat top center;
+        background-size: 44px 55px;
+}
+.apple-ipad{
+        background: url("https://cdn.novamind.com/images/logos-icons/apple.png") no-repeat top center;
+        background-size: 45px 55px;
+}.apple-osx{
+        background: url("https://cdn.novamind.com/images/logos-icons/osx.png") no-repeat top center;
+        background-size: 54px 54px;
+}
+.cloud-web{
+        background: url("https://cdn.novamind.com/images/logos-icons/cloud.png") no-repeat top center;
+        background-size: 68px 49px;
+     /*   width: 99px !important; */
+}
+.blue-bg-rpt{
+            background: url("../novamind/blue-bg.png") repeat;
+            padding: 0 6% 50px;
+            /* padding: 0 6% 20px 6%; */
+}
+
+
+.d_android_green_h {
+    background: url("https://cdn.novamind.com/images/logos-icons/android-green.png") no-repeat scroll center top / 44px 55px rgba(0, 0, 0, 0);
+}
+.d_apple_green_h {
+    background: url("https://cdn.novamind.com/images/logos-icons/apple-green.png") no-repeat scroll center top / 45px 55px rgba(0, 0, 0, 0);
+}
+.d_apple_os_x_green_h {
+    background: url("https://cdn.novamind.com/images/logos-icons/osx-green.png") no-repeat scroll center top / 54px 54px rgba(0, 0, 0, 0);
+}
+.d_cloude_green_h {
+    background: url("https://cdn.novamind.com/images/logos-icons/cloud-green.png") no-repeat scroll center top / 68px 49px rgba(0, 0, 0, 0);
+}
+.d_windows_8_green_h {
+    background: url("https://cdn.novamind.com/images/logos-icons/win-modern-green.png") no-repeat scroll center top / 52px 55px rgba(0, 0, 0, 0);
+}
+.d_windows_green_h {
+    background: url("https://cdn.novamind.com/images/logos-icons/win-desktop-green.png") no-repeat scroll center top / 61px 54px rgba(0, 0, 0, 0);
+  /*  width: 99px !important;  */
+}
+
+
+
+
+
+/*** dilan images ***/
+
+.home_d_win-desk{
+        background: url("images/win-desk.png") no-repeat top center;
+        background-size: 61px 54px;
+}
+.home_d_win-eight{
+        background: url("images/win-eight.png") no-repeat top center;
+        background-size: 52px 55px;
+}
+.home_d_android-tab{
+        background: url("images/android.png") no-repeat top center;
+        background-size: 44px 55px;
+}
+.home_d_apple-ipad{
+        background: url("images/apple.png") no-repeat top center;
+        background-size: 45px 55px;
+}.home_d_apple-osx{
+        background: url("images/osx.png") no-repeat top center;
+        background-size: 54px 54px;
+}
+.home_d_cloud-web{
+        background: url("images/cloud.png") no-repeat top center;
+        background-size: 72px 45px;
+        width: 99px !important;
+}
+.home_d_blue-bg-rpt{
+            background: url("../novamind/images/blue-bg.png") repeat;
+            
+            padding: 0 6% 20px 6%;
+}
+
+
+/*** end dilan image  **/
+
+.hlp-box {
+ padding: 35px 30px;
+border-radius: 20px;
+color: #fff;
+border: 1px solid #899fb7;
+font-size: 1.06em;
+text-align:center;
+ height:258px;
+ /*   max-height: 300px; */
+  /*  min-height: 300px; */
+ /*   min-height: 273px; */
+}
+
+.hlp-box h3{
+    font-size: 2.1em;
+            padding-bottom: 65px;
+}
+.hlp-box.visual-pl {
+    background: rgba(50,26,140,0.3);
+}
+.hlp-box.presentation {
+        background: rgba(88,154,45,0.3);
+}
+.hlp-box.pitching {
+        background: rgba(177,49,100,0.3);
+}
+.hlp-box.studying {
+        background: rgba(224,148,0,0.3);
+}
+.hlp-box.visual-pl h3{
+        background: url("../novamind/eye.png") no-repeat bottom center;
+        background-size: 59px 38px;
+}
+.hlp-box.presentation h3{
+        background: url("../novamind/presentation.png") no-repeat bottom center;
+        background-size: 57px 46px;
+}
+.hlp-box.pitching h3{
+        background: url("../novamind/hand-icon.png") no-repeat bottom center;
+        background-size: 52px 51px;
+}
+.hlp-box.studying h3{
+        background: url("../novamind/fa-dollar.png") no-repeat bottom center;
+        background-size: 75px 51px;/*grad-hat.png*/
+}
+
+.partners{
+height: 200px;
+background: url("https://cdn.novamind.com/images/bg-textures/partners.jpg") no-repeat top center;
+background-size: 100%; 
+margin: 30px 0 17px;
+}
+.goals .btn-yellow{
+padding: 10px 48px;
+font-size: 1.2em;
+margin: 0 auto;
+float: left;
+}
+
+.goals h3{
+margin: 77px 0 0 10px !important;
+font-size: 2em;
+text-shadow: 0px 0px 7px #fff; 
+/* text-shadow: 0px 0px 15px #fff; */
+ /*text-shadow: 0px 0px 12px #fff;   rgba(109, 111, 111, 1)  rgba(0, 0, 0, 1)  */
+color: #000;
+font-family: 'helveticaneueltstd-lt';
+}
+
+.gl-type1{
+        height: 380px;  
+        background: url("https://cdn.novamind.com/images/bg-textures/hand-shake-img.jpg") no-repeat bottom center;
+      /*  background-size: 438px 346px; */
+        background-size:cover;
+}
+.gl-type2{
+        height: 380px;
+        background: url("https://cdn.novamind.com/images/bg-textures/ocean.jpg") no-repeat bottom center;
+       /* background-size: 438px 346px; */
+        background-size:cover;
+}
+.gl-type3{
+        height: 380px;
+        background: url("https://cdn.novamind.com/images/bg-textures/education2.jpg") no-repeat scroll center bottom / cover rgba(0, 0, 0, 0);
+        background-size:cover;
+}
+
+
+.goals .h3-tablet{
+    
+    display:none;
+}
+
+
+.header-main {
+    width: auto;
+}
+.header-main {
+    padding: 0;
+}
+
+
+/****  edited by yasitha **/
+
+/* .page-id-676  */
+
+ .display-none-755 {
+    display:none !important;
+}
+
+ .display-755{
+    display:block !important;
+    font-size: 1em !important;
+}
+
+.description-p{
+    min-height:85px;
+}
+
+/*** end edited by yasitha **/
+
+
+
+
+
+
+
+.description-wrap{
+background: rgba(255,255,255, 0.6);
+padding: 9px 26px;
+bottom: 0px;
+position: absolute;
+width: 75%;
+height: 167px;
+left: 0;
+border-radius: 8px;
+font-size: 1.1em;
+/* line-height: 1.2em; */
+}
+
+.descrip-wra-p{
+    font-size: 1.3em;
+    height: 180px;
+    line-height: 1.2em;
+    padding-top: 24px !important;
+  
+}
+
+
+.ttl-indent{
+    display: block;
+    text-indent:70px;
+}
+.recommendation-block{
+height: 580px;
+background: url("https://cdn.novamind.com/images/bg-textures/microsoft.jpg") no-repeat top left #2f3028;
+background-size: 100%;
+}
+.wht-txt{
+    color:#fff !important;
+    text-shadow:none !important;
+}
+.mind-mapping-list ul li{
+    float:left;
+    width: 100%;
+    list-style: none;
+    border-bottom:1px solid #e5e5e5;
+  /*  padding: 38px 0px; */
+    padding: 38px 0 10px;
+} 
+.mind-mapping-list ul li:last-child{
+        border-bottom:0px solid #e5e5e5;
+}
+.mind-mapping-list-wrapper{
+    padding-left: 280px;
+    position:relative;
+    padding-bottom: 25px;
+}
+
+.custom-padding{
+    padding: 3% 0 4% 5%;
+}
+.heading-title-custom{
+padding-bottom: 43px;
+font-family: 'helveticaneueltstd-th';
+text-align: center;
+}
+
+.heading-title-custom-mobile{
+    
+    display:none;
+}
+
+.home p{
+    font-size: 1.3em;
+    line-height: 1.5em;
+}
+.how-it-works{
+padding: 9% 0 5% 0;
+font-size: 3em;
+color: #fff;
+text-align: center;
+  font-family: 'helveticaneueltstd-th';
+
+}
+
+.btn-yellow{
+padding: 11px 60px;
+border: 1px solid #fff; color: #fff;
+text-align: center;
+margin: 72px auto;
+display: block;
+font-size: 1.5em;
+background: #FD9D16;  /* url("images/yellow-bg.png") repeat center center   */
+}
+.btn-yellow:hover{
+    border-color: #e7e5e5; color: #fff;
+    background-color:#FC880F !important;
+}
+
+.hw-it-wrk-desc{
+padding-top: 70px;
+font-size: 1.2em;
+color: #fff;
+}
+.tagline-hd{
+   font-size: 1.1em;
+padding-bottom: 20px;
+display: block;
+}
+.merlin-hd{
+background: url("images/merlin.png") no-repeat top center;
+padding-top: 103px;
+background-size: 72px 92px;
+text-align: center;
+font-size: 2em;
+}
+.merlin-platform-container{
+    padding-top:15px;
+    float:none;
+    display:inline-block;
+}
+.merlin-platform-container ul{
+    float: left;
+width: 100%;
+}
+.merlin-platform-container ul li{
+float: left;
+list-style: none;
+margin-right: 14px;
+font-size: 1.2em;
+text-align: center;
+}
+.merlin-platform-container ul li a{
+    margin-left: 10px;
+    text-decoration: none;
+    color: #a1a1a1;
+    padding-top: 90px;
+    width: auto;
+    float: left;
+}
+.merlin-app{
+     background: url("images/merlin.png") no-repeat top center;
+background-size: 60px 67px;
+width: 60px !important;
+}
+.merlin-server{
+        background: url("images/merlin-server.png") no-repeat top center;
+        background-size: 61px 66px;
+}
+.merlin-ios{
+        background: url("images/merlin-ios.png") no-repeat top center;
+        background-size: 39px 69px;
+}
+.merlin-web-sharing{
+        background: url("images/merlin-web-sharing.png") no-repeat top center;
+        background-size: 64px 66px;
+}
+
+.recommendation-desk-block{
+   float: left;
+padding:50px 30px 38px !important;
+text-align: center;
+font-size: 1.3em;
+border-bottom: 1px solid #aaaaad;
+height: 570px;
+}
+.recommendation-txt{
+font-family: 'helveticaneueltstd-th';
+font-size: 1.2em;
+color: #fff;
+position: absolute;
+bottom: 32px;
+left: 26px;
+text-shadow: 0px 0px 0px #fff; 
+}
+.recom-author{
+        font-size: 1.15em;
+text-align:right;
+float:right;
+}
+.mind-mapping-list-wrapper .btn-yellow{
+margin: 0;
+position: absolute;
+right: 0;
+padding: 10px 42px;
+top: -9px;
+}
+
+.mind-mapping-list{
+    padding: 0px 80px 40px;
+    float: left;
+
+}
+
+.mind-mapping-list-wrapper h3{
+    width:65%;
+    font-size: 2.1em;
+    margin-top:0;
+    padding-bottom: 15px;
+}
+.mind-mapping-list-inner ul{
+    margin-left:0;
+}
+.mind-mapping-list-wrapper p{
+    font-size:1.45em;
+}
+.grey-bg{
+     background: #ffffff;
+    background: -moz-linear-gradient(top,  #ffffff 0%, #fdfdfd 31%, #f9f9f9 63%, #f7f7f7 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(31%,#fdfdfd), color-stop(63%,#f9f9f9), color-stop(100%,#f7f7f7));
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#fdfdfd 31%,#f9f9f9 63%,#f7f7f7 100%);
+    background: -o-linear-gradient(top,  #ffffff 0%,#fdfdfd 31%,#f9f9f9 63%,#f7f7f7 100%);
+    background: -ms-linear-gradient(top,  #ffffff 0%,#fdfdfd 31%,#f9f9f9 63%,#f7f7f7 100%);
+    background: linear-gradient(to bottom,  #ffffff 0%,#fdfdfd 31%,#f9f9f9 63%,#f7f7f7 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=0 );
+    
+    padding-left: 7%;
+    padding-right: 7%;
+    padding-top: 4%;
+    
+    
+    
+
+}
+.list-one{
+    background: url("https://cdn.novamind.com/images/ebooks/teachers-guide-248x166.png") no-repeat top left;
+}
+.list-two{
+    background: url("https://cdn.novamind.com/images/ebooks/business-guide-248x166.png") no-repeat top left;
+}
+.list-three{
+    background: url("https://cdn.novamind.com/images/ebooks/time-management-ebook.jpg") no-repeat 27px 0px;
+}
+.list-four{
+    background: url("https://cdn.novamind.com/images/ebooks/power-brainstorming-128x177.jpg") no-repeat 57px 0px;
+}
+
+.home .col-md-9 {
+ padding-left: 15px;
+ padding-right: 15px;
+}
+.home.full-width .site-content .entry-content{
+   padding-right: 0px;
+    padding-left: 0px;
+   
+}
+/*
+.btn-success:active, .btn-success.active {
+color: #fff;
+background-color: #ffaf00;
+border-color: #e7e5e5;
+opacity: 0.8;
+}
+
+.btn-success:hover, .btn-success:focus, .btn-success:active{
+    border-color: #e7e5e5;
+    background-color:#fc880f !important;
+}
+*/
+.btn-gt-strted:hover, .btn-gt-strted:focus, .btn-gt-strted:active{
+        background-color:#6FB342 !important;
+}
+
+.page-id-226 .entry-header, .page-id-638 .entry-header, .page-id-640 .entry-header, .page-id-642 .entry-header {
+    display: none;
+}
+
+.pitching-bg{
+background: #4a382a;
+background: url("https://cdn.novamind.com/images/bg-textures/room-w-chair.jpg") no-repeat scroll center top, -moz-linear-gradient(top,  #4a382a 67%, #3e3023 80%, #33271c 100%);
+background:url("https://cdn.novamind.com/images/bg-textures/room-w-chair.jpg") no-repeat scroll center top,  -webkit-gradient(linear, left top, left bottom, color-stop(67%,#4a382a), color-stop(80%,#3e3023), color-stop(100%,#33271c));
+background:url("https://cdn.novamind.com/images/bg-textures/room-w-chair.jpg") no-repeat scroll center top,  -webkit-linear-gradient(top,  #4a382a 67%,#3e3023 80%,#33271c 100%);
+background:url("https://cdn.novamind.com/images/bg-textures/room-w-chair.jpg") no-repeat scroll center top,  -o-linear-gradient(top,  #4a382a 67%,#3e3023 80%,#33271c 100%);
+background:url("https://cdn.novamind.com/images/bg-textures/room-w-chair.jpg") no-repeat scroll center top,  -ms-linear-gradient(top,  #4a382a 67%,#3e3023 80%,#33271c 100%);
+background:url("https://cdn.novamind.com/images/bg-textures/room-w-chair.jpg") no-repeat scroll center top,  linear-gradient(to bottom,  #4a382a 67%,#3e3023 80%,#33271c 100%);
+        background-size: 100%;
+        width: 100%;
+height: auto;
+}
+.page-id-638 .content-area, .page-id-640 .content-area, .page-id-642 .content-area{
+padding-top: 0px !important;
+}
+.presentation-bg{
+background: #36363b;
+background: url("https://cdn.novamind.com/images/bg-textures/ppl-in-meeting.jpg") no-repeat scroll center top, -moz-linear-gradient(top,  #36363b 65%, #242528 100%);
+background: url("https://cdn.novamind.com/images/bg-textures/ppl-in-meeting.jpg") no-repeat scroll center top, -webkit-gradient(linear, left top, left bottom, color-stop(65%,#36363b), color-stop(100%,#242528));
+background: url("https://cdn.novamind.com/images/bg-textures/ppl-in-meeting.jpg") no-repeat scroll center top, -webkit-linear-gradient(top,  #36363b 65%,#242528 100%);
+background: url("https://cdn.novamind.com/images/bg-textures/ppl-in-meeting.jpg") no-repeat scroll center top, -o-linear-gradient(top,  #36363b 65%,#242528 100%);
+background: url("https://cdn.novamind.com/images/bg-textures/ppl-in-meeting.jpg") no-repeat scroll center top, -ms-linear-gradient(top,  #36363b 65%,#242528 100%);
+background: url("https://cdn.novamind.com/images/bg-textures/ppl-in-meeting.jpg") no-repeat scroll center top, linear-gradient(to bottom,  #36363b 65%,#242528 100%);
+
+        background-size: 100%;
+        width: 100%;
+height: auto;
+}
+.studying-bg{
+    background: #563d32;
+background: url("https://cdn.novamind.com/images/bg-textures/studying.jpg") no-repeat scroll center top, -moz-linear-gradient(top,  #563d32 65%, #3a2922 100%);
+background: url("https://cdn.novamind.com/images/bg-textures/studying.jpg") no-repeat scroll center top, -webkit-gradient(linear, left top, left bottom, color-stop(65%,#563d32), color-stop(100%,#3a2922));
+background: url("https://cdn.novamind.com/images/bg-textures/studying.jpg") no-repeat scroll center top, -webkit-linear-gradient(top,  #563d32 65%,#3a2922 100%);
+background: url("https://cdn.novamind.com/images/bg-textures/studying.jpg") no-repeat scroll center top, -o-linear-gradient(top,  #563d32 65%,#3a2922 100%);
+background: url("https://cdn.novamind.com/images/bg-textures/studying.jpg") no-repeat scroll center top, -ms-linear-gradient(top,  #563d32 65%,#3a2922 100%);
+background: url("https://cdn.novamind.com/images/bg-textures/studying.jpg") no-repeat scroll center top, linear-gradient(to bottom,  #563d32 65%,#3a2922 100%);
+        background-size: 100%;
+        width: 100%;
+height: auto;
+}
+.visual-bg{
+background: #876138;
+background: url("https://cdn.novamind.com/images/bg-textures/woman-on-table.jpg") no-repeat scroll center top, -moz-linear-gradient(top,  #90673c 63%, #624628 100%);
+background: url("https://cdn.novamind.com/images/bg-textures/woman-on-table.jpg") no-repeat scroll center top, -webkit-gradient(linear, left top, left bottom, color-stop(63%,#90673c), color-stop(100%,#624628));
+background: url("https://cdn.novamind.com/images/bg-textures/woman-on-table.jpg") no-repeat scroll center top, -webkit-linear-gradient(top,  #90673c 63%,#624628 100%);
+background: url("https://cdn.novamind.com/images/bg-textures/woman-on-table.jpg") no-repeat scroll center top, -o-linear-gradient(top,  #90673c 63%,#624628 100%);
+background: url("https://cdn.novamind.com/images/bg-textures/woman-on-table.jpg") no-repeat scroll center top, -ms-linear-gradient(top,  #90673c 63%,#624628 100%);
+background: url("https://cdn.novamind.com/images/bg-textures/woman-on-table.jpg") no-repeat scroll center top, linear-gradient(to bottom,  #90673c 63%,#624628 100%);
+
+        background-size: 100%;
+        width: 100%;
+height: auto;
+}
+
+.logo-nova-container-small{
+    width: 363px;
+    height:73px;
+    background: url("images/logo-nova-white.png") no-repeat;
+background-size: 363px 73px;
+margin: 0 0 60px 12px;
+
+}
+.white-link{
+    text-decoration: none !important;
+    color: #fff;
+}
+.white-link:hover{
+    color:#92cc69;
+}
+.inner-pg-hd{
+position: relative;
+padding: 40% 0 4% 0;
+text-align: center;
+font-size: 2.9em;
+color: #fff;
+      font-family: 'helveticaneueltstd-th';
+}
+.list-item-type1{
+  color: #fff;
+font-size: 1.5em !important;
+      font-family: 'helveticaneueltstd-th';
+
+}
+.list-item-wrapper-type1{
+  padding-left: 0px !important;
+padding-top: 3% !important;  
+}
+.list-item-wrapper-type1 .broad-dd {
+margin-left: 50px !important;
+margin-bottom: 5px !important;
+float: inherit !important;
+}
+.list-item-wrapper-type1 .broad-dt {
+width: 23px !important;
+float: left !important;
+}
+.list-item-wrapper-type1 .broad-icon {
+color: #fff;
+font-size: 0.6em;
+}
+.list-item-wrapper-type1 .btn-gt-strted {
+margin: 72px 0 50px 11px;
+}
+
+/*Styles by Gayan*/
+.page-id-271 .entry-header {
+    display:none;
+}
+
+.page-id-271 .entry-content{
+    padding-top: 36px;
+}
+
+.testm-blue-bg {
+    width:100%;
+    height:270px;
+    color:#ffffff;
+    background: url("../../uploads/2014/08/testm-blue-bg.png") no-repeat scroll center center;
+    border-bottom: 2px solid #a7a7aa;
+    margin-top: 2%;
+}
+
+.testm-blue-bg  h2{ font-size:40px !important; margin:5% 0 3.5% !important;}
+.testm-blue-bg  p {font-size:20px !important; margin:0 0 10% 0 !important; line-height:36px; padding:0 7%;}
+
+.testm-gray-bg {
+    width:100%;
+    height:379px;
+    color:#ffffff;
+    background: url("../../uploads/2014/08/testm-gray-bg.png") no-repeat scroll center center;
+}
+
+.testm-gray-bg-content-left {
+    width:30%;
+    height: 380px;
+    float:left;
+   /*  background:url("../../uploads/2014/08/testm-women-desktop.png") no-repeat scroll center center; */
+    background: url("../../uploads/2014/08/testm-women-desktop.png") no-repeat scroll center center / 300px auto rgba(0, 0, 0, 0);
+}
+
+.testm-gray-bg-content-right {
+    /*  width:70%; */
+    width: 66%;
+    float:right;
+}
+
+.testm-gray-bg-content-right .ms-logo {
+    float:right;
+    width:200px;
+    height:74px; 
+    background:url("../../uploads/2014/08/ms-logo-desktop.png") no-repeat scroll center center;
+}
+
+.testm-gray-bg-content-right  p:first-of-type {
+    margin-bottom:5%;
+}
+
+.testm-gray-bg-content-right  p {
+    clear:both;
+    font-size:21px !important;
+    line-height:25px;
+    color:#fff;
+    margin:3% 0 2.5%;
+}
+
+.testm-gray-bg-content-right .hide-on-mobile .testi-p {
+    margin-top:90px;
+}
+
+.show-on-mobile {display:none;}
+
+.testm-gray-bg-content-right p.light-small { 
+    color:#bababb; 
+    font-size:17px !important;
+}
+
+.testimonies-post-container {
+    clear:both;
+}
+
+.testm-post-item {
+    width:45% !important;
+    /*border-bottom:1px solid #8a8a8c;*/
+    margin: 5% 0 0 3%;
+    padding-bottom:50px;
+    float:left;
+}
+
+.testm-post-thumb {
+    width:125px;
+    height:126px;
+    float:left;
+    margin:0 50px 50px 0;
+}
+
+.testm-post-content {
+    float:left;
+    width:66%;
+}
+
+.testm-post-content h5 {
+    font-size:16px;
+    font-weight:bold;
+}
+
+.testm-post-content p {
+    font-size:16px;
+    line-height:22px;
+}
+
+@media (min-width: 992px){
+  .ipad{
+    max-width:655px;
+background-size:100%;
+}  
+}
+@media (min-width: 992px) and (max-width: 1248px){
+.platform-container{
+zoom:0.8;
+}
+ .hlp-box {
+padding: 27px 15px;
+font-size: 1em;
+height:236px;
+/* min-height: 245px; */
+}
+.goals .description-wrap p{
+    font-size:1em;
+}
+.description-wrap {
+padding: 9px 18px;
+}
+.recommendation-desk-block p{
+    font-size:1.1em;
+}
+.merlin-platform-container ul li a {
+    font-size:0.9em;
+}
+.merlin-platform-container {
+zoom: 0.9;
+}
+.recommendation-txt {
+    font-size: 1em;
+}
+.recommendation-desk-block {
+float: left;
+padding: 117px 30px 41px 30px;
+}
+
+
+.ttl-indent {
+    display: block;
+    text-indent: 30px;
+}
+
+.goals h3 {
+    color: #000;
+    font-family: "helveticaneueltstd-lt";
+    font-size: 1.5em;
+    margin: 77px 0 0 10px !important;
+    text-shadow: 0 0 7px #fff;
+}
+
+}
+
+@media (min-width: 768px) and (max-width: 1024px){
+    
+    /*by Gayan*/
+    .testm-blue-bg {height:200px;}
+    .testm-blue-bg p {font-size: 17px !important; line-height:24px; padding:0;}
+    #page-id-271 .logo-nova-container {display:none;}
+    .testm-gray-bg {height:300px;}
+    .testm-gray-bg-content-left {width:250px; height:250px; background-size:cover; margin-top:25px}
+    .testm-gray-bg-content-right {width:62%;}
+    .testm-gray-bg-content-right p {font-size:16px !important; line-height:18px;}
+    .testm-post-thumb {width:75px; height:75px; margin-right:20px;}
+    .testm-post-content {width: 69%;}
+    .testm-post-content p {font-size: 13px;line-height: 18px;}
+    
+  .ipad{
+    background: url("/images/novamind-product-image-640.png") no-repeat scroll center center / 400px 600px rgba(0, 0, 0, 0) !important;
+    background-size: 652px 506px;
+    
+}
+
+.home-how-box{
+  /*  height:50px; */
+}
+
+ .platform-container, .btn-gt-strted, .recommendation-block{
+display:none;
+ }   
+ 
+ .btn-green-more button{
+     display:block;
+ }
+ 
+ .hlp-box {
+     /*
+padding: 27px 15px;
+font-size: 1em;
+margin-bottom: 40px;
+    */
+    
+    font-size: 0.7em;
+    margin-bottom: 40px;
+    height: 200px;
+    padding: 27px 15px;
+    
+}
+.hw-it-wrk-btn{
+    padding: 11px 35px;
+}
+.goals .description-wrap p{
+    font-size:1em;
+}
+.description-wrap {
+padding: 9px 18px;
+}
+.merlin-platform-container {
+padding-top: 15px;
+float: none;
+display: inline-block;
+}
+.recommendation-txt {
+    font-size: 1em;
+}
+.recommendation-desk-block {
+float: left;
+padding: 117px 30px 41px 30px;
+width: 100%;
+}
+
+.testi-recomond{
+ width: 100%; 
+ display:block !important;
+}
+
+.gl-type1, .gl-type2, .gl-type3 {
+    background-size: cover;
+    height: 400px;
+}
+
+
+.partners {
+    background: url("images/partners.jpg") no-repeat scroll center top / 100% auto rgba(0, 0, 0, 0);
+    /* height: 200px;
+       margin: 52px 0 15px;
+    */
+    
+    height: 160px;
+    margin: 30px 0 1px;
+}
+
+.hw-it-wrk-desc {
+    color: #fff;
+    font-size: 1.2em;
+    padding-top: 0px;
+}
+
+.btn-yellow {
+
+  background:url(http://at-novamind-stg.allioncloud.net/wp-content/themes/novamind-child/buddhika_style.css?ver=3.9.1) 50% 50% repeat #FD9D16;
+  border:1px solid #FFFFFF;
+  display:block;
+  font-size:1.5em;
+  margin:0px auto !important;
+  padding: 11px 20px !important;
+  text-align:center;
+  
+   /*   background: url("images/yellow-bg.png") repeat scroll center center rgba(0, 0, 0, 0); 
+    border: 1px solid #fff;
+    display: block;
+    font-size: 1.5em;
+    margin: 0px auto;
+    padding: 11px 43px !important;
+    text-align: center;
+  */
+
+}
+
+
+ .hlp-box h3 {
+    font-size: 1.5em;
+    padding-bottom: 65px;
+}
+
+
+.ttl-indent {
+    display: block;
+    text-indent: 0px;
+}
+
+.goals h3 {
+    color: #000;
+    font-family: "helveticaneueltstd-lt";
+    font-size: 1.4em;
+    margin: 77px 0 0 10px !important;
+    text-shadow: 0 0 7px #fff;
+}
+
+
+}
+
+@media (min-width: 768px) and (max-width:940px) {
+
+    .logo-nova-container-small {
+width: 300px;
+height: 60px;
+background-size: 90%;
+}
+
+.goals h3 {
+    color: #000;
+    font-size: 1.4em;
+    margin: 77px 0 0 10px !important;
+    text-shadow: 0 0 12px #fff;
+}
+
+}
+
+
+@media (min-width: 942px) {
+    
+ .platform-container, .btn-gt-strted{
+    display:block;
+ }   
+ 
+    
+}
+
+
+@media (max-width: 942px) {
+
+     .platform-container, .btn-gt-strted{
+    display:none;
+ } 
+ 
+ .hlp-box h3 {
+    font-size: 1.4em;
+    padding-bottom: 65px;
+    
+}
+ 
+/*
+.btn-yellow {
+    padding: 11px 43px;
+
+
+}
+*/
+
+}
+
+@media (min-width: 942px) and (max-width:1200px) {
+      .btn-gt-strted {
+    background: none repeat scroll 0 0 #93cd69;
+    display: block;
+    font-size: 1.5em;
+    margin: 72px auto;
+    padding: 11px 43px !important;
+    text-align: center;
+}
+    
+}
+
+
+
+@media (max-width: 767px){
+    
+    /*by Gayan*/
+    .hide-on-mobile {display:none; text-shadow: 0 0 7px #000;}
+    .show-on-mobile {display:block; text-shadow: 0 0 7px #000;}
+    .testm-blue-bg {height:250px;}
+    .testm-blue-bg h2 {margin: 12% 0px 3.5% !important;}
+    .testm-blue-bg p {font-size: 17px !important; line-height:24px; padding:0;}
+     #page-id-271 .logo-nova-container, .hide-on-mobile {display:none;}
+    .testm-gray-bg { /* height:320px; */  background:url(../../uploads/2014/08/testm-women-mobile.png); background-size:cover;}
+    .testm-post-item {width:95% !important; clear:both; padding-bottom:10px;}
+    .testm-gray-bg-content-left, .ms-logo {display:none;}
+    .testm-gray-bg-content-right {width:95%;}
+    .testm-gray-bg-content-right p:first-of-type {margin-top:130px !important;}
+    .testm-gray-bg-content-right p {font-size:14px !important; line-height:18px; margin-top:40px;}
+    .testm-post-thumb {width:75px; height:75px; margin-right:20px;}
+    .testm-post-content {width: 69%;}
+    .testm-post-content p {font-size: 13px;line-height: 18px;}
+    
+    
+  .ipad{
+    width: 350px;
+    height: 640px;
+    background: url("/images/novamind-product-image-640.png") no-repeat center top;
+    background-size: 100%;
+    margin:0 auto;
+}
+  .logo-nova-container{
+    background-size: 100% auto;
+    width: 60%;
+   /* margin-top: 63px; */
+    margin-top: 19px;
+}
+.platform-container, .recommendation-block, .btn-gt-strted, .hw-it-wrk-btn, .partners, .mind-mapping-list{
+    display:none;
+}
+
+.testi-recomond{
+ width: 100%; 
+ display:block !important;
+}
+
+.recom-author {
+    float: none !important;
+    text-align: left;
+    font-size:1.3em;
+}
+
+.page-id-21 .testi-recomond p {
+    font-size: 1.2em !important;
+    line-height: 1.3em !important;
+}
+
+
+
+.yell-btn-new{
+    display:block !important;
+}
+
+
+/*** edited by yasitha  ***/
+
+.page-id-676 .platform-container, .page-id-676 .recommendation-block, .page-id-676 .btn-gt-strted, .page-id-676 .hw-it-wrk-btn, .page-id-676 .partners, .page-id-676 .mind-mapping-list{
+    display:block;
+}
+
+.page-id-21 .mind-mapping-list{
+    display:block;
+}
+
+/** .page-id-676  */
+
+ .mind-mapping-list-wrapper {
+    padding-left: 193px;
+    position: relative;
+}
+
+ .list-one {
+    background: url("images/novamind-list-item1.jpg") no-repeat scroll left top / 31% auto rgba(0, 0, 0, 0);
+}
+
+ .list-two {
+    background: url("images/novamind-list-item2.jpg") no-repeat scroll left top / 31% auto rgba(0, 0, 0, 0);
+}
+
+ .list-three {
+    background: url("images/novamind-list-item3.jpg") no-repeat scroll 11px 0 / 31% auto rgba(0, 0, 0, 0);
+}
+
+ .list-four {
+    background: url("images/novamind-list-item4.jpg") no-repeat scroll 8px 0 / 31% auto rgba(0, 0, 0, 0);
+}
+
+ .mind-mapping-list-wrapper .btn-yellow {
+    margin: 0;
+    padding: 5px 16px;
+    position: relative;
+    right: 0;
+    top: 2px;
+    width: 90%;
+}
+
+  .display-none-755 {
+    display:none;
+}
+
+ .display-755{
+    display:block;
+    font-size: 1em !important;
+}
+
+ .mind-mapping-list-wrapper h3 {
+    font-size: 1.6em;
+    margin-top: 0;
+    width: 100%;
+}
+
+
+/** end edited by yasitha  ***/
+
+
+
+  .btn-green-more button{
+     display:block;
+      width: 95%;
+      margin: 25px auto !important;
+ }
+ 
+ 
+ .hlp-box {
+padding: 27px 30px;
+margin-bottom: 40px;
+height: 240px;
+}
+
+ .hlp-box h3 {
+font-size:2em;
+}
+
+.blue-bg-rpt {
+    padding: 27px 6% 0;
+   /* padding: 0 6% 0px; */
+}
+
+
+.goals .description-wrap p{
+    font-size:1em;
+    font-size: 1em;
+    line-height: 1.2em;
+    padding-top: 6px;
+    width: 95%;
+}
+
+
+.goals .description-wrap button{
+    border-radius: 7px;  
+    width: 241px;
+}
+
+.description-wrap {
+padding: 9px 18px;
+width:50%;
+}
+.gl-type1, .gl-type2, .gl-type3 {
+    background-size: cover;
+    height: 410px;
+}
+
+
+.description-wrap {
+    border-radius: 12px;
+    color: #767676;
+    font-size: 1.6em;
+    height: auto;
+    padding: 9px 43px 3px 28px;
+    width: 309px;
+}
+
+
+.goals .btn-yellow {
+    float: left;
+    font-size: 1.2em;
+    margin: 10px auto;
+    padding: 10px 7px 10px 8px;
+}
+
+.goals h3{
+    
+    display:none;
+}
+
+
+
+.goals .h3-tablet{
+    
+    display:inline;
+    font-size: 1.8em;
+    margin-top: -1px !important;
+    padding: 8% 0 0 0;
+    margin: 77px 0 0 1px !important;
+    position: relative;
+    top: 85px;
+}
+
+.page-id-226  .goals .h3-tablet {
+    display: inline;
+    font-size: 2.5em;
+    margin-top: -1px !important;
+    padding: 8% 0 0 0%;
+    position: relative;
+    top: 39px;
+}
+
+
+.ttl-indent {
+    display: block;
+    text-indent: 70px;
+}
+
+
+
+
+
+.gl-type2 .description-wrap{
+    right:0;
+    left:auto;
+}
+.goals h3{
+margin-top: 0 !important;
+position: relative;
+top: 36px;}
+.merlin-platform-container {
+padding-top: 15px;
+float: none;
+display: inline-block;
+}
+.merlin-platform-container {
+zoom: 0.7;
+}
+.recommendation-desk-block p{
+    font-size: 1.1em;
+}
+.hw-it-wrk-desc {
+padding-top: 10px;
+font-size: 1.2em;
+color: #fff;
+}
+.hw-it-wrk-desc p{
+     font-size: 0.9em;
+}
+.list-item-wrapper-type1 {
+padding-left: 8% !important;
+padding-top: 3% !important;
+}
+.logo-nova-container-small{
+margin: 20px auto 45px;
+}
+
+
+
+.grey-bg .heading-title-custom-mobile{
+    margin-top: -19px !important; 
+    text-align:center;
+    font-size: 2.3em;
+}
+
+.page-id-226 .site-content .entry-header, .site-content .entry-content, .site-content .entry-summary, .site-content .entry-meta, .page-content {
+    margin-bottom: auto !important;
+    max-width: 1300px;
+}
+
+
+
+}
+
+
+
+
+@media (max-width: 950px){
+    
+    .mind-mapping-list-wrapper h3 {
+       font-size: 1.6em;
+       margin-top: 0;
+       width: 60%;
+     }
+     
+     .mind-mapping-list-wrapper .btn-yellow {
+         /*
+    margin: 0;
+    padding: 5px 16px;
+    position: absolute;
+    right: 0;
+    top: 2px;
+    */
+    
+    font-size: 0.8em !important;
+    margin: 0;
+    padding: 5px 16px;
+    position: absolute;
+    right: 0;
+    top: 2px;
+    width: 21%;
+   }
+   
+   .mind-mapping-list-wrapper p {
+    font-size: 1.3em;
+}
+    
+}
+
+@media (max-width: 760px){
+    
+ /**** new ****/
+
+
+    .heading-title-custom-mobile{
+        display:inline-block;
+        font-family: 'helveticaneueltstd-th';
+        font-size: 2.2em;
+        color:#767676;
+        text-align: center;
+        padding-bottom:20px;
+    }
+    
+    .heading-title-custom{
+        display:none;
+    }
+    
+    .custom-padding p {
+        font-size: 1.3em;
+        line-height: 1.4em;
+        /*color:#767676;*/
+    }
+    
+    .hlp-box p{
+    font-size: 1.35em;
+    line-height: 1.3em;   
+        
+    }
+    
+    .hw-it-wrk-desc p{
+        font-size: 1.1em;
+        text-align: center;
+    }
+    
+    .goals h3 {
+        margin-top: -1px !important;
+        padding: 8% 0 0 12%;
+        position: relative;
+        top: 30px;
+        font-size: 2.5em;
+     }   
+     
+     
+     
+    .recommendation-desk-block {
+    border-bottom: 1px solid #aaaaad;
+    float: left;
+    font-size: 1.3em;
+    height: auto;
+    padding: 36px 30px 60px !important;
+    text-align: center;
+} 
+
+
+.merlin-platform-container ul li a {
+    color: #a1a1a1;
+    float: left;
+    margin-left: 10px;
+    margin-top: 25px;
+    padding-top: 79px;
+    text-decoration: none;
+    width: auto;
+}
+
+    
+.custom-padding {
+    padding: 8% 0 6% 5%;
+}    
+
+.page-id-226 .site-content .entry-header, .site-content .entry-content, .site-content .entry-summary, .site-content .entry-meta, .page-content {
+    margin-bottom: 0% !important;
+    max-width: 1300px;
+}
+
+
+/*** by yasitha **/
+
+ .mind-mapping-list-wrapper .btn-yellow {
+    margin: 0;
+    padding: 5px 16px;
+    position: relative;
+    right: 0;
+    top: 2px;
+    width: 90%;
+}
+    
+    
+}
+
+
+@media (max-width: 635px){
+   .page-id-226 .site-content .entry-header, .site-content .entry-content, .site-content .entry-summary, .site-content .entry-meta, .page-content {
+    margin-bottom: auto !important;
+    max-width: 1300px;
+} 
+
+ .hlp-box {
+    font-size: 0.94em;
+    height: 240px;
+    margin-bottom: 40px;
+    padding: 27px 30px;
+}
+
+ .hlp-box h3 {
+font-size:1.7em;
+}
+
+}
+
+
+
+@media (max-width: 535px){
+
+.hlp-box {
+padding: 15px 10px;
+margin-bottom: 40px;
+font-size: 0.8em;
+height: 192px;
+}
+
+.how-it-works {
+font-size: 2em;
+}
+.logo-nova-container-small{
+    width: 320px;
+    height:64px;
+background-size: 320px 64px;
+
+}
+
+.entry-content .heading-title-custom-mobile {
+   margin-top: 15px !important; 
+
+}
+
+.page-id-226 .site-content .entry-header, .site-content .entry-content, .site-content .entry-summary, .site-content .entry-meta, .page-content {
+    margin-bottom: auto !important;
+    max-width: 1300px;
+}
+
+
+/*** edited by yasitha  ***/
+
+/** .page-id-676  **/
+
+ .mind-mapping-list-wrapper {
+    padding-left: 120px;
+    position: relative;
+}
+
+ .list-one {
+    background: url("images/novamind-list-item1.jpg") no-repeat scroll left top / 31% auto rgba(0, 0, 0, 0);
+}
+
+.list-two {
+    background: url("images/novamind-list-item2.jpg") no-repeat scroll left top / 31% auto rgba(0, 0, 0, 0);
+}
+
+ .list-three {
+    background: url("images/novamind-list-item3.jpg") no-repeat scroll 11px 0 / 31% auto rgba(0, 0, 0, 0);
+}
+
+ .list-four {
+    background: url("images/novamind-list-item4.jpg") no-repeat scroll 8px 0 / 31% auto rgba(0, 0, 0, 0);
+}
+
+ .mind-mapping-list-wrapper .btn-yellow {
+    margin: 0;
+    padding: 5px 16px;
+    position: relative;
+    right: 0;
+    top: 2px;
+    width: 90%;
+}
+
+
+ .mind-mapping-list-wrapper h3 {
+    font-size: 1.6em;
+    margin-top: 0;
+    width: 100%;
+}
+
+
+/** end edited by yasitha  ***/
+
+
+}
+
+
+
+
+
+@media (max-width: 500px){
+
+.gl-type1, .gl-type2, .gl-type3 {
+height: 375px;
+}
+.goals h3 {
+font-size: 1.7em;
+}
+.merlin-platform-container ul {
+margin-left: 0;
+}
+.merlin-platform-container {
+zoom: 0.6;
+}
+
+.description-wrap {
+    border-radius: 5px;
+    color: #767676;
+    font-size: 1.2em;
+    height: auto;
+    padding: 17px 20px 0 19px;
+    width: 70%;
+}
+
+
+.goals .h3-tablet {
+    display: inline;
+    font-size: 1.4em;
+    font-weight: 300;
+    margin-top: -1px !important;
+    padding: 8% 0 0 0%;
+    margin: 77px 0 0 0px !important;
+    position: relative;
+    top: 56px !important;
+}
+
+
+
+.ttl-indent {
+    display: block;
+    text-indent: 10%;
+}
+
+.ipad {
+    background: url("/images/novamind-product-image-640.png") no-repeat scroll center top / 100% auto rgba(0, 0, 0, 0);
+    width: 100%;
+}
+
+.logo-nova-container {
+    background: url("images/logo-nova.png") no-repeat scroll 0 0 / 264px 50px rgba(0, 0, 0, 0);
+    height: 50px;
+    text-align: center;
+
+
+}
+
+
+.site-content .entry-header, .site-content .entry-content, .site-content .entry-summary, .site-content .entry-meta, .page-content {
+    margin: -22px auto;
+    max-width: 474px;
+}
+
+.page-id-226 .site-content .entry-header, .site-content .entry-content, .site-content .entry-summary, .site-content .entry-meta, .page-content {
+    margin-bottom: auto !important;
+    max-width: 1300px;
+}
+
+.custom-padding {
+    padding: 4% 0 6% 5%;
+}
+
+
+.hlp-box {
+    font-size: 0.6em;
+    margin-bottom: 40px;
+   /*  min-height: 267px;  */
+    padding: 15px 10px;
+     height: 160px;
+}
+
+.hlp-box h3 {
+    font-size: 1.5em;
+}
+
+.page-id-271 .entry-content {
+    padding-top: 0px;
+}
+
+
+}
+
+
+
+
+
+
+@media (min-width: 320px) and (max-width: 481px){
+    
+
+/*** edited by yasitha  ***/
+
+
+.testi-recomond{
+ display:none !important;
+}
+
+
+.page-id-21 .mind-mapping-list{
+    display:none;
+}
+
+
+.page-id-676 .mind-mapping-list-wrapper {
+
+    padding-left: 10px;
+    padding-top: 73%;
+    position: relative;
+}
+
+.page-id-676 .list-one {
+    background: url("images/novamind-list-item1.jpg") no-repeat scroll center top / 80% auto rgba(0, 0, 0, 0);
+}
+
+.page-id-676 .list-two {
+    background: url("images/novamind-list-item2.jpg") no-repeat scroll center top / 80% auto rgba(0, 0, 0, 0);
+}
+
+.page-id-676 .list-three {
+    background: url("images/novamind-list-item3.jpg") no-repeat scroll center top / 51% auto rgba(0, 0, 0, 0);
+}
+
+.page-id-676 .list-four {
+    background: url("images/novamind-list-item4.jpg") no-repeat scroll center top / 51% auto rgba(0, 0, 0, 0);
+}
+
+.page-id-676 .mind-mapping-list-wrapper .btn-yellow {
+    margin: 0;
+    padding: 5px 16px;
+    position: relative;
+    right: 0;
+    top: 2px;
+    width: 90%;
+}
+
+
+.page-id-676 .mind-mapping-list-wrapper h3 {
+    font-size: 1.6em;
+    margin-top: 0;
+    width: 100%;
+}
+
+.page-id-676 .mind-mapping-list {
+    float: left;
+    padding: 0 7px 40px;
+}
+
+.yell-btn-new{
+    display:none !important;
+}
+
+
+.testm-gray-bg {
+    background: url("../../uploads/2014/08/testm-women-mobile.png") no-repeat scroll 0 0 / 100% 339px rgba(0, 0, 0, 0);
+    height: 339px;
+    
+}
+
+.blue-bg-rpt {
+    padding: 35px 6% 40px;
+}
+
+
+/** end edited by yasitha  ***/
+
+.hlp-box {
+    font-size: 0.6em;
+    margin-bottom: 40px;
+   /*  min-height: 267px;  */
+    padding: 15px 10px;
+     height: 170px;
+}
+
+.logo-nova-container {
+    background: url("images/logo-nova.png") no-repeat scroll 0 0 / 190px 43px rgba(0, 0, 0, 0);
+    height: 70px;
+    text-align: center;
+}
+
+
+/*** pitching ***/
+
+.inner-pg-hd {
+    color: #fff;
+    font-family: 'helveticaneueltstd-th';
+    font-size: 2.5em;
+    padding: 55% 19% 1%;
+    position: relative;
+    text-align: center;
+}
+
+.col-xs-481 {
+    display:none;
+}
+
+
+.logo-nova-container-small {
+    background-size: 320px 64px;
+    height: 70px;
+    width: 332px;
+}
+
+.logo-nova-container-small {
+    margin: 30px auto 46px;
+}
+
+.logo-nova-container-small {
+    background: url("images/logo-nova-white.png") no-repeat scroll 0 0 / 71% 62% rgba(0, 0, 0, 0) !important;
+    margin: 9% 12%;
+}
+
+.page-id-226 .platform-container, .page-id-226 .recommendation-block, .page-id-226 .btn-gt-strted, .page-id-226 .hw-it-wrk-btn, .page-id-226 .partners, .page-id-226 .mind-mapping-list {
+    display: block;
+}
+
+
+.page-id-226 .list-item-wrapper-type1 .btn-gt-strted {
+    margin: 33px 0 50px 0;
+}
+
+.page-id-226 .btn {
+    border-radius: 8px;
+    border-width: 1px;
+    font-size: 1.2em;
+    min-height: 33px;
+}
+
+.page-id-226 .btn-green-more .btn-gt-strted {
+    background: none repeat scroll 0 0 #93cd69;
+    display: block;
+    font-size: 1.5em;
+    margin: 72px auto;
+    padding: 7px 36%;
+    text-align: center;
+}
+
+
+.page-id-226 .goals h3 {
+    display: none;
+}
+
+.page-id-226 .goals h3 {
+    font-size: 2em;
+    margin-top: -1px !important;
+    padding: 0 0 0 12%;
+    position: relative;
+    top: 30px;
+}
+
+.page-id-226 .goals .h3-tablet {
+    display: inline;
+    font-size: 1.6em;
+    font-weight: 300;
+    margin-top: -1px !important;
+    padding: 8% 0 0 7%;
+    position: relative;
+    top: 60px !important;
+}
+
+.page-id-226 .goals .description-wrap p {
+    font-size: 1em;
+    line-height: 1.2em;
+    padding-top: 6px;
+    width: 95%;
+}
+
+.page-id-226 .site-content .entry-header, .site-content .entry-content, .site-content .entry-summary, .site-content .entry-meta, .page-content {
+    margin-bottom: auto !important;
+    max-width: 1300px;
+}
+
+/*** end pithcing  ****/
+
+
+    
+}
+
+
+@media (max-width: 360px){
+    .ipad {
+    background: url("/images/novamind-product-image-640.png") no-repeat scroll center center / 250px auto rgba(0, 0, 0, 0);
+    height: 287px;
+}
+
+}
+
+@media (max-width: 320px){
+    
+    
+    /*** edited by yasitha  ***/
+    
+ .hlp-box {
+    font-size: 0.6em;
+    margin-bottom: 40px;
+   /*  min-height: 267px;  */
+    padding: 15px 10px;
+     height: 180px;
+}
+
+   
+    .testi-recomond{
+ display:none !important;
+}
+
+
+.page-id-21 .mind-mapping-list{
+    display:none;
+}
+
+.page-id-676 .mind-mapping-list-wrapper {
+
+    padding-left: 10px;
+    padding-top: 73%;
+    position: relative;
+}
+
+.page-id-676 .list-one {
+    background: url("images/novamind-list-item1.jpg") no-repeat scroll center top / 80% auto rgba(0, 0, 0, 0);
+}
+
+.page-id-676 .list-two {
+    background: url("images/novamind-list-item2.jpg") no-repeat scroll center top / 80% auto rgba(0, 0, 0, 0);
+}
+
+.page-id-676 .list-three {
+    background: url("images/novamind-list-item3.jpg") no-repeat scroll center top / 51% auto rgba(0, 0, 0, 0);
+}
+
+.page-id-676 .list-four {
+    background: url("images/novamind-list-item4.jpg") no-repeat scroll center top / 51% auto rgba(0, 0, 0, 0);
+}
+
+.page-id-676 .mind-mapping-list-wrapper .btn-yellow {
+    margin: 0;
+    padding: 5px 16px;
+    position: relative;
+    right: 0;
+    top: 2px;
+    width: 90%;
+}
+
+
+.page-id-676 .mind-mapping-list-wrapper h3 {
+    font-size: 1.6em;
+    margin-top: 0;
+    width: 100%;
+}
+
+.page-id-676 .mind-mapping-list {
+    float: left;
+    padding: 0 7px 40px;
+}
+
+
+.testm-gray-bg {
+    background: url("../../uploads/2014/08/testm-women-mobile.png") no-repeat scroll 0 0 / 100% 355px rgba(0, 0, 0, 0);
+    height: 355px;
+    
+}
+
+.blue-bg-rpt {
+    padding: 30px 6% 40px;
+}
+
+.yell-btn-new {
+    display: none !important;
+}
+
+
+/** end edited by yasitha  ***/
+
+    
+
+.recommendation-desk-block {
+    border-bottom: 0 solid #aaaaad;
+    float: left;
+    font-size: 0.9em;
+    height: auto;
+    padding: 32px 30px 60px !important;
+    text-align: center;
+}
+
+.tagline-hd {
+    display: block;
+    font-size: 1.1em;
+    padding-bottom: 20px;
+}
+
+
+.logo-nova-container {
+    background: url("images/logo-nova.png") no-repeat scroll 0 0 / 164px 44px rgba(0, 0, 0, 0);
+    height: 68px;
+    text-align: center;
+}
+
+.ipad {
+    background: url("/images/novamind-product-image-640.png") no-repeat scroll center top / auto 100% rgba(0, 0, 0, 0);
+    width: 100%;
+}
+
+.description-wrap {
+    border-radius: 5px;
+    color: #767676;
+    font-size: 1.2em;
+    height: auto;
+    padding: 17px 20px 0 19px;
+    width: 70%;
+}
+
+
+.goals .h3-tablet {
+    display: inline;
+    font-size: 1.3em;
+    font-weight: 300;
+    margin-top: -1px !important;
+    padding: 8% 0 0 0%;
+    margin: 77px 0 0 0px !important;
+    position: relative;
+    top: 30px !important;
+}
+
+.gl-type1, .gl-type2, .gl-type3 {
+    height: 298px;
+}
+
+
+.merlin-platform-container ul li {
+    float: left;
+    font-size: 1em;
+    list-style: none outside none;
+    margin-right: 0px;
+    text-align: center;
+}
+
+.merlin-platform-container ul li a {
+    color: #a1a1a1;
+    float: left;
+    margin-left: 10px;
+    margin-top: 10px;
+    padding-top: 55px;
+    text-decoration: none;
+    width: auto;
+}
+
+.merlin-platform-container {
+    display: inline-block;
+    float: none;
+    padding-top: 11px;
+    width: auto;
+}
+
+.merlin-hd {
+    background: url("images/merlin.png") no-repeat scroll center top / 52px 66px rgba(0, 0, 0, 0);
+    font-size: 1.5em;
+    padding-top: 82px;
+    text-align: center;
+}
+
+.merlin-app {
+    background: url("images/merlin.png") no-repeat scroll center top / 50px 40px rgba(0, 0, 0, 0);
+    width: 50px !important;
+}
+
+.merlin-server {
+    background: url("images/merlin-server.png") no-repeat scroll center top / 50px 40px rgba(0, 0, 0, 0);
+    width: 50px !important;
+}
+
+.merlin-ios {
+    background: url("images/merlin-ios.png") no-repeat scroll center top / 50px 40px rgba(0, 0, 0, 0);
+    width: 50px !important;
+}
+
+.merlin-web-sharing {
+    background: url("images/merlin-web-sharing.png") no-repeat scroll center top / 50px 40px rgba(0, 0, 0, 0);
+    width: 50px !important;
+}
+
+
+/*** pitching ***/
+
+.inner-pg-hd {
+    color: #fff;
+    font-family: 'helveticaneueltstd-th';
+    font-size: 1.5em;
+    padding: 55% 19% 1%;
+    position: relative;
+    text-align: center;
+}
+
+.col-xs-481 {
+    display:none;
+}
+
+
+.logo-nova-container-small {
+    background-size: 320px 64px;
+    height: 70px;
+    width: 332px;
+}
+
+.logo-nova-container-small {
+    margin: 30px auto 46px;
+}
+
+.logo-nova-container-small {
+    background: url("images/logo-nova-white.png") no-repeat scroll 0 0 / 71% 62% rgba(0, 0, 0, 0) !important;
+    margin: 9% 2%;
+    
+}
+
+.list-item-wrapper-type1 .broad-dd {
+    float: inherit !important;
+    margin-bottom: 5px !important;
+    margin-left: 24px !important;
+}
+
+.list-item-type1 {
+    color: #fff;
+    font-family: 'helveticaneueltstd-th';
+    font-size: 1em !important;
+}
+
+
+.page-id-226 .platform-container, .page-id-226 .recommendation-block, .page-id-226 .btn-gt-strted, .page-id-226 .hw-it-wrk-btn, .page-id-226 .partners, .page-id-226 .mind-mapping-list {
+    display: block;
+}
+
+
+.page-id-226 .list-item-wrapper-type1 .btn-gt-strted {
+    margin: 21px 0 50px 4%;
+}
+
+.page-id-226 .btn {
+    border-radius: 8px;
+    border-width: 1px;
+    font-size: 1.1em;
+    min-height: 33px;
+}
+
+.page-id-226 .btn-green-more .btn-gt-strted {
+    background: none repeat scroll 0 0 #93cd69;
+    display: block;
+    font-size: 1.5em;
+    margin: 72px auto;
+    padding: 4px 25%;   
+    text-align: center;
+}
+
+
+.page-id-226 .goals h3 {
+    display: none;
+}
+
+.page-id-226 .goals h3 {
+    font-size: 2em;
+    margin-top: -1px !important;
+    padding: 0 0 0 12%;
+    position: relative;
+    top: 30px;
+}
+
+.page-id-226 .goals .h3-tablet {
+    display: inline;
+    font-size: 1.6em;
+    font-weight: 300;
+    margin-top: -1px !important;
+    padding: 8% 0 0 7%;
+    position: relative;
+    top: 40px !important;
+}
+
+
+.page-id-226 .site-content .entry-header, .site-content .entry-content, .site-content .entry-summary, .site-content .entry-meta, .page-content {
+    margin-bottom: auto !important;
+    max-width: 1300px;
+}
+
+
+/*** end pithcing  ****/
+
+
+
+
+   }
+
+
+/****  newly added  *****/
+
+#page-id-21 .row .grey-bg{
+    
+}
+
+/**** end newly added ****/
+
+.educational-background{
+    background-attachment: scroll, scroll;
+    background-clip: border-box, border-box;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url("/wp-content/uploads/2014/09/grads.jpg");
+    background-origin: padding-box, padding-box;
+    background-position: center top, 0 0;
+    background-repeat: no-repeat, repeat;
+    background-size: 100% auto;
+    height: auto;
+    width: 100%;
+}
+.page-id-650 .entry-header, .page-id-655 .entry-header{
+    display:none;
+}
+.page-id-650 .content-area, .page-id-655 .content-area {
+    padding-top: 0 !important;
+}
+.broad-fu-header{
+    font-family: helveticaneueltstd-th, tahoma;
+    text-shadow: 0 0 7px #fff;
+}
+.educational-header, .personal-header {
+color: #fff;
+font-family: helveticaneueltstd-th, tahoma;
+font-size: 3.9em;
+padding: 14% 0 13.5%;
+text-align: center;
+text-shadow: 0px 0px 7px #000; 
+}
+.page-id-655 .educational-header, .personal-header {
+
+    color:#000;
+}
+
+.personal-background{
+    background-attachment: scroll, scroll;
+    background-clip: border-box, border-box;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url("/wp-content/uploads/2014/09/the-beach.jpg");
+    background-origin: padding-box, padding-box;
+    background-position: center top, 0 0;
+    background-repeat: no-repeat, repeat;
+    background-size: 100% auto;
+    height: auto;
+    width: 100%;
+}
+.black-link{
+    color: #58585a;
+    text-decoration:none !important;
+}
+.black-link:hover{
+    color: #93cd69;
+}
+
+
+
+.post-120 .content-area, .post-120 .content-sidebar, .post-317 .content-area, .post-317 .content-sidebar {
+   padding-top: 0!important; 
+}
