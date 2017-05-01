@@ -18,7 +18,7 @@ func main() {
 	beego.AddFuncMap("indexaddone", Indexaddone) //模板中使用{{indexaddone $index}}或{{$index|indexaddone}}
 
 	//开启orm调试模式
-	// orm.Debug = true
+	orm.Debug = true
 	//自动建表
 	orm.RunSyncdb("default", false, true)
 	beego.Run()

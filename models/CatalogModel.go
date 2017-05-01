@@ -76,7 +76,7 @@ type Specialty struct {
 }
 
 func init() {
-	orm.RegisterModel(new(Catalog))
+	// orm.RegisterModel(new(Catalog))
 }
 
 //在线添加，批量导入

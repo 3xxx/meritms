@@ -109,7 +109,7 @@ func (c *Achievement) GetAchievement() {
 	username, role := checkprodRole(c.Ctx)
 	if role == 1 {
 		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
+	} else if role >= 1 && role < 5 {
 		c.Data["IsLogin"] = true
 	} else {
 		c.Data["IsAdmin"] = false

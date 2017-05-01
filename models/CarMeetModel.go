@@ -13,9 +13,9 @@ type CarCalendar struct {
 	Id        int64     `json:"id",form:"-"`
 	Title     string    `json:"title",form:"title;text;title:",valid:"MinSize(1);MaxSize(100)"` //orm:"unique",
 	Content   string    `json:"content",orm:"sie(20)"`
-	Starttime time.Time `json:"start",orm:"not null;type(datetime)"`
-	Endtime   time.Time `json:"end",orm:"not null;type(datetime)"`
-	Allday    bool      `json:"allDay",orm:"not null;default(0)"`
+	Starttime time.Time `json:"start",orm:"type(datetime)"`
+	Endtime   time.Time `json:"end",orm:"type(datetime)"`
+	Allday    bool      `json:"allDay",orm:"default(0)"`
 	Color     string    `json:"color",orm:"null"`
 	Public    bool      `default(true)`
 	Ip        string    `json:"ip",orm:"null"`
@@ -27,9 +27,9 @@ type MeetCalendar struct {
 	Id        int64     `json:"id",form:"-"`
 	Title     string    `json:"title",form:"title;text;title:",valid:"MinSize(1);MaxSize(100)"` //orm:"unique",
 	Content   string    `json:"content",orm:"sie(20)"`
-	Starttime time.Time `json:"start",orm:"not null;type(datetime)"`
-	Endtime   time.Time `json:"end",orm:"not null;type(datetime)"`
-	Allday    bool      `json:"allDay",orm:"not null;default(0)"`
+	Starttime time.Time `json:"start",orm:"type(datetime)"`
+	Endtime   time.Time `json:"end",orm:"type(datetime)"`
+	Allday    bool      `json:"allDay",orm:"default(0)"`
 	Color     string    `json:"color",orm:"null"`
 	Public    bool      `default(true)`
 	Ip        string    `json:"ip",orm:"null"`
@@ -38,7 +38,7 @@ type MeetCalendar struct {
 }
 
 func init() {
-	orm.RegisterModel(new(CarCalendar), new(MeetCalendar)) //, new(Article)
+	// orm.RegisterModel(new(CarCalendar), new(MeetCalendar)) //, new(Article)
 }
 
 //********汽车日历********

@@ -20,7 +20,7 @@ type AdminAchievcategory struct {
 }
 
 func init() {
-	orm.RegisterModel(new(AdminAchievcategory))
+	// orm.RegisterModel(new(AdminAchievcategory))
 }
 
 func SaveAchievcategory(category AdminAchievcategory) (cid int64, err error) {

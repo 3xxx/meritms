@@ -22,7 +22,7 @@ type AchievementTopic struct {
 }
 
 func init() {
-	orm.RegisterModel(new(AchievementTopic)) //, new(Article)
+	// orm.RegisterModel(new(AchievementTopic)) //, new(Article)
 	// orm.RegisterDriver("sqlite", orm.DRSqlite)
 	// orm.RegisterDataBase("default", "sqlite3", "database/merit.db", 10)
 }

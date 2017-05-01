@@ -22,10 +22,10 @@ type AdminCategory struct {
 
 //项目同步ip表
 type AdminSynchIp struct {
-	Id       int64     `form:"-"`
-	ParentId int64     `orm:"null"`
-	UserName string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
-	SynchIp  string    `orm:"not null"`
+	Id       int64  `form:"-"`
+	ParentId int64  `orm:"null"`
+	UserName string `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
+	SynchIp  string
 	Port     string    `orm:"default(80)"`
 	Created  time.Time `orm:"index","auto_now_add;type(datetime)"`
 	Updated  time.Time `orm:"index","auto_now;type(datetime)"`
@@ -61,9 +61,9 @@ type AdminDepartMerit struct {
 
 //ip地址段权限
 type AdminIpsegment struct {
-	Id      int64     `form:"-"`
-	Title   string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
-	StartIp string    `orm:"not null"`
+	Id      int64  `form:"-"`
+	Title   string `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
+	StartIp string
 	EndIp   string    `orm:"null"`
 	Iprole  int       `orm:"null"`
 	Created time.Time `orm:"index","auto_now_add;type(datetime)"`
@@ -74,9 +74,9 @@ type AdminIpsegment struct {
 type AdminCalenda struct {
 	Id        int64     `form:"-"`
 	Title     string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(100)"` //orm:"unique",
-	starttime time.Time `orm:"not null;type(datetime)"`
+	starttime time.Time `orm:"type(datetime)"`
 	endtime   time.Time `orm:"null;type(datetime)"`
-	allday    int8      `orm:"not null;default(0)"`
+	allday    int8      `orm:"NOT NULL;default(0)"`
 	color     string    `orm:"null"`
 }
 
@@ -97,9 +97,10 @@ type AdminCarousel struct {
 //   `color` varchar(20) DEFAULT NULL,
 
 func init() {
-	orm.RegisterModel(new(AdminDepartment), new(AdminMerit), new(AdminIpsegment), new(AdminDepartMerit), new(AdminCategory), new(AdminSynchIp), new(AdminCarousel)) //, new(Article)
+	// orm.RegisterModel(new(AdminDepartment), new(AdminMerit), new(AdminIpsegment), new(AdminDepartMerit), new(AdminCategory), new(AdminSynchIp), new(AdminCarousel)) //, new(Article)
+	// orm.RegisterModel(new(AdminIpsegment))
 	// orm.RegisterDriver("sqlite", orm.DRSqlite)
-	orm.RegisterDataBase("default", "sqlite3", "database/meritms.db", 10)
+	// orm.RegisterDataBase("default", "sqlite3", "database/meritms.db", 10)
 }
 
 //添加部门

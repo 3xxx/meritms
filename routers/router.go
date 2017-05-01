@@ -377,7 +377,7 @@ func init() {
 	//项目进度甘特图
 	beego.Router("/projectgant", &controllers.ProjGantController{}, "get:Get")
 	//数据填充
-	beego.Router("/projectgant/getprojgants", &controllers.ProjGantController{}, "get:GetProjGants")
+	// beego.Router("/projectgant/getprojgants", &controllers.ProjGantController{}, "get:GetProjGants")
 
 	//添加项目进度
 	beego.Router("/projectgant/addprojgant", &controllers.ProjGantController{}, "post:AddProjGant")
@@ -424,4 +424,6 @@ func init() {
 	//resize事件
 	beego.Router("/index/meetingroomcalendar/resizecalendar", &controllers.IndexController{}, "*:ResizeMeetCalendar")
 
+	// beego.SetStaticPath("/views/cms", "views/cms")
+	// beego.SetStaticPath("/res", "views/cms/res")
 }

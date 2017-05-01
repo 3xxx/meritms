@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/session"
@@ -14,16 +15,28 @@ type AdminController struct {
 	beego.Controller
 }
 
-//（2）建立一个全局session mananger对象
 var globalSessions *session.Manager
 
-//（3）在初始化“全局session mananger对象”
 func init() {
-	globalSessions, _ = session.NewManager("memory", `{"cookieName":"gosessionid", "enableSetCookie,omitempty": true, "gclifetime":3600, "maxLifetime": 36000, "secure": false, "sessionIDHashFunc": "sha1", "sessionIDHashKey": "", "cookieLifeTime": 36000, "providerConfig": ""}`)
+	config := `{"cookieName":"gosessionid","enableSetCookie":false,"gclifetime":3600,"ProviderConfig":"{\"cookieName\":\"gosessionid\",\"securityKey\":\"beegocookiehashkey\"}"}`
+
+	conf := new(session.ManagerConfig)
+	if err := json.Unmarshal([]byte(config), conf); err != nil {
+		beego.Error(err)
+	}
+	globalSessions, _ = session.NewManager("cookie", conf)
+
 	go globalSessions.GC()
-	// globalSessions, _ = session.NewManager("memory", `{"cookieName":"gosessionid","gclifetime":3600}`)
-	// go globalSessions.GC()
 }
+
+//（2）建立一个全局session mananger对象
+// var globalSessions *session.Manager
+
+//（3）在初始化“全局session mananger对象”
+// func init() {
+// 	globalSessions, _ = session.NewManager("memory", `{"cookieName":"gosessionid", "enableSetCookie,omitempty": true, "gclifetime":3600, "maxLifetime": 3600, "secure": false, "cookieLifeTime": 3600, "providerConfig": ""}`)
+// 	go globalSessions.GC()
+// }
 
 // func (c *AdminController) Get() {
 // 	// c.Data["Website"] = "beego.me"
