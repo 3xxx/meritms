@@ -15,12 +15,12 @@ type AdminAchievcategory struct {
 	Rationum   float64 //折标系数
 	Ismaterial bool    //是否是实物工作量
 	// Data     time.Time `orm:"null;auto_now_add;type(datetime)"`
-	Created time.Time `orm:"index;auto_now_add;type(datetime)"`
-	Updated time.Time `orm:"index;auto_now_add;type(datetime)"`
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 func init() {
-	// orm.RegisterModel(new(AdminAchievcategory))
+	orm.RegisterModel(new(AdminAchievcategory))
 }
 
 func SaveAchievcategory(category AdminAchievcategory) (cid int64, err error) {

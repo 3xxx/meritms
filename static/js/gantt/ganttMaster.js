@@ -991,7 +991,8 @@ GanttMaster.prototype.deleteCurrentTask = function () {
   if (!self.currentTask || !self.permissions.canWrite || !self.currentTask.canWrite)
     return;
   var row = self.currentTask.getRow();
-  if (self.currentTask && (row > 0 || self.isMultiRoot || self.currentTask.isNew()) ) {
+  //20170526原来是row>0改为row>=0
+  if (self.currentTask && (row >= 0 || self.isMultiRoot || self.currentTask.isNew()) ) {
     var par = self.currentTask.getParent();
     self.beginTransaction();
     self.currentTask.deleteTask();

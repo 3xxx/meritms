@@ -40,8 +40,8 @@ func (c *LoginController) Get() {
 	// 	ctx.Input.CruSession.Flush()
 	// 	beego.GlobalSessions.SessionDestroy(ctx.ResponseWriter, ctx.Request)
 	// }
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
 	if isExit {
 		// c.Ctx.SetCookie("uname", "", -1, "/")
 		// c.Ctx.SetCookie("pwd", "", -1, "/")
@@ -51,7 +51,8 @@ func (c *LoginController) Get() {
 		// c.Ctx.Input.CruSession.Delete("gosessionid")这句与上面一句重复
 		// c.Ctx.Input.CruSession.Flush()
 		// beego.GlobalSessions.SessionDestroy(c.Ctx.ResponseWriter, c.Ctx.Request)
-		sess.Delete("uname") //这个可行。
+		// sess.Delete("uname") //这个可行。
+		c.DelSession("uname")
 		// sess.Flush()//这个不灵
 		c.Redirect("/", 301)
 		return
@@ -95,8 +96,8 @@ func (c *LoginController) Post() {
 	}
 	// beego.Info(url)
 	//（4）获取当前的请求会话，并返回当前请求会话的对象
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
 	//（5）根据当前请求对象，设置一个session
 	// sess.Set("mySession", "qq504284")
 	// c.Data["Website"] = "广东省水利电力勘测设计研究院■☆●施工预算分院"
@@ -141,8 +142,10 @@ func (c *LoginController) Post() {
 		// 	maxAge = 1<<31 - 1
 		// }
 		// c.Ctx.SetCookie("uname", user.Username, maxAge, "/")
-		sess.Set("uname", user.Username)
-		sess.Set("pwd", user.Password)
+		c.SetSession("uname", user.Username)
+		c.SetSession("pwd", user.Password)
+		// sess.Set("uname", user.Username)
+		// sess.Set("pwd", user.Password)
 		// beego.Info(sess.Get("uname"))
 		// c.Ctx.SetCookie("pwd", user.Password, maxAge, "/")
 
@@ -190,12 +193,17 @@ func (c *LoginController) Post() {
 }
 
 func checkAccount(ctx *context.Context) bool {
+	// func checkAccount(c *LoginController) bool {
 	var user models.User
 	//（4）获取当前的请求会话，并返回当前请求会话的对象
 	//但是我还是建议大家采用 SetSession、GetSession、DelSession 三个方法来操作，避免自己在操作的过程中资源没释放的问题
-	sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
-	defer sess.SessionRelease(ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
+	// defer sess.SessionRelease(ctx.ResponseWriter)
+	// v := sess.Get("uname")
+	// ctx.Input.CruSession.Get("Adminname")            //读取Session
+	// ctx.Input.CruSession.Set("Adminname","value")    //设置Session
+	// ctx.Input.CruSession.Delete("Adminname")         //删除Session
+	v := ctx.Input.CruSession.Get("uname")
 	if v == nil {
 		return false
 		//     this.SetSession("asta", int(1))
@@ -205,7 +213,8 @@ func checkAccount(ctx *context.Context) bool {
 		//     this.Data["num"] = v.(int)
 
 		user.Username = v.(string)
-		v = sess.Get("pwd")
+		// v = sess.Get("pwd")
+		v = ctx.Input.CruSession.Get("pwd")
 		user.Password = v.(string) //ck.Value
 		err := models.ValidateUser(user)
 		if err == nil {
@@ -234,9 +243,11 @@ func checkAccount(ctx *context.Context) bool {
 
 func checkRole(ctx *context.Context) (role int, err error) { //这里返回用户的role
 	//（4）获取当前的请求会话，并返回当前请求会话的对象
-	sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
-	defer sess.SessionRelease(ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
+	// defer sess.SessionRelease(ctx.ResponseWriter)
+	// v := sess.Get("uname")
+	// func checkRole(c *LoginController) (role int, err error) {
+	v := ctx.Input.CruSession.Get("uname")
 	// ck, err := ctx.Request.Cookie("uname")
 	// if err != nil {
 	// 	return "", err

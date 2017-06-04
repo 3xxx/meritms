@@ -16,8 +16,8 @@ type AdminCategory struct {
 	Title    string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
 	Code     string    `orm:"null"`
 	Grade    int       `orm:"null"`
-	Created  time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated  time.Time `orm:"index","auto_now;type(datetime)"`
+	Created  time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated  time.Time `orm:"auto_now;type(datetime)"`
 }
 
 //项目同步ip表
@@ -27,8 +27,8 @@ type AdminSynchIp struct {
 	UserName string `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
 	SynchIp  string
 	Port     string    `orm:"default(80)"`
-	Created  time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated  time.Time `orm:"index","auto_now;type(datetime)"`
+	Created  time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated  time.Time `orm:"auto_now;type(datetime)"`
 }
 
 //科室结构
@@ -37,8 +37,8 @@ type AdminDepartment struct {
 	ParentId int64     `orm:"null"`
 	Title    string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
 	Code     string    `orm:"null"`
-	Created  time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated  time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Created  time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated  time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 //价值分类
@@ -49,8 +49,8 @@ type AdminMerit struct {
 	Mark     string    `orm:"null"`                                              //设置分数
 	List     string    `orm:"null"`                                              //选择项
 	ListMark string    `orm:"null"`
-	Created  time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated  time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Created  time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated  time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 type AdminDepartMerit struct {
@@ -66,8 +66,8 @@ type AdminIpsegment struct {
 	StartIp string
 	EndIp   string    `orm:"null"`
 	Iprole  int       `orm:"null"`
-	Created time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 //日历
@@ -85,8 +85,8 @@ type AdminCarousel struct {
 	Id      int64     `form:"-"`
 	Title   string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
 	Url     string    `orm:"null"`
-	Created time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 // `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -97,10 +97,10 @@ type AdminCarousel struct {
 //   `color` varchar(20) DEFAULT NULL,
 
 func init() {
-	// orm.RegisterModel(new(AdminDepartment), new(AdminMerit), new(AdminIpsegment), new(AdminDepartMerit), new(AdminCategory), new(AdminSynchIp), new(AdminCarousel)) //, new(Article)
+	orm.RegisterModel(new(AdminDepartment), new(AdminMerit), new(AdminIpsegment), new(AdminDepartMerit), new(AdminCategory), new(AdminSynchIp), new(AdminCarousel)) //, new(Article)
 	// orm.RegisterModel(new(AdminIpsegment))
-	// orm.RegisterDriver("sqlite", orm.DRSqlite)
-	// orm.RegisterDataBase("default", "sqlite3", "database/meritms.db", 10)
+	orm.RegisterDriver("sqlite", orm.DRSqlite)
+	orm.RegisterDataBase("default", "sqlite3", "database/meritms.db", 10)
 }
 
 //添加部门

@@ -142,6 +142,11 @@ func init() {
 	beego.Router("/achievement/downsendcatalog", &controllers.Achievement{}, "post:DownSendCatalog")
 	//个人在线修改保存成果
 	beego.Router("/achievement/modifycatalog", &controllers.Achievement{}, "post:ModifyCatalog")
+	//如果一个成果的附件多于1条，则查看一个成果的附件列表
+	beego.Router("/achievement/catalog/attachment/:id:string", &controllers.Achievement{}, "get:CatalogAttachment")
+	//查看一个成果的校审意见列表
+	beego.Router("/achievement/catalog/content/:id:string", &controllers.Achievement{}, "get:CatalogContent")
+
 	//个人在线删除一条成功
 	beego.Router("/achievement/delete", &controllers.Achievement{}, "post:DeleteCatalog")
 	//测试某个专业下总成本分布情况
@@ -229,15 +234,18 @@ func init() {
 	// 填充科室总体情况数据
 	beego.Router("/achievement/secofficedata", &controllers.Achievement{}, "get:SecofficeData")
 
+	//根据id=1,2,3分别显示准备提交，已经提交，已经完成
+	beego.Router("/achievement/send/:id:int", &controllers.Achievement{}, "get:AchievementSend")
+
 	//用户在线登记时，自己发起的成果，还未提交
 	beego.Router("/achievement/myself", &controllers.Achievement{}, "get:Myself")
 	//自己发起的成果，已经提交
 	beego.Router("/achievement/running", &controllers.Achievement{}, "get:Running")
 	//别人传来，自己处于设计位置
 	beego.Router("/achievement/designd", &controllers.Achievement{}, "get:Designd")
-	//别人传来，自己处于设计位置
+	//别人传来，自己处于校核位置
 	beego.Router("/achievement/checked", &controllers.Achievement{}, "get:Checked")
-	//别人传来，自己处于设计位置
+	//别人传来，自己处于审查位置
 	beego.Router("/achievement/examined", &controllers.Achievement{}, "get:Examined")
 	//查看用户个人时，获取已经完成的数据
 	beego.Router("/achievement/completed", &controllers.Achievement{}, "get:Completed")
@@ -423,6 +431,9 @@ func init() {
 	beego.Router("/index/meetingroomcalendar/dropcalendar", &controllers.IndexController{}, "*:DropMeetCalendar")
 	//resize事件
 	beego.Router("/index/meetingroomcalendar/resizecalendar", &controllers.IndexController{}, "*:ResizeMeetCalendar")
+
+	//获得ecms提交过来的成果清单
+	beego.Router("/getecmspost", &controllers.EcmsController{}, "post:GetEcmsPost")
 
 	// beego.SetStaticPath("/views/cms", "views/cms")
 	// beego.SetStaticPath("/res", "views/cms/res")

@@ -19,8 +19,8 @@ type Project struct {
 	ParentIdPath    string    `orm:"null"`
 	ParentTitlePath string    `orm:"null"`
 	Grade           int       `orm:"null"`
-	Created         time.Time `orm:"null;index","auto_now_add;type(datetime)"`
-	Updated         time.Time `orm:"null;index","auto_now_add;type(datetime)"`
+	Created         time.Time `orm:"null","auto_now_add;type(datetime)"`
+	Updated         time.Time `orm:"null","auto_now_add;type(datetime)"`
 }
 
 type Pidstruct struct {

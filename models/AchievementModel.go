@@ -17,12 +17,12 @@ type AchievementTopic struct {
 	Choose   string    `orm:"null"`
 	Content  string    `orm:"null"`
 	Mark     string    `orm:"null"` //设置分数
-	Created  time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated  time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Created  time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated  time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 func init() {
-	// orm.RegisterModel(new(AchievementTopic)) //, new(Article)
+	orm.RegisterModel(new(AchievementTopic)) //, new(Article)
 	// orm.RegisterDriver("sqlite", orm.DRSqlite)
 	// orm.RegisterDataBase("default", "sqlite3", "database/merit.db", 10)
 }

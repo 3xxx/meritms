@@ -44,9 +44,9 @@ func (this *UserController) Index() {
 		return
 	}
 	//2.取得客户端用户名
-	sess, _ := globalSessions.SessionStart(this.Ctx.ResponseWriter, this.Ctx.Request)
-	defer sess.SessionRelease(this.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(this.Ctx.ResponseWriter, this.Ctx.Request)
+	// defer sess.SessionRelease(this.Ctx.ResponseWriter)
+	v := this.GetSession("uname")
 	if v != nil {
 		this.Data["Uname"] = v.(string)
 	}
@@ -158,9 +158,9 @@ func (c *UserController) View() {
 	// c.TplName = "category.tpl"
 	c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//2.取得客户端用户名
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		c.Data["Uname"] = v.(string)
 	}
@@ -320,9 +320,9 @@ func (c *UserController) GetUserByUsername() {
 	c.Data["role"] = role
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -341,9 +341,9 @@ func (c *UserController) GetUserByUsername() {
 func (c *UserController) Usermyself() {
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -506,9 +506,9 @@ func (this *UserController) Roleerr() {
 
 func checkprodRole(ctx *context.Context) (uname string, role int) {
 	// var uname string
-	sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
-	defer sess.SessionRelease(ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
+	// defer sess.SessionRelease(ctx.ResponseWriter)
+	v := ctx.Input.CruSession.Get("uname")
 	var userrole int
 	if v != nil {
 		uname = v.(string)

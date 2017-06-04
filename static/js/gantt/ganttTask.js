@@ -904,7 +904,7 @@ Task.prototype.outdent = function () {
   //console.debug("outdent", this);
 
   //a level must be >1 -> cannot escape from root
-  if (this.level <= 1)
+  if (this.level <= 0)//2017-5-20秦修改，可以添加0级，这样才合理嘛
     return false;
 
   var ret = false;

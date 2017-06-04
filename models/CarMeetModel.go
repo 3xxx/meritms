@@ -38,7 +38,7 @@ type MeetCalendar struct {
 }
 
 func init() {
-	// orm.RegisterModel(new(CarCalendar), new(MeetCalendar)) //, new(Article)
+	orm.RegisterModel(new(CarCalendar), new(MeetCalendar)) //, new(Article)
 }
 
 //********汽车日历********

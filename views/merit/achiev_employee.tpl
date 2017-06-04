@@ -111,7 +111,7 @@
           <thead>        
           <tr>
               <th data-formatter="index1">#</th>
-              <th data-field="ProjectNumber">项目编号</th>
+              <th data-field="ProjectNumber" data-visible='false'>项目编号</th>
               <th data-field="ProjectName" data-sortable="true">项目名称</th>
               <th data-field="DesignStage" data-sortable="true">项目阶段</th>
               <th data-field="Tnumber">成果编号</th>
@@ -168,7 +168,7 @@
     <thead>        
     <tr>
         <th data-formatter="index1">#</th>
-        <th data-field="ProjectNumber">项目编号</th>
+        <th data-field="ProjectNumber" data-visible='false'>项目编号</th>
         <th data-field="ProjectName" data-sortable="true">项目名称</th>
         <th data-field="DesignStage" data-sortable="true">项目阶段</th>
         <th data-field="Tnumber" data-sortable="true">成果编号</th>

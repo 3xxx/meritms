@@ -9,7 +9,7 @@ import (
 )
 
 type Catalog struct {
-	Id            int64
+	Id            int64     `json:"id"`
 	ProjectNumber string    //项目编号
 	ProjectName   string    //项目名称
 	DesignStage   string    //阶段
@@ -32,32 +32,44 @@ type Catalog struct {
 	Examinedratio float64   //审查系数
 	Datestring    string    //保存字符型日期
 	Date          time.Time `orm:"null;auto_now_add;type(datetime)"`
-	Created       time.Time `orm:"index;auto_now_add;type(datetime)"`
-	Updated       time.Time `orm:"index;auto_now_add;type(datetime)"`
+	Created       time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated       time.Time `orm:"auto_now_add;type(datetime)"`
 	Author        string    //上传者
 	State         int       //1编写状态，未提交；2编写者提交，等待校核确认;3,校核确认，等待审查确认;4，审查确认
+}
+
+//附件链接表
+type CatalogLink struct {
+	Id        int64
+	CatalogId int64
+	Url       string    `orm:"sie(500)"`
+	Created   time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated   time.Time `orm:"auto_now_add;type(datetime)"`
+}
+
+//设计说明表
+type CatalogContent struct {
+	Id        int64
+	CatalogId int64
+	Content   string
+	Level     int
+	Created   time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated   time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 //任何人只能在线填写自己是编制和设计的，填写自己是校核和审查的不允许
 
 //员工的编制、设计……分值——全部改成float浮点型小数
 type Employeeachievement struct {
-	Id    string  //员工Id
-	Name  string  //员工姓名nickname
-	Drawn float64 //编制、绘制
-
-	Designd float64 //设计
-
-	Checked float64 //校核
-
+	Id       string  //员工Id
+	Name     string  //员工姓名nickname
+	Drawn    float64 //编制、绘制
+	Designd  float64 //设计
+	Checked  float64 //校核
 	Examined float64 //审查
-
 	Verified float64 //核定
-
 	Approved float64 //批准
-
-	Sigma float64 //合计
-
+	Sigma    float64 //合计
 	//增加实物工作量合计
 	MaterialSigma float64 //实物工作量合计
 }
@@ -76,7 +88,7 @@ type Specialty struct {
 }
 
 func init() {
-	// orm.RegisterModel(new(Catalog))
+	orm.RegisterModel(new(Catalog), new(CatalogLink), new(CatalogContent))
 }
 
 //在线添加，批量导入
@@ -104,6 +116,95 @@ func SaveCatalog(catalog Catalog) (cid int64, err error, news string) {
 	} else {
 		return 0, nil, "数据已存在"
 	}
+}
+
+//添加附件链接表
+func AddCatalogLink(cid int64, link string) (id int64, err error) {
+	// cid, err := strconv.ParseInt(categoryid, 10, 64)
+	o := orm.NewOrm()
+	cataloglink := &CatalogLink{
+		CatalogId: cid,
+		Url:       link,
+		// Category:   category,
+		// CategoryId: cid,
+		// Content:    content,
+		// Attachment: attachment,
+		// Author:     uname,
+		Created: time.Now(),
+		Updated: time.Now(),
+		// ReplyTime:  time.Now(),
+	}
+	//	qs := o.QueryTable("category") //不知道主键就用这个过滤操作
+	//	err := qs.Filter("title", name).One(cate)
+	//	if err == nil {
+	//		return err
+	//	}
+	id, err = o.Insert(cataloglink)
+	if err != nil {
+		return id, err //如果文章编号相同，则唯一性检查错误，返回id吗？
+	}
+	// if id == 0 {
+	// 	var catalog Catalog
+	// 	err = o.QueryTable("catalog").Filter("tnumber", tnumber).One(&catalog, "Id")
+	// 	id = catalog.Id
+	// }
+	return id, err
+}
+
+//添加设计说明
+func AddCatalogContent(cid int64, content string, level int) (id int64, err error) {
+	// cid, err := strconv.ParseInt(categoryid, 10, 64)
+	o := orm.NewOrm()
+	catalogcontent := &CatalogContent{
+		CatalogId: cid,
+		Content:   content,
+		Level:     level,
+		// Category:   category,
+		// CategoryId: cid,
+		// Content:    content,
+		// Attachment: attachment,
+		// Author:     uname,
+		Created: time.Now(),
+		Updated: time.Now(),
+		// ReplyTime:  time.Now(),
+	}
+	//	qs := o.QueryTable("category") //不知道主键就用这个过滤操作
+	//	err := qs.Filter("title", name).One(cate)
+	//	if err == nil {
+	//		return err
+	//	}
+	id, err = o.Insert(catalogcontent)
+	if err != nil {
+		return id, err //如果文章编号相同，则唯一性检查错误，返回id吗？
+	}
+	// if id == 0 {
+	// 	var catalog Catalog
+	// 	err = o.QueryTable("catalog").Filter("tnumber", tnumber).One(&catalog, "Id")
+	// 	id = catalog.Id
+	// }
+	return id, err
+}
+
+//根据成果id查出附件链接表
+func GetCatalogLinks(cid int64) (links []*CatalogLink, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("CatalogLink")
+	_, err = qs.Filter("CatalogId", cid).All(&links)
+	if err != nil {
+		return nil, err
+	}
+	return links, err
+}
+
+//根据成果id查出设计说明校审记录表
+func GetCatalogContents(cid int64) (contents []*CatalogContent, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("CatalogContent")
+	_, err = qs.Filter("CatalogId", cid).All(&contents)
+	if err != nil {
+		return nil, err
+	}
+	return contents, err
 }
 
 func GetAllCatalogs(cid string) (catalogs []*Catalog, err error) {

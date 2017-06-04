@@ -594,9 +594,9 @@ func (c *MeritController) Secofficeshow() {
 	}
 	//2.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -928,9 +928,9 @@ func (c *MeritController) Myself() {
 		}
 		//4.取得客户端用户名
 		var uname string
-		sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-		defer sess.SessionRelease(c.Ctx.ResponseWriter)
-		v := sess.Get("uname")
+		// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+		// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+		v := c.GetSession("uname")
 		if v != nil {
 			uname = v.(string)
 			c.Data["Uname"] = v.(string)
@@ -1026,9 +1026,9 @@ func (c *MeritController) MeritSend() {
 	}
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -1278,9 +1278,9 @@ func (c *MeritController) AddMerit() {
 	choose := c.Input().Get("choose")
 	content := c.Input().Get("content")
 	//2.取得客户端用户名
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	var uname string
 	if v != nil {
 		uname = v.(string)

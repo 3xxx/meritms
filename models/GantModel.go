@@ -72,23 +72,24 @@ type ProjGant struct {
 	HasChild         bool      `orm:"null"`
 	Description      string    `orm:"null"`
 	Show             bool
-	Created          time.Time `orm:"null;index","auto_now_add;type(datetime)"`
-	Updated          time.Time `orm:"null;index","auto_now_add;type(datetime)"`
+	Created          time.Time `orm:"null","auto_now_add;type(datetime)"`
+	Updated          time.Time `orm:"null","auto_now_add;type(datetime)"`
 	// ProgressByWorklog string    `orm:"null"`
 }
 
 func init() {
 	orm.RegisterModel(new(ProjGant))
-	orm.RegisterModel(new(AdminIpsegment))
-	orm.RegisterDriver("sqlite", orm.DRSqlite)
-	orm.RegisterDataBase("default", "sqlite3", "database/meritms.db", 10)
+	// orm.RegisterModel(new(AdminIpsegment))
+	// orm.RegisterDriver("sqlite", orm.DRSqlite)
+	// orm.RegisterDataBase("default", "sqlite3", "database/meritms.db", 10)
 }
 
 //添加项目进度
 func AddProjGant(id1, parentid int64, status, code, name, depends, description string, level, duration, progress int, start, end time.Time, startismilestone, endismilestone, haschild bool) (id int64, err error) {
 	o := orm.NewOrm()
 	gantt := &ProjGant{Id: id1}
-	if o.Read(gantt) == orm.ErrNoRows {
+	err = o.Read(gantt)
+	if err == orm.ErrNoRows {
 		//关闭写同步
 		// o.Raw("PRAGMA synchronous = OFF; ", 0, 0, 0).Exec()
 		// var ProjGant ProjGant
@@ -189,12 +190,12 @@ func GetProjGant(id int64) (projgant ProjGant, err error) {
 	return projgant, err
 }
 
-//根据名字title查询到项目进度
-func GetProjGantTitle(name string) (projgant ProjGant, err error) {
+//根据编号code和名字name查询到项目进度
+func GetProjGantName(code, name string) (projgant ProjGant, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("ProjGant")
 	// var cate ProjGant
-	err = qs.Filter("name", name).One(&projgant)
+	err = qs.Filter("code", code).Filter("name", name).One(&projgant)
 	// if pid != "" {
 	// cate := ProjGant{Title: title}这句无效
 	// categories = make([]*ProjGant, 0)
@@ -210,4 +211,12 @@ func GetProjGantTitle(name string) (projgant ProjGant, err error) {
 	// }
 	// return categories, err
 	// }
+}
+
+//根据名字name和parentid查询到项目进度
+func GetProjGantParent(name string, parentid int64) (projgant ProjGant, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("ProjGant")
+	err = qs.Filter("name", name).Filter("parentid", parentid).One(&projgant)
+	return projgant, err
 }

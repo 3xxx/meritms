@@ -19,8 +19,8 @@ type MeritTopic struct {
 	State   int    //1编写状态，未提交；2编写者提交，等待审核确认;3,已经审核确认
 
 	// Mark     string    `orm:"null"` //设置分数
-	Created time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 func init() {

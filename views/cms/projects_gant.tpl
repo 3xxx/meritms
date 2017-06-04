@@ -1,4 +1,5 @@
 <!DOCTYPE HTML>
+
 <html>
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE"/>
@@ -10,6 +11,7 @@
 
   <link rel=stylesheet href="/static/css/gantt/gantt.css" type="text/css">
   <link rel=stylesheet href="/static/css/gantt/ganttPrint.css" type="text/css" media="print">
+<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 
   <script src="/static/js/gantt/jquery.min.js"></script>
   <script src="/static/js/gantt/jquery-ui.min.js"></script>
@@ -36,6 +38,8 @@
   <script src="/static/js/gantt/ganttMaster.js"></script>  
 </head>
 <body style="background-color: #fff;">
+
+
 
   <div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden;border:1px solid #e5e5e5;position:relative;margin:0 5px"></div>
 
@@ -654,24 +658,24 @@
 
 
   function saveGanttOnServer() {
-  //this is a simulation: save data to the local storage or to the textarea
-  saveInLocalStorage();
+    //this is a simulation: save data to the local storage or to the textarea
+    saveInLocalStorage();
+    
+    var prj = ge.saveProject();
+    // alert(prj[0]);
+    // alert(JSON.stringify(prj));
   
-  var prj = ge.saveProject();
-  // alert(prj[0]);
-  // alert(JSON.stringify(prj));
-
-  delete prj.resources;
-  delete prj.roles;
-
-  // var prof = new Profiler("saveServerSide");
-  // prof.reset();
-
-  if (ge.deletedTaskIds.length>0) {
-    if (!confirm("TASK_THAT_WILL_BE_REMOVED\n"+ge.deletedTaskIds.length)) {
-      return;
+    delete prj.resources;
+    delete prj.roles;
+  
+    // var prof = new Profiler("saveServerSide");
+    // prof.reset();
+  
+    if (ge.deletedTaskIds.length>0) {
+      if (!confirm("TASK_THAT_WILL_BE_REMOVED\n"+ge.deletedTaskIds.length)) {
+        return;
+      }
     }
-  }
         // if (name&&code){
           $.ajax({
             type:"post",
@@ -721,7 +725,7 @@
 
   //-------------------------------------------  Create some demo data ------------------------------------------------------
   function setRoles() {
-  ge.roles = [
+    ge.roles = [
     {
       id:"tmp_1",
       name:"Project Manager"
@@ -738,20 +742,20 @@
       id:"tmp_4",
       name:"Customer"
     }
-  ];
+    ];
   }
   
   function setResource() {
-  var res = [];
-  for (var i = 1; i <= 10; i++) {
-    res.push({id:"tmp_" + i,name:"Resource " + i});
-  }
-  ge.resources = res;
+    var res = [];
+    for (var i = 1; i <= 10; i++) {
+      res.push({id:"tmp_" + i,name:"Resource " + i});
+    }
+    ge.resources = res;
   }
 
   function editResources(){
   }
-  
+
   function clearGantt() {
     ge.reset();
   }
@@ -1421,6 +1425,7 @@
       <button onclick="ge.splitter.resize(100);return false;" class="button textual icon"><span class="teamworkIcon">R</span></button>
 
       <button onclick="editResources();" class="button textual requireWrite" title="edit resources"><span class="teamworkIcon">M</span></button>
+      <button onclick="importgants();" class="button textual requireWrite" title="导入进度数据"><span class="teamworkIcon">f</span></button>
       &nbsp; &nbsp; &nbsp; &nbsp;
       <button onclick="saveGanttOnServer();" class="button first big requireWrite" title="Save">Save</button>
       <button onclick='newProject();' class='button requireWrite newproject'><em>clear project</em></button>
@@ -1471,20 +1476,20 @@
       </tr>
     --></div>
 
-<div class="__template__" type="TASKEMPTYROW">
-  <tr class="taskEditRow emptyRow" >
-    <th class="gdfCell" align="right"></th>
-    <td class="gdfCell noClip" align="center"></td>
-    <td class="gdfCell"></td>
-    <td class="gdfCell"></td>
-    <td class="gdfCell"></td>
-    <td class="gdfCell"></td>
-    <td class="gdfCell"></td>
-    <td class="gdfCell"></td>
-    <td class="gdfCell"></td>
-    <td class="gdfCell"></td>
-    <td class="gdfCell requireCanSeeDep"></td>
-    <td class="gdfCell"></td>
+  <div class="__template__" type="TASKEMPTYROW">
+    <tr class="taskEditRow emptyRow" >
+      <th class="gdfCell" align="right"></th>
+      <td class="gdfCell noClip" align="center"></td>
+      <td class="gdfCell"></td>
+      <td class="gdfCell"></td>
+      <td class="gdfCell"></td>
+      <td class="gdfCell"></td>
+      <td class="gdfCell"></td>
+      <td class="gdfCell"></td>
+      <td class="gdfCell"></td>
+      <td class="gdfCell"></td>
+      <td class="gdfCell requireCanSeeDep"></td>
+      <td class="gdfCell"></td>
   </tr>
   </div>
 
@@ -1617,6 +1622,44 @@
     --></div>
   </div>
 
+
+  <!-- 导入用户数据 -->
+  <div class="container form-horizontal">
+    <div class="modal fade" id="importgants">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">添加用户</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content"> 
+              <div class="form-group">
+                <form method="post" id="form1" action="/projectgant/importprojgant" enctype="multipart/form-data">
+                  <div class="form-inline" class="form-group">
+                    <label>选择项目进度数据文件(Excel)：
+                      <input type="file" class="form-control" name="gantsexcel" id="gantsexcel"/> </label>
+                    <br/>          
+                  </div>
+                  <!-- <button type="submit" class="btn btn-default">提交</button> -->
+                </form>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="submit" class="btn btn-primary" onclick="return importprojgants();">导入</button>
+          <!-- <button type="submit" class="btn btn-primary" onclick="return import_xls_catalog();">提交</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
   <script type="text/javascript">
   $.JST.loadDecorator("RESOURCE_ROW", function(resTr, res){
     resTr.find(".delRes").click(function(){
@@ -1694,7 +1737,38 @@
 
     });
   }
-  </script>
 
+  </script>
+  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+  <script src="/static/js/jquery.form.js"></script>
+  <script type="text/javascript">
+  function importgants(){
+        $('#importgants').modal({
+        show:true,
+        backdrop:'static'
+        });
+    }
+
+    //导入用户数据表
+    function importprojgants(){
+        var file=$("#gantsexcel").val();
+        if(file!=""){  
+            var form = $("form[id=form1]");
+            var options  = {    
+                url:'/projectgant/importprojgant',    
+                type:'post', 
+                success:function(data)    
+                {    
+                  alert("导入数据："+data+"！")
+                }    
+            };
+           form.ajaxSubmit(options);
+           return false;
+        }else{
+            alert("请选择文件！");
+            return false; 
+        }
+    }
+</script>
 </body>
 </html>

@@ -14,12 +14,12 @@ type Article struct {
 	Subtext   string    `orm:"sie(20)"`
 	Content   string    `orm:"sie(5000)"`
 	ProductId int64     `orm:"null"`
-	Created   time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated   time.Time `orm:"index","auto_now_add;type(datetime)"`
+	Created   time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated   time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 func init() {
-	// orm.RegisterModel(new(Article)) //, new(Article)
+	orm.RegisterModel(new(Article)) //, new(Article)
 	// orm.RegisterDriver("sqlite", orm.DRSqlite)
 	// orm.RegisterDataBase("default", "sqlite3", "database/engineer.db", 10)
 }

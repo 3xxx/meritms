@@ -29,6 +29,47 @@ type Project struct {
 	Percent       float64
 }
 
+//Catalog添加附件链接和设计说明、校审意见
+type CatalogLinkCont struct {
+	Id            int64     `json:"id"`
+	ProjectNumber string    //项目编号
+	ProjectName   string    //项目名称
+	DesignStage   string    //阶段
+	Section       string    //专业
+	Tnumber       string    //成果编号
+	Name          string    //成果名称
+	Category      string    //成果类型
+	Page          string    //成果计量单位
+	Count         float64   //成果数量
+	Drawn         string    //编制、绘制
+	Designd       string    //设计
+	Checked       string    //校核
+	Examined      string    //审查
+	Verified      string    //核定
+	Approved      string    //批准
+	Complex       float64   //难度系数
+	Drawnratio    float64   //编制、绘制占比系数
+	Designdratio  float64   //设计系数
+	Checkedratio  float64   //校核系数
+	Examinedratio float64   //审查系数
+	Datestring    string    //保存字符型日期
+	Date          time.Time `orm:"null;auto_now_add;type(datetime)"`
+	Created       time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated       time.Time `orm:"auto_now_add;type(datetime)"`
+	Author        string    //上传者
+	Link          []models.CatalogLink
+	Content       []models.CatalogContent
+}
+
+//设计说明表
+type CatalogContentlevel struct {
+	Id      int64
+	Content string
+	Title   string
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now_add;type(datetime)"`
+}
+
 //struct排序
 type graphictopics []m.Employeeachievement
 
@@ -434,9 +475,9 @@ func (c *Achievement) Secofficeshow() {
 	}
 	//2.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -689,6 +730,7 @@ func (c *Achievement) Secofficeshow() {
 			if err != nil {
 				beego.Error(err)
 			}
+
 			c.Data["Starttime"] = t1
 			c.Data["Endtime"] = t2
 			c.Data["Ratio"] = ratios //定义的成果类型
@@ -1186,15 +1228,129 @@ func (c *Achievement) SecofficeData() {
 // 		}
 // 	}
 // }
+//显示登录用户待提交，已提交，已经完成的成果内容——计算分值
+//20170508修改
+func (c *Achievement) AchievementSend() {
+	// 	id := c.Ctx.Input.Param(":id")
+	// 	idint, err := strconv.Atoi(id)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	aid := c.Input().Get("aid")
+	// 	aidNum, err := strconv.ParseInt(aid, 10, 64)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	//如果是主任以上权限人查看，则id代表用户名id，个人查看，id则代表价值id
+	// 	//1.首先判断是否注册
+	// 	if !checkAccount(c.Ctx) {
+	// 		route := c.Ctx.Request.URL.String()
+	// 		c.Data["Url"] = route
+	// 		c.Redirect("/login?url="+route, 302)
+	// 		return
+	// 	}
+	// 	//4.取得客户端用户名
+	// 	var uname string
+	// 	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// 	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	// 	v := c.GetSession("uname")
+	// 	if v != nil {
+	// 		uname = v.(string)
+	// 		c.Data["Uname"] = v.(string)
+	// 	}
+	// 	//4.取出用户的权限等级
+	// 	role, _ := checkRole(c.Ctx) //login里的
+	// 	if role > 4 {               //
+	// 		route := c.Ctx.Request.URL.String()
+	// 		c.Data["Url"] = route
+	// 		c.Redirect("/roleerr?url="+route, 302)
+	// 		return
+	// 	}
+
+	// 	user, err := models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	var merits []*models.MeritTopic
+	// 	if idint == 1 {
+	// 		//取得这个id下的所有merittopic
+	// 		merits, err = models.GetMerit(midNum, user.Id, 1)
+	// 		if err != nil {
+	// 			beego.Error(err)
+	// 		}
+	// 	} else if idint == 2 {
+	// 		merits, err = models.GetMerit(midNum, user.Id, 2)
+	// 		if err != nil {
+	// 			beego.Error(err)
+	// 		}
+	// 	} else if idint == 3 {
+	// 		merits, err = models.GetMerit(midNum, user.Id, 3)
+	// 		if err != nil {
+	// 			beego.Error(err)
+	// 		}
+	// 	}
+
+	// 	merittopics := make([]MeritTopicSlice, 0)
+	// 	//根据choose取得adminmerit分值
+	// 	adminmerit, err := models.GetAdminMeritbyId(midNum)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	//价值分类
+	// 	meritcate, err := models.GetAdminMeritbyId(adminmerit.ParentId)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	for _, v := range merits {
+	// 		var ff string
+	// 		if adminmerit.Mark == "" {
+	// 			// 如果mark为空，则寻找选择列表的分值，如果不为空，则直接用价值的分值
+	// 			// 进行选择列表拆分
+	// 			array1 := strings.Split(adminmerit.List, ",")
+	// 			array2 := strings.Split(adminmerit.ListMark, ",")
+	// 			for i1, v1 := range array1 {
+	// 				if v1 == v.Choose {
+	// 					ff = array2[i1]
+	// 				}
+	// 			}
+	// 		} else {
+	// 			ff = adminmerit.Mark
+	// 		}
+	// 		var markint int
+	// 		if ff != "" {
+	// 			markint, err = strconv.Atoi(ff)
+	// 			if err != nil {
+	// 				beego.Error(err)
+	// 			}
+	// 		}
+	// 		aa := make([]MeritTopicSlice, 1)
+	// 		aa[0].Id = v.Id
+	// 		aa[0].MeritId = v.MeritId
+	// 		aa[0].MeritCate = meritcate.Title //价值类型
+	// 		aa[0].Merit = adminmerit.Title    //价值
+	// 		aa[0].UserId = v.UserId
+	// 		aa[0].Title = v.Title
+	// 		aa[0].Choose = v.Choose
+	// 		aa[0].Content = v.Content
+	// 		aa[0].State = v.State
+	// 		aa[0].Mark = markint
+	// 		aa[0].Created = v.Created
+	// 		aa[0].Updated = v.Updated
+	// 		merittopics = append(merittopics, aa...)
+	// 		// merittopics = make([]MeritTopicSlice, 0) //再把slice置0
+	// 	}
+	// 	c.Data["json"] = merittopics
+	// 	c.ServeJSON()
+}
 
 //自己发起的成果,还没提交
 //author=登录的人名，登录名所处制图-状态为1；设计-状态为2；校核-状态为3；审查-无
 func (c *Achievement) Myself() {
 	//1.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -1270,6 +1426,68 @@ func (c *Achievement) Myself() {
 	if err != nil {
 		beego.Error(err)
 	}
+	link := make([]CatalogLinkCont, 0)
+	Attachslice := make([]models.CatalogLink, 0)
+	Contentslice := make([]models.CatalogContent, 0)
+	linkarr := make([]CatalogLinkCont, 1)
+	attacharr := make([]models.CatalogLink, 1)
+	contarr := make([]models.CatalogContent, 1)
+
+	//这里循环，添加附件链接和设计说，校审意见
+	for _, w := range catalogs {
+		linkarr[0].Id = w.Id
+		linkarr[0].ProjectNumber = w.ProjectNumber
+		linkarr[0].ProjectName = w.ProjectName
+		linkarr[0].DesignStage = w.DesignStage
+		linkarr[0].Section = w.Section
+		linkarr[0].Tnumber = w.Tnumber
+		linkarr[0].Name = w.Name
+		linkarr[0].Category = w.Category
+		linkarr[0].Page = w.Page
+		linkarr[0].Count = w.Count
+		linkarr[0].Drawn = w.Drawn
+		linkarr[0].Designd = w.Designd
+		linkarr[0].Checked = w.Checked
+		linkarr[0].Examined = w.Examined
+		linkarr[0].Verified = w.Verified
+		linkarr[0].Approved = w.Approved
+		linkarr[0].Complex = w.Complex
+		linkarr[0].Drawnratio = w.Drawnratio
+		linkarr[0].Designdratio = w.Designdratio
+		linkarr[0].Checkedratio = w.Checkedratio
+		linkarr[0].Examinedratio = w.Examinedratio
+		linkarr[0].Datestring = w.Datestring
+		linkarr[0].Date = w.Date
+		linkarr[0].Created = w.Created
+		linkarr[0].Updated = w.Updated
+		linkarr[0].Author = w.Author
+		links, err := models.GetCatalogLinks(w.Id)
+		if err != nil {
+			beego.Error(err)
+		}
+		// beego.Info(links)
+		if len(links) > 0 {
+			linkarray := strings.Split(links[0].Url, ",")
+			for _, v := range linkarray {
+				attacharr[0].Url = v
+				// beego.Info(v.Url)
+				Attachslice = append(Attachslice, attacharr...)
+			}
+		}
+		contents, err := models.GetCatalogContents(w.Id)
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, v := range contents {
+			contarr[0].Content = v.Content
+			Contentslice = append(Contentslice, contarr...)
+		}
+		linkarr[0].Link = Attachslice
+		linkarr[0].Content = Contentslice
+		Attachslice = make([]models.CatalogLink, 0)
+		Contentslice = make([]models.CatalogContent, 0)
+		link = append(link, linkarr...)
+	}
 	c.Data["Select2"] = select2
 	c.Data["Starttime"] = t1
 	c.Data["Endtime"] = t2
@@ -1277,8 +1495,92 @@ func (c *Achievement) Myself() {
 	// c.Data["Secid"] = secid
 	// c.Data["Level"] = level
 	c.Data["UserNickname"] = user.Nickname
-	c.Data["json"] = catalogs
+	c.Data["json"] = link //catalogs
 	c.ServeJSON()
+}
+
+//列表显示成果附件
+func (c *Achievement) CatalogAttachment() {
+	id := c.Ctx.Input.Param(":id")
+	// beego.Info(id)
+	c.Data["Id"] = id
+	var idNum int64
+	var err error
+	// var Url string
+	if id != "" {
+		//id转成64为
+		idNum, err = strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	//根据成果id取得所有附件
+	links, err := models.GetCatalogLinks(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	Attachslice := make([]models.CatalogLink, 0)
+	attacharr := make([]models.CatalogLink, 1)
+	if len(links) > 0 {
+		linkarray := strings.Split(links[0].Url, ",")
+		for _, v := range linkarray {
+			// attacharr[0].Id = v.Id
+			// linkarr[0].Title = v.FileName
+			attacharr[0].Url = v
+			// beego.Info(v.Url)
+			Attachslice = append(Attachslice, attacharr...)
+		}
+	}
+
+	c.Data["json"] = Attachslice
+	c.ServeJSON()
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")
+}
+
+//列表显示成果的校审意见
+func (c *Achievement) CatalogContent() {
+	id := c.Ctx.Input.Param(":id")
+	// beego.Info(id)
+	c.Data["Id"] = id
+	var idNum int64
+	var err error
+	// var Url string
+	if id != "" {
+		//id转成64为
+		idNum, err = strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	//根据成果id取得所有附件
+	contents, err := models.GetCatalogContents(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	Contentslice := make([]CatalogContentlevel, 0)
+	contentarr := make([]CatalogContentlevel, 1)
+	for _, v := range contents {
+		// attacharr[0].Id = v.Id
+		if v.Level == 1 {
+			contentarr[0].Title = "设计说明"
+		} else if v.Level == 2 {
+			contentarr[0].Title = "校核意见"
+		} else if v.Level == 3 {
+			contentarr[0].Title = "审查意见"
+		}
+		contentarr[0].Id = v.Id
+		contentarr[0].Content = v.Content
+		contentarr[0].Created = v.Created
+		contentarr[0].Updated = v.Updated
+		// beego.Info(v.Url)
+		Contentslice = append(Contentslice, contentarr...)
+	}
+
+	c.Data["json"] = Contentslice
+	c.ServeJSON()
+	c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")
 }
 
 //自己发起的成果,已经提交
@@ -1288,9 +1590,9 @@ func (c *Achievement) Running() {
 
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -1379,9 +1681,9 @@ func (c *Achievement) Completed() {
 
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -1470,9 +1772,9 @@ func (c *Achievement) Designd() {
 
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -1559,9 +1861,9 @@ func (c *Achievement) Checked() {
 
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -1650,9 +1952,9 @@ func (c *Achievement) Examined() {
 
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -1764,9 +2066,9 @@ func (c *Achievement) GetAchievementUser() {
 		//3.由用户id取得用户名
 		//4.取得客户端用户名
 		var uname string
-		sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-		defer sess.SessionRelease(c.Ctx.ResponseWriter)
-		v := sess.Get("uname")
+		// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+		// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+		v := c.GetSession("uname")
 		if v != nil {
 			uname = v.(string)
 			c.Data["Uname"] = v.(string)
@@ -1830,9 +2132,9 @@ func (c *Achievement) Import_Xls_Catalog() {
 		}
 	}
 	//2.取得客户端用户名
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	var uname string
 	if v != nil {
 		uname = v.(string)
@@ -2130,9 +2432,9 @@ func (c *Achievement) Import_Xls_Catalog() {
 func (c *Achievement) AddCatalog() {
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -2231,6 +2533,7 @@ func (c *Achievement) AddCatalog() {
 	// 	beego.Error(err)
 	// }
 	// catalog.Examinedratio = examinedratio
+
 	type Duration int64
 	const (
 		Nanosecond  Duration = 1
@@ -2270,12 +2573,13 @@ func (c *Achievement) AddCatalog() {
 	catalog.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
 
 	var news string
+	var id int64
 	catalog.Author = uname
 	catalog.Complex = 1
 	if catalog.Checked == user.Nickname && catalog.Examined != user.Nickname && catalog.Examined != "" {
 		// beego.Info(catalog.Checked)
 		catalog.State = 3
-		_, err, news = m.SaveCatalog(catalog)
+		id, err, news = m.SaveCatalog(catalog)
 		if err != nil {
 			beego.Error(err)
 		} else {
@@ -2285,7 +2589,7 @@ func (c *Achievement) AddCatalog() {
 	} else if catalog.Designd == user.Nickname && catalog.Checked != user.Nickname && catalog.Checked != "" || catalog.Designd == user.Nickname && catalog.Examined != user.Nickname && catalog.Examined != "" {
 		// beego.Info(catalog.Designd)
 		catalog.State = 2
-		_, err, news = m.SaveCatalog(catalog)
+		id, err, news = m.SaveCatalog(catalog)
 		if err != nil {
 			beego.Error(err)
 		} else {
@@ -2295,7 +2599,7 @@ func (c *Achievement) AddCatalog() {
 	} else if catalog.Drawn == user.Nickname && catalog.Designd != user.Nickname && catalog.Designd != "" || catalog.Drawn == user.Nickname && catalog.Checked != user.Nickname && catalog.Checked != "" || catalog.Drawn == user.Nickname && catalog.Examined != user.Nickname && catalog.Examined != "" {
 		// beego.Info(catalog.Drawn)
 		catalog.State = 1
-		_, err, news = m.SaveCatalog(catalog)
+		id, err, news = m.SaveCatalog(catalog)
 		if err != nil {
 			beego.Error(err)
 		} else {
@@ -2305,6 +2609,23 @@ func (c *Achievement) AddCatalog() {
 	} else {
 		data := "缺少下级 或 自己与下级同名 或 不能发起审查"
 		c.Ctx.WriteString(data)
+	}
+	//****保存附件链接地址和设计说明
+	if err == nil {
+		link1 := c.Input().Get("Link") //附件链接地址
+		if link1 != "" {
+			_, err = models.AddCatalogLink(id, link1)
+			if err != nil {
+				beego.Error(err)
+			}
+		}
+		content1 := c.Input().Get("Content") //设计说明
+		if content1 != "" {
+			_, err = models.AddCatalogContent(id, content1, 1)
+			if err != nil {
+				beego.Error(err)
+			}
+		}
 	}
 	//只能添加自己是设计者或绘图者的成果
 	logs := logs.NewLogger(1000)
@@ -2340,8 +2661,8 @@ func (c *Achievement) ModifyCatalog() {
 				if err != nil {
 					beego.Error(err)
 				} else {
-					data := "ok!"
-					c.Ctx.WriteString(data)
+					// data := value
+					// c.Ctx.WriteString(data)
 				}
 			}
 		}
@@ -2356,7 +2677,7 @@ func (c *Achievement) ModifyCatalog() {
 	if err != nil {
 		beego.Error(err)
 	} else {
-		data := "ok!"
+		data := value
 		c.Ctx.WriteString(data)
 	}
 
@@ -2590,9 +2911,9 @@ func (c *Achievement) Participate() {
 	}
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -2705,9 +3026,9 @@ func (c *Achievement) Echarts() {
 	}
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)
@@ -2780,9 +3101,9 @@ func (c *Achievement) Echarts2() {
 	}
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	v := c.GetSession("uname")
 	if v != nil {
 		uname = v.(string)
 		c.Data["Uname"] = v.(string)

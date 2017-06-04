@@ -18,8 +18,8 @@ type Product struct {
 	Principal string    `orm:"null"`      //提供人                                            //负责人id
 	ProjectId int64     `orm:"null"`      //侧栏id
 	Content   string    `orm:"sie(5000)"` //内容
-	Created   time.Time `orm:"index","auto_now_add;type(datetime)"`
-	Updated   time.Time `orm:"index","auto_now;type(datetime)"`
+	Created   time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated   time.Time `orm:"auto_now;type(datetime)"`
 	Views     int64
 	// ReplyTime         time.Time
 	// ReplyCount        int64

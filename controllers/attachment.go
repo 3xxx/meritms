@@ -817,9 +817,10 @@ func (c *AttachController) DownloadAttachment() {
 	c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//4.取得客户端用户名
 	var uname string
-	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := sess.Get("uname")
+	v := c.GetSession("uname")
+	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	// v := sess.Get("uname")
 	var role, userrole int
 	if v != nil {
 		uname = v.(string)
