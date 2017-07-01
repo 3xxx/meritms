@@ -3,8 +3,10 @@ package main
 import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"github.com/astaxie/beego/toolbox"
 	_ "github.com/mattn/go-sqlite3"
 	// "merit/models"
+	"meritms/controllers"
 	_ "meritms/routers"
 )
 
@@ -21,6 +23,15 @@ func main() {
 	orm.Debug = true
 	//自动建表
 	orm.RunSyncdb("default", false, true)
+
+	// time1 := "0/" + time + " * * * * *"
+
+	time1 := "0 16 22 * * *"
+	tk1 := toolbox.NewTask("tk1", time1, func() error { controllers.Postdata(); return nil }) //func() error { fmt.Println("tk1"); return nil }
+	toolbox.AddTask("tk1", tk1)
+	toolbox.StartTask()
+	defer toolbox.StopTask()
+
 	beego.Run()
 }
 

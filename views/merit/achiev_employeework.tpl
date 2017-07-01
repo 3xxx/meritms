@@ -123,7 +123,7 @@
                   success:function(data)    
                   {    
                     alert("导入数据："+data+"！");
-                    $('#table').bootstrapTable('refresh', {url:'/achievement/myself'});
+                    $('#table').bootstrapTable('refresh', {url:'/achievement/send/1'});
                   }    
               };
              form.ajaxSubmit(options);
@@ -169,7 +169,7 @@
           data: {Pnumber:newPnumber,Pname:newPname,Stage:newStage,Section:newSection,Tnumber:newTnumber,Name:newName,Category:newCategory,Count:newCount,Drawn:newDrawn,Designd:newDesignd,Checked:newChecked,Examined:newExamined,Drawnratio:newDrawnratio,Designdratio:newDesigndratio,Link:newLink,Content:newContent,Date:newDate},
             success:function(data,status){//数据提交成功时返回数据
               alert("添加“"+data+"”(status:"+status+".)");
-              $('#table').bootstrapTable('refresh', {url:'/achievement/myself'});
+              $('#table').bootstrapTable('refresh', {url:'/achievement/send/1'});
             } 
           });
         }
@@ -369,11 +369,11 @@
         format: "yyyy-mm-dd"//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
       });
 
-$(document).ready(function() {
-  var now = new Date(); 
-myDate=new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(); 
-$("#Date").val(myDate);
-})
+      $(document).ready(function() {
+        var now = new Date(); 
+        myDate=new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate(); 
+        $("#Date").val(myDate);
+      })
     </script>
     <h3>别人发起，我设计</h3>
     <div id="designd" class="btn-group">
@@ -458,33 +458,25 @@ $("#Date").val(myDate);
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h3 class="modal-title">附件列表</h3>
+            <h3 class="modal-title" id="attachtitle"></h3>
           </div>
           <div class="modal-body">
+            <div id="attachbar" class="btn-group">
+              <button type="button" class="btn btn-default" id="attachbutton"> <i class="fa fa-plus"></i>
+              </button>
+            </div>
             <div class="modal-body-content">
-              <!-- <div id="pdfs" style="display:none"> -->
-                <!-- <h3>工程目录分级</h3> -->
-                <table id="attachs"
-                      data-toggle="table"
-                      data-page-size="5"
-                      data-page-list="[5, 25, 50, All]"
-                      data-unique-id="id"
-                      data-pagination="true"
-                      data-side-pagination="client"
-                      data-click-to-select="true">
-                    <thead>     
-                    <tr>
-                      <th data-width="10" data-checkbox="true"></th>
-                      <th data-formatter="index1">#</th>
-                      <!-- <th data-field="Title">名称</th> -->
-                      <!-- <th data-field="FileSize">大小</th> -->
-                      <th data-field="Url" data-formatter="setAttachlink">下载</th>
-                      <!-- <th data-field="Created" data-formatter="localDateFormatter">建立时间</th> -->
-                      <!-- <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th> -->
-                    </tr>
-                  </thead>
-                </table>
-              <!-- </div> -->
+              <table id="attachs"
+                    data-query-params="queryParams"
+                    data-page-size="5"
+                    data-page-list="[5, 25, 50, All]"
+                    data-unique-id="id"
+                    data-toolbar="#attachbar"
+                    data-pagination="true"
+                    data-side-pagination="client"
+                    data-show-refresh="true"
+                    data-click-to-select="true">
+              </table>
             </div>
           </div>
           <div class="modal-footer">
@@ -504,33 +496,24 @@ $("#Date").val(myDate);
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h3 class="modal-title">校审意见列表</h3>
+            <h3 class="modal-title" id="conttitle"></h3>
           </div>
           <div class="modal-body">
+            <div id="contentbar" class="btn-group">
+              <button type="button" class="btn btn-default" id="contentbutton"> <i class="fa fa-plus"></i>
+              </button>
+            </div>
             <div class="modal-body-content">
-              <div id="contentbar" class="btn-group">
-                <button type="button" class="btn btn-default" id="contentbutton"> <i class="fa fa-plus"></i>
-                </button>
-              </div>
-                <table id="contents"
-                      data-page-size="5"
-                      data-page-list="[5, 25, 50, All]"
-                      data-unique-id="id"
-                      data-pagination="true"
-                      ata-toolbar="#contentbar"
-                      data-side-pagination="client"
-                      data-click-to-select="true">
-                    <thead>     
-                    <!-- <tr>
-                      <th data-width="10" data-checkbox="true"></th>
-                      <th data-formatter="index1">#</th>
-                      <th data-field="Title">名称</th>
-                      <th data-field="Content">意见</th>
-                      <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
-                      <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
-                    </tr> -->
-                  </thead>
-                </table>
+              <table id="contents"
+                    data-page-size="5"
+                    data-page-list="[5, 25, 50, All]"
+                    data-unique-id="id"
+                    data-toolbar="#contentbar"
+                    data-pagination="true"
+                    data-side-pagination="client"
+                    data-show-refresh="true"
+                    data-click-to-select="true">
+              </table>
             </div>
           </div>
           <div class="modal-footer">
@@ -539,7 +522,7 @@ $("#Date").val(myDate);
         </div>
       </div>
     </div>
-  </div>  
+  </div>
 
 <script type="text/javascript">
   function index1(value,row,index){
@@ -549,30 +532,36 @@ $("#Date").val(myDate);
 
   function setAttachment(value,row,index){
     if (value){
-      if (value.length==1){
-        attachUrl= '<a href="'+value[0].Url+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
-        return attachUrl;
-      }else if(value.length==0){
+      // if (value.length==1){
+        // attachUrl= '<a href="'+value[0].Url+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
+        // return attachUrl;
+      // }else if(value.length==0){
                     
-      }else if(value.length>1){
+      // }else if(value.length>1){
         attachUrl= "<a class='attachment' href='javascript:void(0)' title='查看附件列表'><i class='fa fa-list-ol'></i></a>";
         return attachUrl;
-      }
+      // }
     }
   }
 
   function setContent(value,row,index){
-    if (value){
+    if (row.State==1||row.State==2){
       // if (value.length==1){
       //   attachUrl= '<a href="http://'+value[0].Url+'" title="下载" target="_blank"><i class="fa fa-paperclip"></i></a>';
       //   return attachUrl;
       // }else 
-      if(value.length==0){
+      // if(value.length==0){
                     
-      }else if(value.length>=1){
-        contentUrl= "<a class='content' href='javascript:void(0)' title='查看校审意见'><i class='fa fa-list-alt'></i></a>";
+      // }else if(value.length>=1){
+        contentUrl= "<a class='content' href='javascript:void(0)' title='查看设计说明'><i class='fa fa-list-alt'></i></a>";
         return contentUrl;
-      }
+      // }
+    }else if(row.State==3){
+      contentUrl= "<a class='content' href='javascript:void(0)' title='查看意见'><i class='fa fa-list-alt'></i></a>";
+        return contentUrl;
+    }else if(row.State==4){
+      contentUrl= "<a class='content' href='javascript:void(0)' title='查看意见'><i class='fa fa-list-alt'></i></a>";
+        return contentUrl;
     }
   }
 
@@ -599,6 +588,13 @@ $("#Date").val(myDate);
   // '<a class="edit ml10" href="javascript:void(0)" title="退回">','<i class="glyphicon glyphicon-edit"></i>','</a>'
   window.actionEvents = {
     'click .attachment': function (e, value, row, index) {
+        rowcatalogid=row.id;
+        rowtitle=row.Name;
+        $("#attachtitle").html(rowtitle+'—附件列表');
+        // $("input#cid").remove();
+        // var th1="<input id='cid' type='hidden' name='cid' value='" +row.Id+"'/>"
+        // $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+
         $('#attachs').bootstrapTable('refresh', {url:'/achievement/catalog/attachment/'+row.id});
         $('#modalattach').modal({
           show:true,
@@ -606,8 +602,15 @@ $("#Date").val(myDate);
         });
     },
 
+
     'click .content': function (e, value, row, index) {
-        $('#contents').bootstrapTable('refresh', {url:'/achievement/catalog/content/'+row.id});
+          rowcatalogid=row.id;
+          rowtitle=row.Name
+          $("#conttitle").html(rowtitle+'—校审意见');
+          $('#contents').bootstrapTable('refresh', {url:'/achievement/catalog/content/'+row.id});
+          // $("input#cid").remove();
+          // var th1="<input id='cid' type='hidden' name='cid' value='" +row.Id+"'/>"
+          // $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
         // $('#contents').bootstrapTable('insertRow', {
         //         index: index+1,
         //         row: {
@@ -623,27 +626,53 @@ $("#Date").val(myDate);
           backdrop:'static'
         });
     },
-
+    //我发起
     'click .send': function (e, value, row, index) {
+      var selectRow3=$('#table').bootstrapTable('getSelections');
+        if (selectRow3.length==0){
+          var mycars = new Array()
+          mycars[0]=row;
+          var selectRow3=mycars
+        }
+        if(confirm("确定提交吗？")){
+          var ids = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+          // var removeline=$(this).parents("tr")
+          //提交到后台进行修改数据库状态修改
+            $.ajax({
+            type:"post",//这里是否一定要用post？？？
+            url:"/achievement/sendcatalog",
+            data: JSON.stringify(selectRow3),//JSON.stringify(row),
+            success:function(data,status){//数据提交成功时返回数据
+              $('#table').bootstrapTable('remove', {
+                  field: 'id',//table填充的数据结构中必须提供这个id，否则不能删除某行
+                  values: ids
+              });
+              // removeline.remove();
+              alert("提交“"+data+"”成功！(status:"+status+".)");
+              // $('#table1').bootstrapTable('refresh', {url:'/admin/merit/meritlist/1'});
+            }
+            });  
+        }
         // alert('You click send icon, row: ' + JSON.stringify(row.Id));
         // alert(e);无值
         // alert(value);无值
         // alert(row.id);
         // alert(index);0~
         // console.log(value, row, index);
-        if(confirm("确定提交该行吗？")){
-          var removeline=$(this).parents("tr")
-          //提交到后台进行修改数据库状态修改
-            $.ajax({
-            type:"post",//这里是否一定要用post？？？
-            url:"/achievement/sendcatalog",
-            data: {CatalogId:row.id},
-                success:function(data,status){//数据提交成功时返回数据
-                removeline.remove();
-                alert("提交“"+data+"”成功！(status:"+status+".)");
-                }
-            });  
-        }
+        // if(confirm("确定提交该行吗？")){
+        //   var removeline=$(this).parents("tr")
+        //     $.ajax({//提交到后台进行修改数据库状态修改
+        //     type:"post",//这里是否一定要用post？？？
+        //     url:"/achievement/sendcatalog",
+        //     data: {CatalogId:row.Catalog.id},
+        //         success:function(data,status){//数据提交成功时返回数据
+        //         removeline.remove();
+        //         alert("提交“"+data+"”成功！(status:"+status+".)");
+        //         }
+        //     });  
+        // }
     },
     'click .downsend': function (e, value, row, index) {
         // alert('You click send icon, row: ' + JSON.stringify(row.Id));
@@ -688,9 +717,41 @@ $("#Date").val(myDate);
                 }
             });  
         }
+    },
+
+    'click .deletelink': function (e, value, row, index) {
+        // alert('You click remove icon, row: ' + JSON.stringify(row));
+        // console.log(value, row, index);
+        if(confirm("确定删除该行吗？")){  
+        var removeline=$(this).parents("tr")
+         // alert("欢迎您：" + name) 
+            $.ajax({//提交到后台进行删除数据库
+            type:"post",//这里是否一定要用post？？？
+            url:"/achievement/catalog/deletelink",
+            data: {CataloglinkId:row.id},
+                success:function(data,status){//数据提交成功时返回数据
+                removeline.remove();
+                alert("删除“"+data+"”成功！(status:"+status+".)");
+                }
+            });  
+        }
     }
   };
-
+    //弹出附件列表表格添加空行
+    //这里要考虑CatalogId吗？？？
+    $(function () {
+        $('#attachbutton').click(function () {
+            $('#attachs').bootstrapTable('insertRow', {
+                index: 3,
+                row: {
+                  Id:10,
+                  Url: '',
+                  Url: ''
+                }
+            });
+        });
+    });
+    //弹出校审意见列表表格添加空行_这个没必要
     $(function () {
         $('#contentbutton').click(function () {
             $('#contents').bootstrapTable('insertRow', {
@@ -705,7 +766,7 @@ $("#Date").val(myDate);
             });
         });
     });
-  //不提供删除功能的操作
+  //别人发起，我设计，不提供删除功能的操作
   function actionFormatter1(value, row, index) {
     return [
         '<a class="send" href="javascript:void(0)" title="提交">',
@@ -716,20 +777,95 @@ $("#Date").val(myDate);
         '</a>',
     ].join('');
   }
-//不提供删除功能的操作
+
+
+  //别人发起，我设计，不提供删除功能的操作
   window.actionEvents1 = {
     'click .send': function (e, value, row, index) {
-        if(confirm("确定提交该行吗？")){
-          var removeline=$(this).parents("tr")
+      var selectRow3=$('#table1').bootstrapTable('getSelections');
+        if (selectRow3.length==0){
+          var mycars = new Array()
+          mycars[0]=row;
+          var selectRow3=mycars
+        }
+        if(confirm("确定提交吗？")){
+          var ids = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+          // var removeline=$(this).parents("tr")
           //提交到后台进行修改数据库状态修改
             $.ajax({
             type:"post",//这里是否一定要用post？？？
             url:"/achievement/sendcatalog",
-            data: {CatalogId:row.Id},
+            data: JSON.stringify(selectRow3),//JSON.stringify(row),
+            success:function(data,status){//数据提交成功时返回数据
+              $('#table').bootstrapTable('remove', {
+                  field: 'id',
+                  values: ids
+              });
+              // removeline.remove();
+              alert("提交“"+data+"”成功！(status:"+status+".)");
+              // $('#table1').bootstrapTable('refresh', {url:'/admin/merit/meritlist/1'});
+            }
+            });  
+        }
+        // if(confirm("确定提交该行吗？")){
+        //   var removeline=$(this).parents("tr")
+        //     $.ajax({//提交到后台进行修改数据库状态修改
+        //     type:"post",//这里是否一定要用post？？？
+        //     url:"/achievement/sendcatalog",
+        //     data: {CatalogId:row.Catalog.id},
+        //         success:function(data,status){//数据提交成功时返回数据
+        //         removeline.remove();
+        //         alert("提交“"+data+"”成功！(status:"+status+".)");
+        //         }
+        //     });  
+        // }
+    },
+    'click .downsend': function (e, value, row, index) {
+        if(confirm("确定退回该行吗？")){
+        var removeline=$(this).parents("tr")
+          //提交到后台进行修改数据库状态修改
+            $.ajax({
+            type:"post",//这里是否一定要用post？？？
+            url:"/achievement/downsendcatalog",
+            data: {CatalogId:row.id},
                 success:function(data,status){//数据提交成功时返回数据
                 removeline.remove();
-                alert("提交“"+data+"”成功！(status:"+status+".)");
+                alert("退回“"+data+"”成功！(status:"+status+".)");
                 }
+            });  
+        }
+    }
+  };
+  //别人发起，我校核
+  window.actionEvents2 = {
+    'click .send': function (e, value, row, index) {
+      var selectRow3=$('#table2').bootstrapTable('getSelections');
+        if (selectRow3.length==0){
+          var mycars = new Array()
+          mycars[0]=row;
+          var selectRow3=mycars
+        }
+        if(confirm("确定提交吗？")){
+          var ids = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+          // var removeline=$(this).parents("tr")
+          //提交到后台进行修改数据库状态修改
+            $.ajax({
+            type:"post",//这里是否一定要用post？？？
+            url:"/achievement/sendcatalog",
+            data: JSON.stringify(selectRow3),//JSON.stringify(row),
+            success:function(data,status){//数据提交成功时返回数据
+              $('#table').bootstrapTable('remove', {
+                  field: 'id',
+                  values: ids
+              });
+              // removeline.remove();
+              alert("提交“"+data+"”成功！(status:"+status+".)");
+              // $('#table1').bootstrapTable('refresh', {url:'/admin/merit/meritlist/1'});
+            }
             });  
         }
     },
@@ -740,7 +876,54 @@ $("#Date").val(myDate);
             $.ajax({
             type:"post",//这里是否一定要用post？？？
             url:"/achievement/downsendcatalog",
-            data: {CatalogId:row.Id},
+            data: {CatalogId:row.id},
+                success:function(data,status){//数据提交成功时返回数据
+                removeline.remove();
+                alert("退回“"+data+"”成功！(status:"+status+".)");
+                }
+            });  
+        }
+    }
+  };
+  //别人发起，我审查
+  window.actionEvents3 = {
+    'click .send': function (e, value, row, index) {
+      var selectRow3=$('#table3').bootstrapTable('getSelections');
+        if (selectRow3.length==0){
+          var mycars = new Array()
+          mycars[0]=row;
+          var selectRow3=mycars
+        }
+        if(confirm("确定提交吗？")){
+          var ids = $.map($('#table').bootstrapTable('getSelections'), function (row) {
+                return row.id;
+            });
+          // var removeline=$(this).parents("tr")
+          //提交到后台进行修改数据库状态修改
+            $.ajax({
+            type:"post",//这里是否一定要用post？？？
+            url:"/achievement/sendcatalog",
+            data: JSON.stringify(selectRow3),//JSON.stringify(row),
+            success:function(data,status){//数据提交成功时返回数据
+              $('#table').bootstrapTable('remove', {
+                  field: 'id',
+                  values: ids
+              });
+              // removeline.remove();
+              alert("提交“"+data+"”成功！(status:"+status+".)");
+              // $('#table1').bootstrapTable('refresh', {url:'/admin/merit/meritlist/1'});
+            }
+            });  
+        }
+    },
+    'click .downsend': function (e, value, row, index) {
+        if(confirm("确定退回该行吗？")){
+        var removeline=$(this).parents("tr")
+          //提交到后台进行修改数据库状态修改
+            $.ajax({
+            type:"post",//这里是否一定要用post？？？
+            url:"/achievement/downsendcatalog",
+            data: {CatalogId:row.id},
                 success:function(data,status){//数据提交成功时返回数据
                 removeline.remove();
                 alert("退回“"+data+"”成功！(status:"+status+".)");
@@ -765,81 +948,13 @@ $("#Date").val(myDate);
     return value;
   }
 
-//这个是导出的
-// $(function () {
-//   var $table = $('#table');
-//   $('#toolbar').find('select').change(function () {
-//     $table.bootstrapTable('refreshOptions', {
-//       exportDataType: $(this).val()
-//     });
-//   });
-// });
-//这个是编辑表-2方法
-// $(function () {
-//     $('#table').bootstrapTable({
-//         idField: 'ProjectNumber',
-//         // pagination: true,
-//         // search: true,
-//         url: '/addinline',
-//         columns: [{
-//             field: 'Id',
-//             title: '编号'
-//         },
-//         {
-//             field: 'ProjectNumber',
-//             title: '项目编号'
-//         }, {
-//             field: 'ProjectName',
-//             title: '项目名称'
-//         }],
-//         onPostBody: function () {
-//             $('#table').editableTableWidget({editor: $('<textarea>')});
-//         }
-//     });
-// });
-//在线编辑
-// $(function () {
-//   $('#table').bootstrapTable({
-//     idField: 'ProjectNumber',
-//     url: '/addinline',
-//     columns: [{
-//       field: 'Id',
-//             title: '编号'
-//         },
-//         {
-//       field: 'ProjectNumber',
-//       title: 'ProjectNumber',
-//       editable: {
-//         type: 'text'
-//       }
-//     }, {
-//       field: 'ProjectName',
-//       title: 'ProjectName',
-//       editable: {
-//         type: 'address',
-//         // var value={{.Ratio}}
-//         display: function(value) {
-//           if(!value) {
-//             $(this).empty();
-//             return; 
-//           }
-//           var html = '<b>' + $('<div>').text(value.Category).html() + '</b>, ' + $('<div>').text(value.Category).html() + ' st., bld. ' + $('<div>').text(value.Category).html();
-//           $(this).html(html); 
-//         }
-//       }
-//     }, {
-//       field: 'description',
-//       title: 'Description'
-//     }]
-//   });
-// });
-    //待选择的修改*******不要删除
-    //我发起
+  //待选择的修改*******不要删除
+  //我发起
   $(function (value, sourceData) {
       $('#table').bootstrapTable({
         idField: 'id',
         uniqueId:'id',
-        url: '/achievement/myself',
+        url: '/achievement/send/1',
         // striped: "true",
         columns: [
           {
@@ -856,7 +971,7 @@ $("#Date").val(myDate);
             field: 'ProjectNumber',
             visible: false,
             title: '项目编号',
-            sortable:'true',
+            sortable:true,
             editable: {
                 params:function(params) {
                   //originally params contain pk, name and value
@@ -926,6 +1041,7 @@ $("#Date").val(myDate);
           },{
             field: 'DesignStage',
             title: '阶段',
+            visible: false,
             editable: {
                 params:function(params) {
                   //originally params contain pk, name and value
@@ -961,7 +1077,8 @@ $("#Date").val(myDate);
           },{
             field: 'Tnumber',
             title: '成果编号',
-            sortable:'true',
+            visible: false,
+            sortable:true,
             editable: {
                 params:function(params) {
                   //originally params contain pk, name and value
@@ -1030,7 +1147,7 @@ $("#Date").val(myDate);
           },{
             field: 'Category',
             title: '成果类型',
-            sortable:'true',
+            sortable:true,
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1100,6 +1217,7 @@ $("#Date").val(myDate);
           },{
             field: 'Drawn',
             title: '制图/编制',
+            visible: false,
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1373,8 +1491,7 @@ $("#Date").val(myDate);
                 datepicker: {
                     weekStart: 1,
                     todayBtn: 'linked'
-                   }
-                },
+                   },
                 success: function(response, newValue) {
                   var selectRow3=$('#table').bootstrapTable('getSelections');
                   for(var i=0;i<selectRow3.length;i++){
@@ -1385,7 +1502,8 @@ $("#Date").val(myDate);
                         }
                     });
                   }
-                }
+                } 
+            }
           },{
               field:'action',
               title: '操作',
@@ -1399,10 +1517,14 @@ $("#Date").val(myDate);
   $(function () {
     $('#table1').bootstrapTable({
         idField: 'id',
-        url: '/achievement/designd',
+        uniqueId:'id',
+        url: '/achievement/send/2',
         // striped: "true",
         columns: [
           {
+            checkbox:true,
+            width:10
+          },{
             // field: 'Number',
             title: '序号',
             formatter:function(value,row,index){
@@ -1411,24 +1533,28 @@ $("#Date").val(myDate);
           },{
             field: 'ProjectNumber',
             title: '项目编号',
-            sortable:'true',
+            visible: false,
+            sortable:true,
           },{
             field: 'ProjectName',
+            visible: false,
             title: '项目名称',
           },{
             field: 'DesignStage',
+            visible: false,
             title: '阶段',
           },{
             field: 'Tnumber',
             title: '成果编号',
-            sortable:'true',
+            visible: false,
+            sortable:true,
           },{
             field: 'Name',
             title: '成果名称',
           },{
             field: 'Category',
             title: '成果类型',
-            sortable:'true',
+            sortable:true,
           },{
             field: 'Count',
             title: '数量',
@@ -1437,6 +1563,7 @@ $("#Date").val(myDate);
             title: '制图/编制',
           },{
             field: 'Designd',
+            visible: false,
             title: '设计',
           },{
             field: 'Checked',
@@ -1444,17 +1571,13 @@ $("#Date").val(myDate);
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table1').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1469,7 +1592,18 @@ $("#Date").val(myDate);
                 },
                 pk: 1,
                 url: '/achievement/modifycatalog',
-                title: 'Enter Checked'  
+                title: 'Enter Checked',
+                success: function(response, newValue) {
+                  var selectRow3=$('#table1').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table1').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Checked: response
+                        }
+                    });
+                  }
+                }  
             }
           },{
             field: 'Examined',
@@ -1477,17 +1611,13 @@ $("#Date").val(myDate);
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table1').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1502,7 +1632,18 @@ $("#Date").val(myDate);
                 },
                 pk: 1,
                 url: '/achievement/modifycatalog',
-                title: 'Enter Examined'  
+                title: 'Enter Examined',
+                success: function(response, newValue) {
+                  var selectRow3=$('#table1').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table1').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Examined: response
+                        }
+                    });
+                  }
+                } 
             }
           },{
             field: 'Drawnratio',
@@ -1510,17 +1651,13 @@ $("#Date").val(myDate);
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table1').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1529,7 +1666,18 @@ $("#Date").val(myDate);
                 type: 'text',
                 pk: 1,
                 url: '/achievement/modifycatalog',
-                title: 'Enter Drawnratio'  
+                title: 'Enter Drawnratio',
+                success: function(response, newValue) {
+                  var selectRow3=$('#table1').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table1').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Drawnratio: response
+                        }
+                    });
+                  }
+                }  
             }
           },{
             field: 'Designdratio',
@@ -1537,17 +1685,13 @@ $("#Date").val(myDate);
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table1').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1556,7 +1700,18 @@ $("#Date").val(myDate);
                 type: 'text',
                 pk: 1,
                 url: '/achievement/modifycatalog',
-                title: 'Enter Designdratio'  
+                title: 'Enter Designdratio',
+                success: function(response, newValue) {
+                  var selectRow3=$('#table1').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table1').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Designdratio: response
+                        }
+                    });
+                  }
+                }  
             }
           },{
             field: 'Complex',
@@ -1564,17 +1719,13 @@ $("#Date").val(myDate);
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table1').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1583,8 +1734,29 @@ $("#Date").val(myDate);
                 type: 'text',
                 pk: 1,
                 url: '/achievement/modifycatalog',
-                title: 'Enter Complex'  
+                title: 'Enter Complex',
+                success: function(response, newValue) {
+                  var selectRow3=$('#table1').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table1').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Complex: response
+                        }
+                    });
+                  }
+                }  
             }
+          },{
+            field:'Link',
+            title: '附件',
+            formatter:'setAttachment',
+            events:'actionEvents',
+          },{
+            field:'Content',
+            title: '意见',
+            formatter:'setContent',
+            events:'actionEvents',
           },{
             field: 'Datestring',
             title: '出版',
@@ -1592,17 +1764,13 @@ $("#Date").val(myDate);
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table1').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1617,8 +1785,19 @@ $("#Date").val(myDate);
                 datepicker: {
                     weekStart: 1,
                     todayBtn: 'linked'
-                   }
-                }
+                   },
+                success: function(response, newValue) {
+                  var selectRow3=$('#table1').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table1').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Datestring: response
+                        }
+                    });
+                  }
+                } 
+            }
         },{
             field:'action',
             title: '操作',
@@ -1633,10 +1812,14 @@ $("#Date").val(myDate);
   $(function () {
     $('#table2').bootstrapTable({
         idField: 'id',
-        url: '/achievement/checked',
+        uniqueId:'id',
+        url: '/achievement/send/3',
         // striped: "true",
         columns: [
           {
+            checkbox:true,
+            width:10
+          },{
             // field: 'Number',
             title: '序号',
             formatter:function(value,row,index){
@@ -1644,17 +1827,21 @@ $("#Date").val(myDate);
           }
           },{
             field: 'ProjectNumber',
+            visible: false,
             title: '项目编号',
-            sortable:'true',
+            sortable:true,
           },{
             field: 'ProjectName',
             title: '项目名称',
+            visible: false,
           },{
             field: 'DesignStage',
+            visible: false,
             title: '阶段',
           },{
             field: 'Tnumber',
             title: '成果编号',
+            visible: false,
             sortable:'true',
           },{
             field: 'Name',
@@ -1667,10 +1854,15 @@ $("#Date").val(myDate);
             field: 'Count',
             title: '数量',
           },{
+            field: 'Catalog.Drawn',
+            visible: false,
+            title: '制图/编制',
+          },{
             field: 'Designd',
             title: '设计',
           },{
             field: 'Checked',
+            visible: false,
             title: '校核',
           },{
             field: 'Examined',
@@ -1678,17 +1870,13 @@ $("#Date").val(myDate);
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table2').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1703,7 +1891,18 @@ $("#Date").val(myDate);
                 },
                 pk: 1,
                 url: '/achievement/modifycatalog',
-                title: 'Enter Examined'  
+                title: 'Enter Examined',
+                success: function(response, newValue) {
+                  var selectRow3=$('#table2').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table2').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Examined: response
+                        }
+                    });
+                  }
+                } 
             }
           },{
             field: 'Designdratio',
@@ -1711,17 +1910,13 @@ $("#Date").val(myDate);
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table2').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1730,7 +1925,18 @@ $("#Date").val(myDate);
                 type: 'text',
                 pk: 1,
                 url: '/achievement/modifycatalog',
-                title: 'Enter Designdratio'  
+                title: 'Enter Checked',
+                success: function(response, newValue) {
+                  var selectRow3=$('#table2').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table2').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Designdratio: response
+                        }
+                    });
+                  }
+                } 
             }
           },{
             field: 'Checkedratio',
@@ -1738,17 +1944,13 @@ $("#Date").val(myDate);
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table2').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1757,7 +1959,18 @@ $("#Date").val(myDate);
                 type: 'text',
                 pk: 1,
                 url: '/achievement/modifycatalog',
-                title: 'Enter Checkedratio'  
+                title: 'Enter Checkedratio',
+                success: function(response, newValue) {
+                  var selectRow3=$('#table2').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table2').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Checkedratio: response
+                        }
+                    });
+                  }
+                }  
             }
           },{
             field: 'Complex',
@@ -1765,17 +1978,13 @@ $("#Date").val(myDate);
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table2').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1784,26 +1993,43 @@ $("#Date").val(myDate);
                 type: 'text',
                 pk: 1,
                 url: '/achievement/modifycatalog',
-                title: 'Enter Complex'  
+                title: 'Enter Complex',
+                success: function(response, newValue) {
+                  var selectRow3=$('#table2').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table2').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Complex: response
+                        }
+                    });
+                  }
+                }  
             }
+          },{
+            field:'Link',
+            title: '附件',
+            formatter:'setAttachment',
+            events:'actionEvents',
+          },{
+            field:'Content',
+            title: '意见',
+            formatter:'setContent',
+            events:'actionEvents',
           },{
             field: 'Datestring',
             title: '出版',
             // formatter:localDateFormatter,
             editable: {
-              params:function(params) {
+                params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table2').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1818,13 +2044,24 @@ $("#Date").val(myDate);
                 datepicker: {
                     weekStart: 1,
                     todayBtn: 'linked'
-                   }
-                }
+                   },
+                success: function(response, newValue) {
+                  var selectRow3=$('#table2').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table2').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Datestring: response
+                        }
+                    });
+                  }
+                } 
+            }
         },{
             field:'action',
             title: '操作',
             formatter:'actionFormatter1',
-            events:'actionEvents1',
+            events:'actionEvents2',
         }
         ]
     });
@@ -1832,12 +2069,16 @@ $("#Date").val(myDate);
 
   //我审查
   $(function () {
-    $('#table3').bootstrapTable({
+    var $table =$('#table3').bootstrapTable({
         idField: 'id',
-        url: '/achievement/examined',
+        uniqueId:'id',
+        url: '/achievement/send/4',
         // striped: "true",
         columns: [
           {
+            checkbox:true,
+            width:10
+          },{
             // field: 'Number',
             title: '序号',
             formatter:function(value,row,index){
@@ -1845,18 +2086,22 @@ $("#Date").val(myDate);
           }
           },{
             field: 'ProjectNumber',
+            visible: false,
             title: '项目编号',
-            sortable:'true',
+            sortable:true,
           },{
             field: 'ProjectName',
+            visible: false,
             title: '项目名称',
           },{
             field: 'DesignStage',
+            visible: false,
             title: '阶段',
           },{
             field: 'Tnumber',
+            visible: false,
             title: '成果编号',
-            sortable:'true',
+            sortable:true,
           },{
             field: 'Name',
             title: '成果名称',
@@ -1868,28 +2113,33 @@ $("#Date").val(myDate);
             field: 'Count',
             title: '数量',
           },{
+            field: 'Drawn',
+            visible: false,
+            title: '制图/编制',
+          },{
+            field: 'Designd',
+            visible: false,
+            title: '设计',
+          },{
             field: 'Checked',
             title: '校核',
           },{
             field: 'Examined',
+            visible: false,
             title: '审查',
           },{
             field: 'Checkedratio',
             title: '校核比例',
             editable: {
-              params:function(params) {
+                params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table3').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1898,25 +2148,32 @@ $("#Date").val(myDate);
                 type: 'text',
                 pk: 1,
                 url: '/achievement/modifycatalog',
-                title: 'Enter Checkedratio'  
+                title: 'Enter Checkedratio',
+                success: function(response, newValue) {
+                  var selectRow3=$('#table3').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table3').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Checkedratio: response
+                        }
+                    });
+                  }
+                } 
             }
           },{
             field: 'Examinedratio',
             title: '审查比例',
             editable: {
-              params:function(params) {
+                params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table3').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1925,25 +2182,32 @@ $("#Date").val(myDate);
                 type: 'text',
                 pk: 1,
                 url: '/achievement/modifycatalog',
-                title: 'Enter Examinedratio'  
+                title: 'Enter Examinedratio',
+                success: function(response, newValue) {
+                  var selectRow3=$('#table3').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table3').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Examinedratio: response
+                        }
+                    });
+                  }
+                }  
             }
           },{
             field: 'Complex',
             title: '难度系数',
             editable: {
-              params:function(params) {
+                params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table3').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1952,8 +2216,29 @@ $("#Date").val(myDate);
                 type: 'text',
                 pk: 1,
                 url: '/achievement/modifycatalog',
-                title: 'Enter Complex'  
+                title: 'Enter Complex',
+                success: function(response, newValue) {
+                  var selectRow3=$('#table3').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table3').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Complex: response
+                        }
+                    });
+                  }
+                }
             }
+          },{
+            field:'Link',
+            title: '附件',
+            formatter:'setAttachment',
+            events:'actionEvents',
+          },{
+            field:'Content',
+            title: '意见',
+            formatter:'setContent',
+            events:'actionEvents',
           },{
             field: 'Datestring',
             title: '出版',
@@ -1961,17 +2246,13 @@ $("#Date").val(myDate);
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    // if (selectRow3.length<1){
-                    //   alert("请先勾选目录！");
-                    //   return;
-                    // }
+                  var selectRow3=$('#table3').bootstrapTable('getSelections');
                     var ids="";
                     for(var i=0;i<selectRow3.length;i++){
                       if(i==0){
-                        ids=selectRow3[i].Id;
+                        ids=selectRow3[i].id;
                       }else{
-                        ids=ids+","+selectRow3[i].Id;
+                        ids=ids+","+selectRow3[i].id;
                       }  
                     }
                   params.ids = ids;
@@ -1986,19 +2267,76 @@ $("#Date").val(myDate);
                 datepicker: {
                     weekStart: 1,
                     todayBtn: 'linked'
-                }
+                   },
+                success: function(response, newValue) {
+                  var selectRow3=$('#table3').bootstrapTable('getSelections');
+                  for(var i=0;i<selectRow3.length;i++){
+                    $('#table3').bootstrapTable('updateByUniqueId', {
+                        id: selectRow3[i].id,
+                        row: {
+                            Datestring: response
+                        }
+                    });
+                  }
+                } 
             }
         },{
             field:'action',
             title: '操作',
             formatter:'actionFormatter1',
-            events:'actionEvents1',
+            events:'actionEvents3',
         }
         ]
     });
   });
 
-  //校审意见列表在线编辑
+  //附件链接列表在线编辑
+  $(function () {
+    $('#attachs').bootstrapTable({
+        idField: 'Id',
+        columns: [
+          {
+            title: '序号',
+            formatter:function(value,row,index){
+              return index+1
+            }
+          },{
+            field:'action',
+            title: '操作',
+            formatter:function(value,row,index){
+              return '<a class="deletelink" href="javascript:void(0)" title="删除"> <i id="delete" class="fa fa-trash"></i> </a>';
+            },
+            events:'actionEvents',
+          },{
+            field: 'Url',
+            title: '下载',
+            formatter:setAttachlink,
+          },{
+            field: 'Url',
+            title: '地址',
+            editable: {
+              params:function(params) {
+                  params.cid = rowcatalogid;
+                  return params;
+                },
+              placement:'left',
+              type: 'textarea',
+              pk: 1,
+              url: '/achievement/catalog/modifylink',
+              title: 'Enter Link',
+              'noeditFormatter': function(value, row, index){
+                if (row.Editable != true) {
+                  return value;
+                }
+                  return false;        
+              } 
+            }
+          }
+        ]
+    });
+  });
+
+  //设计说明意见列表在线编辑
   $(function () {
     $('#contents').bootstrapTable({
         idField: 'Id',
@@ -2009,8 +2347,8 @@ $("#Date").val(myDate);
             // field: 'Number',
             title: '序号',
             formatter:function(value,row,index){
-            return index+1
-          }
+              return index+1
+            }
           },{
             field: 'Title',
             title: '名称',
@@ -2019,23 +2357,19 @@ $("#Date").val(myDate);
             title: '意见',
             editable: {
               params:function(params) {
-                  //originally params contain pk, name and value
-                  var selectRow3=$('#table').bootstrapTable('getSelections');
-                    var ids="";
-                    for(var i=0;i<selectRow3.length;i++){
-                      if(i==0){
-                        ids=selectRow3[i].Id;
-                      }else{
-                        ids=ids+","+selectRow3[i].Id;
-                      }  
-                    }
-                  params.ids = ids;
-                  return params;
-                },
-                type: 'textarea',
-                pk: 1,
-                url: '/achievement/catalog/modifycontent',
-                title: 'Enter Content'  
+                params.cid =rowcatalogid;
+                return params;
+              },
+              type: 'textarea',
+              pk: 1,
+              url: '/achievement/catalog/modifycontent',
+              title: 'Enter Content',
+              'noeditFormatter': function(value, row, index){
+                if (row.Editable != true) {
+                  return value;
+                }
+                  return false;        
+              }
             }
           },{
             field: 'Created',
@@ -2053,6 +2387,96 @@ $("#Date").val(myDate);
         ]
     });
   });
+
+  //试验统一采用一个编辑模式
+  $(function () {
+    var $table = $('#table00').bootstrapTable({
+        idField: 'name',
+        url: '/gh/get/response.json/wenzhixin/bootstrap-table/tree/master/docs/data/data1/',
+        columns: [{
+            field: 'name',
+            title: 'Name'
+        }, {
+            field: 'stargazers_count',
+            title: 'Stars',
+            editable: {
+                type: 'text'
+            }
+        }, {
+            field: 'forks_count',
+            title: 'Forks',
+            editable: {
+                type: 'text'
+            }
+        }, {
+            field: 'description',
+            title: 'Description',
+            editable: {
+                type: 'textarea'
+            }
+        }]
+    });
+    $table.on('editable-save.bs.table', function (e, field, row, oldvalue, $el) {
+      var $els = $table.find('.editable'),
+        next = $els.index($el) + 1;
+        if (next >= $els.length) {
+          return;
+        }
+        $els.eq(next).editable('show');
+        var selectRow3=$('#table').bootstrapTable('getSelections');
+                    var ids="";
+                    for(var i=0;i<selectRow3.length;i++){
+                      if(i==0){
+                        ids=selectRow3[i].Id;
+                      }else{
+                        ids=ids+","+selectRow3[i].Id;
+                      }  
+                    }
+        $.ajax({
+                    type: "post",
+                    url: "/achievement/modifycatalog",
+                    data: {name:field,value:row,pk:row.id,ids:ids},
+                    dataType: 'JSON',
+                    success: function (data, status) {
+                        if (status == "success") {
+                            alert('提交数据成功');
+                        }
+                    },
+                    error: function () {
+                        alert('编辑失败');
+                    },
+                    complete: function () {
+
+                    }
+                });
+    });
+  });
+
+
+  $(function () {
+    $('#table00').bootstrapTable({
+        idField: 'name',
+        pagination: true,
+        search: true,
+        url: '/gh/get/response.json/wenzhixin/bootstrap-table/tree/master/docs/data/data1/',
+        columns: [{
+            field: 'name',
+            title: 'Name'
+        }, {
+            field: 'stargazers_count',
+            title: 'Stars'
+        }, {
+            field: 'forks_count',
+            title: 'Forks'
+        }, {
+            field: 'description',
+            title: 'Description'
+        }],
+        onPostBody: function () {
+            $('#table').editableTableWidget({editor: $('<textarea>')});
+        }
+    });
+  });
   // var date={{.Starttime}};
   // function list(value, row, index) {
   // return '<i class="glyphicon ' + icon + '"></i> ' + value;
@@ -2066,13 +2490,13 @@ $("#Date").val(myDate);
   }
   //这个是显示时间选择
   function datepicker(value) {
-  $(".datepicker").datepicker({
-               language: "zh-CN",
-               autoclose: true,//选中之后自动隐藏日期选择框
-               clearBtn: true,//清除按钮
-               todayBtn: 'linked',//今日按钮
-               format: "yyyy-mm-dd"//日期格式，详见 http://bootstrap-datepicker.readthedocs.org/en/release/options.html#format
-            });
+    $(".datepicker").datepicker({
+      language: "zh-CN",
+      autoclose: true,//选中之后自动隐藏日期选择框
+      clearBtn: true,//清除按钮
+      todayBtn: 'linked',//今日按钮
+      format: "yyyy-mm-dd"//日期格式，详见 http:// atepicker.readthedocs.org/en/release/options.html#format
+    });
   }
 
     function queryParams(params) {
@@ -2090,55 +2514,13 @@ $("#Date").val(myDate);
     // $button = $('#button');
     $(function () {
         $('#button').click(function () {
-            $('#table').bootstrapTable('refresh', {url:'/achievement/myself'});
-            $('#table1').bootstrapTable('refresh', {url:'/achievement/designd'});
-            $('#table2').bootstrapTable('refresh', {url:'/achievement/checked'});
-            $('#table3').bootstrapTable('refresh', {url:'/achievement/examined'});
+            $('#table').bootstrapTable('refresh', {url:'/achievement/send/1'});
+            $('#table1').bootstrapTable('refresh', {url:'/achievement/send/2'});
+            $('#table2').bootstrapTable('refresh', {url:'/achievement/send/3'});
+            $('#table3').bootstrapTable('refresh', {url:'/achievement/send/4'});
         });
     });    
-// $(function () {
- // $('#button').click(function () {
-      // var newPage = $("#txtPage").val();
-            // var date=$("#datefilter").val();
-            // params.datefilter=date;
-            // alert( "Date Loaded: " + newPage);
-            // $table.bootstrapTable('refresh', {url:'/addinline2'});
-            // return params;
-    // }); 
-// });
-// function queryParams() {
-//         var params = {};
-//         $('#toolbar').find('input[name]').each(function () {
-//             params[$(this).attr('name')] = $(this).val();
-//         });
-//         return params;
-//     }
 
-// function queryParams(params) {
-//             return {
-//                 pageSize: params.pageSize,
-//                 pageIndex: params.pageNumber,
-//                 UserName: $("#txtName").val(),
-//                 Birthday: $("#txtBirthday").val(),
-//                 Gender: $("#Gender").val(),
-//                 Address: $("#txtAddress").val(),
-//                 name: params.sortName,
-//                 order: params.sortOrder
-//             };
-//         }        
-// 使用jQuery.post()方法传修改的数据到后台，这实际上是小菜一碟。
-
-// $('#editable td').on('change', function(evt, newValue) {
-//     $.post( "script.php", { value: newValue })
-//     .done(function( data ) {
-//         alert( "Data Loaded: " + data );
-//     });
-// });
-
-// <input id="uname" name="uname" type="text" value="" class="form-control" placeholder="Enter account" list="cars"></div>
-//         <div id='datalistDiv'>
-//           <datalist id="cars" name="cars">//           </datalist>
-//         </div>
       $(document).ready(function(){
         $("#sel_Province").change(function(){
           $.ajax({
@@ -2198,7 +2580,7 @@ $("#Date").val(myDate);
           var uname2=document.getElementById("uname2");
           // alert(event.keyCode);
          if (event.keyCode != 38 && event.keyCode != 40 && uname2.value.length==2){
-          $.ajax({
+            $.ajax({
                 type:"post",//这里是否一定要用post？？？
                 url:"/regist/getuname",
                 data: { uname: $("#uname").val()},
@@ -2209,20 +2591,20 @@ $("#Date").val(myDate);
                       $("#cars2").append('<option class="option" value="' + data[i].Username + '">' + data[i].Nickname + '</option>');
                   });
                 }
-      });
+            });
                 // $("#uname2").keydown(function(){
                 //   $("option").remove();
                 // }); 
-    }
- });
-}); 
-$('#uname3').attr("autocomplete","off"); 
-$(document).ready(function(){
-  $("#uname3").keyup(function(event){
-    var uname3=document.getElementById("uname3");
-    // alert(event.keyCode);
-   if (event.keyCode != 38 && event.keyCode != 40 && uname3.value.length==2){
-    $.ajax({
+          }
+        });
+      }); 
+      $('#uname3').attr("autocomplete","off"); 
+      $(document).ready(function(){
+        $("#uname3").keyup(function(event){
+          var uname3=document.getElementById("uname3");
+            // alert(event.keyCode);
+            if (event.keyCode != 38 && event.keyCode != 40 && uname3.value.length==2){
+              $.ajax({
                 type:"post",//这里是否一定要用post？？？
                 url:"/regist/getuname",
                 data: { uname: $("#uname").val()},
@@ -2233,20 +2615,20 @@ $(document).ready(function(){
                       $("#cars3").append('<option class="option" value="' + data[i].Username + '">' + data[i].Nickname + '</option>');
                   });
                 }
-      });
+              });
                 // $("#uname3").keydown(function(){
                 //   $("option").remove();
                 // }); 
-    }
- });
-}); 
-$('#uname4').attr("autocomplete","off"); 
-$(document).ready(function(){
-  $("#uname4").keyup(function(event){
-    var uname4=document.getElementById("uname4");
+            }
+        });
+      }); 
+  $('#uname4').attr("autocomplete","off"); 
+  $(document).ready(function(){
+    $("#uname4").keyup(function(event){
+      var uname4=document.getElementById("uname4");
     // alert(event.keyCode);
-   if (event.keyCode != 38 && event.keyCode != 40 && uname4.value.length==2){
-    $.ajax({
+          if (event.keyCode != 38 && event.keyCode != 40 && uname4.value.length==2){
+              $.ajax({
                 type:"post",//这里是否一定要用post？？？
                 url:"/regist/getuname",
                 data: { uname: $("#uname").val()},
@@ -2257,15 +2639,131 @@ $(document).ready(function(){
                       $("#cars4").append('<option class="option" value="' + data[i].Username + '">' + data[i].Nickname + '</option>');
                   });
                 }
-      });
-    //             $("#uname4").keydown(function(){
-    //               $("option").remove();
-    //             }); 
-    }
- });
-}); 
+              });
+          //             $("#uname4").keydown(function(){
+          //               $("option").remove();
+          //             }); 
+          }
+    });
+  }); 
 </script>
 
 </body>
 </html>
 
+
+<!-- 
+// $(function () {
+ // $('#button').click(function () {
+      // var newPage = $("#txtPage").val();
+            // var date=$("#datefilter").val();
+            // params.datefilter=date;
+            // alert( "Date Loaded: " + newPage);
+            // $table.bootstrapTable('refresh', {url:'/addinline2'});
+            // return params;
+    // }); 
+// });
+// function queryParams() {
+//         var params = {};
+//         $('#toolbar').find('input[name]').each(function () {
+//             params[$(this).attr('name')] = $(this).val();
+//         });
+//         return params;
+//     }
+
+// function queryParams(params) {
+//             return {
+//                 pageSize: params.pageSize,
+//                 pageIndex: params.pageNumber,
+//                 UserName: $("#txtName").val(),
+//                 Birthday: $("#txtBirthday").val(),
+//                 Gender: $("#Gender").val(),
+//                 Address: $("#txtAddress").val(),
+//                 name: params.sortName,
+//                 order: params.sortOrder
+//             };
+//         }        
+// 使用jQuery.post()方法传修改的数据到后台，这实际上是小菜一碟。
+
+// $('#editable td').on('change', function(evt, newValue) {
+//     $.post( "script.php", { value: newValue })
+//     .done(function( data ) {
+//         alert( "Data Loaded: " + data );
+//     });
+// });
+
+// <input id="uname" name="uname" type="text" value="" class="form-control" placeholder="Enter account" list="cars"></div>
+//         <div id='datalistDiv'>
+//           <datalist id="cars" name="cars">//           </datalist>
+//         </div>
+
+
+
+//这个是导出的
+// $(function () {
+//   var $table = $('#table');
+//   $('#toolbar').find('select').change(function () {
+//     $table.bootstrapTable('refreshOptions', {
+//       exportDataType: $(this).val()
+//     });
+//   });
+// });
+//这个是编辑表-2方法
+// $(function () {
+//     $('#table').bootstrapTable({
+//         idField: 'ProjectNumber',
+//         // pagination: true,
+//         // search: true,
+//         url: '/addinline',
+//         columns: [{
+//             field: 'Id',
+//             title: '编号'
+//         },
+//         {
+//             field: 'ProjectNumber',
+//             title: '项目编号'
+//         }, {
+//             field: 'ProjectName',
+//             title: '项目名称'
+//         }],
+//         onPostBody: function () {
+//             $('#table').editableTableWidget({editor: $('<textarea>')});
+//         }
+//     });
+// });
+//在线编辑
+// $(function () {
+//   $('#table').bootstrapTable({
+//     idField: 'ProjectNumber',
+//     url: '/addinline',
+//     columns: [{
+//       field: 'Id',
+//             title: '编号'
+//         },
+//         {
+//       field: 'ProjectNumber',
+//       title: 'ProjectNumber',
+//       editable: {
+//         type: 'text'
+//       }
+//     }, {
+//       field: 'ProjectName',
+//       title: 'ProjectName',
+//       editable: {
+//         type: 'address',
+//         // var value={{.Ratio}}
+//         display: function(value) {
+//           if(!value) {
+//             $(this).empty();
+//             return; 
+//           }
+//           var html = '<b>' + $('<div>').text(value.Category).html() + '</b>, ' + $('<div>').text(value.Category).html() + ' st., bld. ' + $('<div>').text(value.Category).html();
+//           $(this).html(html); 
+//         }
+//       }
+//     }, {
+//       field: 'description',
+//       title: 'Description'
+//     }]
+//   });
+// }); -->

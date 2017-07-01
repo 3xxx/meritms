@@ -9,7 +9,7 @@ func init() {
 	//1.首页index
 	// beego.Router("/", &controllers.MainController{})
 	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")
-
+	// beego.Router("/postdata", &controllers.MainController{}, "*:Postdata")
 	//显示首页
 	beego.Router("/", &controllers.IndexController{}, "*:GetIndex")
 	beego.Router("/index", &controllers.IndexController{}, "*:GetIndex")
@@ -144,8 +144,12 @@ func init() {
 	beego.Router("/achievement/modifycatalog", &controllers.Achievement{}, "post:ModifyCatalog")
 	//如果一个成果的附件多于1条，则查看一个成果的附件列表
 	beego.Router("/achievement/catalog/attachment/:id:string", &controllers.Achievement{}, "get:CatalogAttachment")
+	//修改附件
+	beego.Router("/achievement/catalog/modifylink", &controllers.Achievement{}, "post:ModifyLink")
 	//查看一个成果的校审意见列表
 	beego.Router("/achievement/catalog/content/:id:string", &controllers.Achievement{}, "get:CatalogContent")
+	//修改校审意见
+	beego.Router("/achievement/catalog/modifycontent", &controllers.Achievement{}, "post:ModifyContent")
 
 	//个人在线删除一条成功
 	beego.Router("/achievement/delete", &controllers.Achievement{}, "post:DeleteCatalog")
@@ -164,7 +168,7 @@ func init() {
 	//一年来一个项目的每个人的贡献率
 	beego.Router("/achievement/projectuserparticipate", &controllers.Achievement{}, "*:ProjectUserParticipate")
 
-	// beego.Router("/test", &controllers.AdminController{}, "get:Test")
+	beego.Router("/test", &controllers.TestController{}, "get:Test")
 	// beego.Router("/test1", &controllers.AdminController{}, "get:Test1")
 
 	//这个是ue编辑器用的
@@ -234,21 +238,20 @@ func init() {
 	// 填充科室总体情况数据
 	beego.Router("/achievement/secofficedata", &controllers.Achievement{}, "get:SecofficeData")
 
-	//根据id=1,2,3分别显示准备提交，已经提交，已经完成
+	//根据id=1,2,3,4分别显示准备提交，设计，校核，审查;5已经提交,6已经完成
 	beego.Router("/achievement/send/:id:int", &controllers.Achievement{}, "get:AchievementSend")
-
 	//用户在线登记时，自己发起的成果，还未提交
-	beego.Router("/achievement/myself", &controllers.Achievement{}, "get:Myself")
+	// beego.Router("/achievement/myself", &controllers.Achievement{}, "get:Myself")
 	//自己发起的成果，已经提交
-	beego.Router("/achievement/running", &controllers.Achievement{}, "get:Running")
+	// beego.Router("/achievement/running", &controllers.Achievement{}, "get:Running")
 	//别人传来，自己处于设计位置
-	beego.Router("/achievement/designd", &controllers.Achievement{}, "get:Designd")
+	// beego.Router("/achievement/designd", &controllers.Achievement{}, "get:Designd")
 	//别人传来，自己处于校核位置
-	beego.Router("/achievement/checked", &controllers.Achievement{}, "get:Checked")
+	// beego.Router("/achievement/checked", &controllers.Achievement{}, "get:Checked")
 	//别人传来，自己处于审查位置
-	beego.Router("/achievement/examined", &controllers.Achievement{}, "get:Examined")
+	// beego.Router("/achievement/examined", &controllers.Achievement{}, "get:Examined")
 	//查看用户个人时，获取已经完成的数据
-	beego.Router("/achievement/completed", &controllers.Achievement{}, "get:Completed")
+	// beego.Router("/achievement/completed", &controllers.Achievement{}, "get:Completed")
 	//获取自己参与的项目列表
 	beego.Router("/achievement/participate", &controllers.Achievement{}, "get:Participate")
 	//获取科室的项目列表

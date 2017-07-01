@@ -103,9 +103,9 @@ func SaveCatalog(catalog Catalog) (cid int64, err error, news string) {
 	//Filter("Drawn", catalog.Drawn).Filter("Designd", catalog.Designd).Filter("Checked", catalog.Checked).
 	err = o.QueryTable("catalog").Filter("Tnumber", catalog.Tnumber).Filter("Name", catalog.Name).Filter("Category", catalog.Category).One(&catalog1)
 	if err == orm.ErrNoRows {
-		cid, err = o.Insert(&catalog) //_, err = o.Insert(reply)
-		if err != nil {
-			return 0, err, "insert err"
+		cid, err1 := o.Insert(&catalog) //_, err = o.Insert(reply)
+		if err1 != nil {
+			return 0, err1, "insert err"
 		} else {
 			return cid, nil, "insert ok"
 		}
@@ -120,68 +120,35 @@ func SaveCatalog(catalog Catalog) (cid int64, err error, news string) {
 
 //添加附件链接表
 func AddCatalogLink(cid int64, link string) (id int64, err error) {
-	// cid, err := strconv.ParseInt(categoryid, 10, 64)
 	o := orm.NewOrm()
 	cataloglink := &CatalogLink{
 		CatalogId: cid,
 		Url:       link,
-		// Category:   category,
-		// CategoryId: cid,
-		// Content:    content,
-		// Attachment: attachment,
-		// Author:     uname,
-		Created: time.Now(),
-		Updated: time.Now(),
-		// ReplyTime:  time.Now(),
+		Created:   time.Now(),
+		Updated:   time.Now(),
 	}
-	//	qs := o.QueryTable("category") //不知道主键就用这个过滤操作
-	//	err := qs.Filter("title", name).One(cate)
-	//	if err == nil {
-	//		return err
-	//	}
 	id, err = o.Insert(cataloglink)
 	if err != nil {
 		return id, err //如果文章编号相同，则唯一性检查错误，返回id吗？
 	}
-	// if id == 0 {
-	// 	var catalog Catalog
-	// 	err = o.QueryTable("catalog").Filter("tnumber", tnumber).One(&catalog, "Id")
-	// 	id = catalog.Id
-	// }
 	return id, err
 }
 
 //添加设计说明
 func AddCatalogContent(cid int64, content string, level int) (id int64, err error) {
-	// cid, err := strconv.ParseInt(categoryid, 10, 64)
 	o := orm.NewOrm()
 	catalogcontent := &CatalogContent{
 		CatalogId: cid,
 		Content:   content,
 		Level:     level,
-		// Category:   category,
-		// CategoryId: cid,
-		// Content:    content,
-		// Attachment: attachment,
-		// Author:     uname,
-		Created: time.Now(),
-		Updated: time.Now(),
-		// ReplyTime:  time.Now(),
+		Created:   time.Now(),
+		Updated:   time.Now(),
 	}
-	//	qs := o.QueryTable("category") //不知道主键就用这个过滤操作
-	//	err := qs.Filter("title", name).One(cate)
-	//	if err == nil {
-	//		return err
-	//	}
+
 	id, err = o.Insert(catalogcontent)
 	if err != nil {
 		return id, err //如果文章编号相同，则唯一性检查错误，返回id吗？
 	}
-	// if id == 0 {
-	// 	var catalog Catalog
-	// 	err = o.QueryTable("catalog").Filter("tnumber", tnumber).One(&catalog, "Id")
-	// 	id = catalog.Id
-	// }
 	return id, err
 }
 
@@ -205,6 +172,74 @@ func GetCatalogContents(cid int64) (contents []*CatalogContent, err error) {
 		return nil, err
 	}
 	return contents, err
+}
+
+//修改links
+func ModifyCatalogLink(id, cid int64, fieldname, value string) error {
+	o := orm.NewOrm()
+	var cataloglink CatalogLink
+	// catalog := &Catalog{Id: cid}
+	err := o.QueryTable("CatalogLink").Filter("Id", id).One(&cataloglink)
+	// err:=o.Read(catalog).One()
+	if err == nil {
+		cataloglink.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
+		cataloglink.Url = value
+		_, err := o.Update(&cataloglink, "Url", "Updated")
+		if err != nil {
+			return err
+		} else {
+			return nil
+		}
+	} else {
+		cataloglink := &CatalogLink{
+			CatalogId: cid,
+			Url:       value,
+			Created:   time.Now(),
+			Updated:   time.Now(),
+		}
+		_, err = o.Insert(cataloglink)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+//修改content
+func ModifyCatalogContent(id, cid int64, fieldname, value string, level int) error {
+	o := orm.NewOrm()
+	var catalogcontent CatalogContent
+	// catalog := &Catalog{Id: cid}
+	err := o.QueryTable("CatalogContent").Filter("Id", id).One(&catalogcontent)
+	// err:=o.Read(catalog).One()
+	if err == nil {
+		catalogcontent.Updated = time.Now()
+		catalogcontent.Content = value
+		_, err := o.Update(&catalogcontent, "Content", "Updated")
+		if err != nil {
+			return err
+		} else {
+			return nil
+		}
+	} else {
+		catalogcontent := &CatalogContent{
+			CatalogId: cid,
+			Content:   value,
+			Level:     level,
+			Created:   time.Now(),
+			Updated:   time.Now(),
+		}
+		// catalogcontent.Content = value
+		// catalogcontent.CatalogId = cid
+		// catalogcontent.Level = level
+		// catalogcontent.Created = time.Now()
+		// catalogcontent.Updated = time.Now()
+		id, err = o.Insert(catalogcontent)
+		if err != nil {
+			return err //如果文章编号相同，则唯一性检查错误，返回id吗？
+		}
+	}
+	return nil
 }
 
 func GetAllCatalogs(cid string) (catalogs []*Catalog, err error) {
@@ -260,18 +295,16 @@ func ModifyCatalog(cid int64, fieldname, value string) error {
 	err := o.QueryTable("catalog").Filter("Id", cid).One(&catalog)
 	// err:=o.Read(catalog).One()
 	if err == nil {
-		type Duration int64
-		const (
-			Nanosecond  Duration = 1
-			Microsecond          = 1000 * Nanosecond
-			Millisecond          = 1000 * Microsecond
-			Second               = 1000 * Millisecond
-			Minute               = 60 * Second
-			Hour                 = 60 * Minute
-		)
-		// hours := 8
-
-		const lll = "2006-01-02"
+		// type Duration int64
+		// const (
+		// 	Nanosecond  Duration = 1
+		// 	Microsecond          = 1000 * Nanosecond
+		// 	Millisecond          = 1000 * Microsecond
+		// 	Second               = 1000 * Millisecond
+		// 	Minute               = 60 * Second
+		// 	Hour                 = 60 * Minute
+		// )
+		// const lll = "2006-01-02"
 		catalog.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
 		switch fieldname {
 		case "ProjectNumber":
@@ -482,15 +515,11 @@ func DeletCatalog(cid string) error { //应该在controllers中显示警告
 	return err
 }
 
-func GetCatalog(tid string) (*Catalog, error) {
-	tidNum, err := strconv.ParseInt(tid, 10, 64)
-	if err != nil {
-		return nil, err
-	}
+func GetCatalog(id int64) (*Catalog, error) {
 	o := orm.NewOrm()
 	catalog := new(Catalog)
 	qs := o.QueryTable("catalog")
-	err = qs.Filter("id", tidNum).One(catalog)
+	err := qs.Filter("id", id).One(catalog)
 	if err != nil {
 		return nil, err
 	}

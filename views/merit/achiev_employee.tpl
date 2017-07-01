@@ -100,7 +100,7 @@
       </div>
       <table id="table"
               data-toggle="table"
-             data-url="/achievement/completed"
+             data-url="/achievement/send/6"
              data-search="true"
              data-show-refresh="true"
              data-show-toggle="true"
@@ -155,7 +155,7 @@
 </div>
 <table id="table1"
        data-toggle="table"
-       data-url="/achievement/running"
+       data-url="/achievement/send/5"
        data-search="true"
        data-show-refresh="true"
        data-show-toggle="true"
@@ -235,7 +235,7 @@ $(function () {
 </div>
 <table id="table2"
         data-toggle="table"
-       data-url="/achievement/myself"
+       data-url="/achievement/send/1"
        data-search="true"
        data-show-refresh="true"
        data-show-toggle="true"
@@ -277,7 +277,7 @@ $(function () {
 </div>
 <table id="table3"
         data-toggle="table"
-       data-url="/achievement/designd"
+       data-url="/achievement/send/2"
        data-search="true"
        data-show-refresh="true"
        data-show-toggle="true"
@@ -319,7 +319,7 @@ $(function () {
 </div>
 <table id="table4"
         data-toggle="table"
-       data-url="/achievement/checked"
+       data-url="/achievement/send/3"
        data-search="true"
        data-show-refresh="true"
        data-show-toggle="true"
@@ -360,7 +360,7 @@ $(function () {
 </div>
 <table id="table5"
         data-toggle="table"
-       data-url="/achievement/examined"
+       data-url="/achievement/send/4"
        data-search="true"
        data-show-refresh="true"
        data-show-toggle="true"

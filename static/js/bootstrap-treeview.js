@@ -143,6 +143,7 @@
 			addNodeBefore: $.proxy(this.addNodeBefore, this),
 			removeNode: $.proxy(this.removeNode, this),
 			updateNode: $.proxy(this.updateNode, this),
+			editNode: $.proxy(this.editNode, this),
 
 			// Select methods
 			selectNode: $.proxy(this.selectNode, this),
@@ -1419,22 +1420,16 @@
 		options = $.extend({}, _default.options, options);
 
 		// insert new node
-		var targetNodes;
-		var parentNode = this._nodes[node.parentId];
-		if (parentNode) {
-			targetNodes = parentNode.nodes;
-		} else {
-			targetNodes = this._tree;
-		}
-		targetNodes.splice(node.index, 1, newNode);
+		$.extend(node,newNode);
 
 		// remove old node from DOM
-		this._removeNodeEl(node);
+		//this._removeNodeEl(node);
 
 		// initialize new state and render changes
 		this._setInitialStates({nodes: this._tree}, 0)
 			.done(this._render.bind(this));
 	};
+
 
 	/**
 		Selects given tree nodes
@@ -1887,6 +1882,29 @@
 			}
 		}
 	};
+	
+    /** 
+     des:扩展bootstrap-treeview的编辑节点方法
+     编辑节点 
+     author:qlx 2017-3-31
+     */
+	Tree.prototype.editNode = function (identifiers, options) {
+	    $.each(identifiers,$.proxy(function (i, node) {
+	        this.setEditNode(node, options);
+	    }, this));
+	    this._setInitialStates({ nodes: this._tree }, 0);
+	    this._render();
+	}
+
+    /** 
+    * 编辑节点 
+    */
+	Tree.prototype.setEditNode = function (node, options) {
+	    if (options) {
+	        $.extend(node, options);
+	    };
+	};
+
 
 	var logError = function (message) {
 		if (window.console) {
