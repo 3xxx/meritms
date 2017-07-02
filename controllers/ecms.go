@@ -47,6 +47,12 @@ type CatalogLinkConts struct {
 }
 
 func (c *EcmsController) GetEcmsPost() {
+	// username := c.Input().Get("username")
+	// beego.Info(username)
+	// password := c.Input().Get("password")
+	ecmsip := c.Input().Get("ecmsip")
+	// beego.Info(ecmsip)
+	ecmsport := c.Input().Get("ecmsport")
 	var ob []CatalogLinkConts
 	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
 	var ob1 []models.Catalog
@@ -61,7 +67,7 @@ func (c *EcmsController) GetEcmsPost() {
 			beego.Error(err)
 		} else {
 			for _, v1 := range v.Link {
-				_, err = models.AddCatalogLink(cid, v1.Url)
+				_, err = models.AddCatalogLink(cid, "http://"+ecmsip+":"+ecmsport+v1.Url)
 				if err != nil {
 					beego.Error(err)
 				}

@@ -495,24 +495,23 @@ func ModifyCatalogState(cid int64, state int) error {
 	return err
 }
 
-func DeletCatalog(cid string) error { //应该在controllers中显示警告
-	cidNum, err := strconv.ParseInt(cid, 10, 64)
-	if err != nil {
-		return err
-	}
-
+func DeletCatalog(id int64) error { //应该在controllers中显示警告
+	// cidNum, err := strconv.ParseInt(cid, 10, 64)
+	// if err != nil {
+	// 	return err
+	// }
 	o := orm.NewOrm()
 	// Read 默认通过查询主键赋值，可以使用指定的字段进行查询：
 	// user := User{Name: "slene"}
 	// err = o.Read(&user, "Name")
-	catalog := Catalog{Id: cidNum}
+	catalog := Catalog{Id: id}
 	if o.Read(&catalog) == nil {
-		_, err = o.Delete(&catalog)
+		_, err := o.Delete(&catalog)
 		if err != nil {
 			return err
 		}
 	} //这样写不对，如果没读到记录，也不返回错误，那么似乎是删除成功了。
-	return err
+	return nil
 }
 
 func GetCatalog(id int64) (*Catalog, error) {

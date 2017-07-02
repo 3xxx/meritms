@@ -419,7 +419,7 @@ func (c *AttachController) AddAttachment() {
 			catalog.ProjectNumber = meritproj.Code
 			catalog.ProjectName = meritproj.Title
 
-			if len(proj.ParentIdPath) > 1 {
+			if len(patharray) > 1 {
 				//pid转成64位
 				meritNum1, err := strconv.ParseInt(patharray[1], 10, 64)
 				if err != nil {
@@ -432,7 +432,7 @@ func (c *AttachController) AddAttachment() {
 				catalog.DesignStage = meritproj1.Title
 			}
 
-			if len(proj.ParentIdPath) > 2 {
+			if len(patharray) > 2 {
 				//pid转成64位
 				meritNum2, err := strconv.ParseInt(patharray[2], 10, 64)
 				if err != nil {
@@ -460,9 +460,9 @@ func (c *AttachController) AddAttachment() {
 					Url = "/attachment/" + proj1.Code + proj1.Title
 				} else {
 					path = proj1.Title
+					DiskDirectory = DiskDirectory + "\\" + path
+					Url = Url + "/" + path
 				}
-				DiskDirectory = DiskDirectory + "\\" + path
-				Url = Url + "/" + path
 			}
 			DiskDirectory = DiskDirectory + "\\" + proj.Title //加上自身
 			Url = Url + "/" + proj.Title

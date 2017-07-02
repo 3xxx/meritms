@@ -26,7 +26,7 @@ func main() {
 
 	// time1 := "0/" + time + " * * * * *"
 
-	time1 := "0 16 22 * * *"
+	time1 := "0 30 23 * * *"
 	tk1 := toolbox.NewTask("tk1", time1, func() error { controllers.Postdata(); return nil }) //func() error { fmt.Println("tk1"); return nil }
 	toolbox.AddTask("tk1", tk1)
 	toolbox.StartTask()

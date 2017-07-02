@@ -3065,7 +3065,6 @@ func (c *Achievement) SendCatalog() {
 	// rolename, _ = strconv.Atoi(role)
 	// c.Data["Uname"] = uname
 	//取得用户名
-
 	// if rolename > 2 && uname != username {
 	var ob []CatalogLinkCont
 	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
@@ -3166,77 +3165,84 @@ func (c *Achievement) SendCatalog() {
 
 //退回一条目录，状态降到前一个人的位置
 func (c *Achievement) DownSendCatalog() {
-	cid := c.Input().Get("CatalogId")
-
-	id, err := strconv.ParseInt(cid, 10, 64)
-	if err != nil {
-		beego.Error(err)
-	}
-	catalog, err := m.GetCatalog(id)
-	if err != nil {
-		beego.Error(err)
-	}
-	switch catalog.State {
-	case 4:
-		if catalog.Checked != "" {
-			err = m.ModifyCatalogState(id, 3)
-			if err != nil {
-				beego.Error(err)
-			} else {
-				data := "退回ok!"
-				c.Ctx.WriteString(data)
+	var ob []CatalogLinkCont
+	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
+	for _, v := range ob {
+		catalog, err := m.GetCatalog(v.Id)
+		if err != nil {
+			beego.Error(err)
+		}
+		// cid := c.Input().Get("CatalogId")
+		// id, err := strconv.ParseInt(cid, 10, 64)
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
+		// catalog, err := m.GetCatalog(id)
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
+		switch catalog.State {
+		case 4:
+			if catalog.Checked != "" {
+				err = m.ModifyCatalogState(v.Id, 3)
+				if err != nil {
+					beego.Error(err)
+				} else {
+					data := "退回ok!"
+					c.Ctx.WriteString(data)
+				}
+			} else if catalog.Designd != "" {
+				err = m.ModifyCatalogState(v.Id, 2)
+				if err != nil {
+					beego.Error(err)
+				} else {
+					data := "退回ok!"
+					c.Ctx.WriteString(data)
+				}
+			} else if catalog.Drawn != "" {
+				err = m.ModifyCatalogState(v.Id, 1)
+				if err != nil {
+					beego.Error(err)
+				} else {
+					data := "退回ok!"
+					c.Ctx.WriteString(data)
+				}
 			}
-		} else if catalog.Designd != "" {
-			err = m.ModifyCatalogState(id, 2)
-			if err != nil {
-				beego.Error(err)
-			} else {
-				data := "退回ok!"
-				c.Ctx.WriteString(data)
+		case 3:
+			if catalog.Designd != "" {
+				err = m.ModifyCatalogState(v.Id, 2)
+				if err != nil {
+					beego.Error(err)
+				} else {
+					data := "退回ok!"
+					c.Ctx.WriteString(data)
+				}
+			} else if catalog.Drawn != "" {
+				err = m.ModifyCatalogState(v.Id, 1)
+				if err != nil {
+					beego.Error(err)
+				} else {
+					data := "退回ok!"
+					c.Ctx.WriteString(data)
+				}
 			}
-		} else if catalog.Drawn != "" {
-			err = m.ModifyCatalogState(id, 1)
-			if err != nil {
-				beego.Error(err)
-			} else {
-				data := "退回ok!"
-				c.Ctx.WriteString(data)
+		case 2:
+			if catalog.Drawn != "" {
+				err = m.ModifyCatalogState(v.Id, 1)
+				if err != nil {
+					beego.Error(err)
+				} else {
+					data := "退回ok!"
+					c.Ctx.WriteString(data)
+				}
 			}
 		}
-	case 3:
-		if catalog.Designd != "" {
-			err = m.ModifyCatalogState(id, 2)
-			if err != nil {
-				beego.Error(err)
-			} else {
-				data := "退回ok!"
-				c.Ctx.WriteString(data)
-			}
-		} else if catalog.Drawn != "" {
-			err = m.ModifyCatalogState(id, 1)
-			if err != nil {
-				beego.Error(err)
-			} else {
-				data := "退回ok!"
-				c.Ctx.WriteString(data)
-			}
-		}
-	case 2:
-		if catalog.Drawn != "" {
-			err = m.ModifyCatalogState(id, 1)
-			if err != nil {
-				beego.Error(err)
-			} else {
-				data := "退回ok!"
-				c.Ctx.WriteString(data)
-			}
-		}
+		logs := logs.NewLogger(1000)
+		logs.SetLogger("file", `{"filename":"log/meritlog.log"}`)
+		logs.EnableFuncCallDepth(true)
+		logs.Info(c.Ctx.Input.IP() + " " + "退回记录" + strconv.FormatInt(v.Id, 10))
+		logs.Close()
 	}
-	logs := logs.NewLogger(1000)
-	logs.SetLogger("file", `{"filename":"log/meritlog.log"}`)
-	logs.EnableFuncCallDepth(true)
-	logs.Info(c.Ctx.Input.IP() + " " + "退回记录" + cid)
-	logs.Close()
 }
 
 //删除一条目录
@@ -3248,19 +3254,26 @@ func (c *Achievement) DeleteCatalog() {
 	//取得用户名
 
 	// if rolename > 2 && uname != username {
-	cid := c.Input().Get("CatalogId")
-
-	err := m.DeletCatalog(cid)
-	if err != nil {
-		beego.Error(err)
-	} else {
-		data := "ok!"
-		c.Ctx.WriteString(data)
-		logs := logs.NewLogger(1000)
-		logs.SetLogger("file", `{"filename":"log/meritlog.log"}`)
-		logs.EnableFuncCallDepth(true)
-		logs.Info(c.Ctx.Input.IP() + " " + "删除记录" + cid)
-		logs.Close()
+	// cid := c.Input().Get("CatalogId")
+	var ob []CatalogLinkCont
+	json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
+	for _, v := range ob {
+		// catalog, err := m.GetCatalog(v.Id)
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
+		err := m.DeletCatalog(v.Id)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			data := "ok!"
+			c.Ctx.WriteString(data)
+			logs := logs.NewLogger(1000)
+			logs.SetLogger("file", `{"filename":"log/meritlog.log"}`)
+			logs.EnableFuncCallDepth(true)
+			logs.Info(c.Ctx.Input.IP() + " " + "删除记录" + strconv.FormatInt(v.Id, 10))
+			logs.Close()
+		}
 	}
 }
 
