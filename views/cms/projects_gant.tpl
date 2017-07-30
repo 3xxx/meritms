@@ -11,7 +11,7 @@
 
   <link rel=stylesheet href="/static/css/gantt/gantt.css" type="text/css">
   <link rel=stylesheet href="/static/css/gantt/ganttPrint.css" type="text/css" media="print">
-<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 
   <script src="/static/js/gantt/jquery.min.js"></script>
   <script src="/static/js/gantt/jquery-ui.min.js"></script>
@@ -38,8 +38,6 @@
   <script src="/static/js/gantt/ganttMaster.js"></script>  
 </head>
 <body style="background-color: #fff;">
-
-
 
   <div id="workSpace" style="padding:0px; overflow-y:auto; overflow-x:hidden;border:1px solid #e5e5e5;position:relative;margin:0 5px"></div>
 
@@ -211,7 +209,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -6,
        "name": "施工专业", 
        "progress": 0, 
@@ -233,7 +231,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -7,
        "name": "施工专业", 
        "progress": 0, 
@@ -255,7 +253,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -8,
        "name": "施工专业", 
        "progress": 0, 
@@ -277,7 +275,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -9,
        "name": "施工专业", 
        "progress": 0, 
@@ -299,7 +297,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -10,
        "name": "施工专业", 
        "progress": 0, 
@@ -321,7 +319,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -11,
        "name": "施工专业", 
        "progress": 0, 
@@ -343,7 +341,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -12,
        "name": "施工专业", 
        "progress": 0, 
@@ -365,7 +363,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -13,
        "name": "施工专业", 
        "progress": 0, 
@@ -387,7 +385,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -14,
        "name": "施工专业", 
        "progress": 0, 
@@ -409,7 +407,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -15,
        "name": "施工专业", 
        "progress": 0, 
@@ -431,7 +429,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -16,
        "name": "施工专业", 
        "progress": 0, 
@@ -453,7 +451,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -17,
        "name": "施工专业", 
        "progress": 0, 
@@ -475,7 +473,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -18,
        "name": "施工专业", 
        "progress": 0, 
@@ -497,7 +495,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -19,
        "name": "施工专业", 
        "progress": 0, 
@@ -519,7 +517,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -20,
        "name": "施工专业", 
        "progress": 0, 
@@ -541,7 +539,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -21,
        "name": "testing",
         "progress": 0,
@@ -924,7 +922,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -5,
        "name": "施工专业", 
        "progress": 0, 
@@ -946,7 +944,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -6,
        "name": "施工专业", 
        "progress": 0, 
@@ -968,7 +966,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -7,
        "name": "施工专业", 
        "progress": 0, 
@@ -990,7 +988,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -8,
        "name": "施工专业", 
        "progress": 0, 
@@ -1012,7 +1010,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -9,
        "name": "施工专业", 
        "progress": 0, 
@@ -1034,7 +1032,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -10,
        "name": "施工专业", 
        "progress": 0, 
@@ -1056,7 +1054,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -11,
        "name": "施工专业", 
        "progress": 0, 
@@ -1078,7 +1076,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -12,
        "name": "施工专业", 
        "progress": 0, 
@@ -1100,7 +1098,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -13,
        "name": "施工专业", 
        "progress": 0, 
@@ -1122,7 +1120,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -14,
        "name": "施工专业", 
        "progress": 0, 
@@ -1144,7 +1142,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -15,
        "name": "施工专业", 
        "progress": 0, 
@@ -1166,7 +1164,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -16,
        "name": "施工专业", 
        "progress": 0, 
@@ -1188,7 +1186,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -17,
        "name": "施工专业", 
        "progress": 0, 
@@ -1210,7 +1208,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -18,
        "name": "施工专业", 
        "progress": 0, 
@@ -1232,7 +1230,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -19,
        "name": "施工专业", 
        "progress": 0, 
@@ -1254,7 +1252,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   },
+      },
       {"id": -20,
        "name": "施工专业", 
        "progress": 0, 
@@ -1276,7 +1274,7 @@
        "collapsed": false, 
        "assigs": [], 
        "hasChild": false
-   }
+      }
     ], 
     "selectedRow": 2, 
     "deletedTaskIds": [],
@@ -1308,32 +1306,31 @@
   }
 
   function saveInLocalStorage() {
-  var prj = ge.saveProject();
-  if (localStorage) {
-    localStorage.setObject("teamworkGantDemo", prj);
-  }
+    var prj = ge.saveProject();
+    if (localStorage) {
+      localStorage.setObject("teamworkGantDemo", prj);
+    }
   }
 
   //-------------------------------------------  Open a black popup for managing resources. This is only an axample of implementation (usually resources come from server) ------------------------------------------------------
   function editResources(){
+    //make resource editor
+    var resourceEditor = $.JST.createFromTemplate({}, "RESOURCE_EDITOR");
+    var resTbl=resourceEditor.find("#resourcesTable");
 
-  //make resource editor
-  var resourceEditor = $.JST.createFromTemplate({}, "RESOURCE_EDITOR");
-  var resTbl=resourceEditor.find("#resourcesTable");
-
-  for (var i=0;i<ge.resources.length;i++){
-    var res=ge.resources[i];
-    resTbl.append($.JST.createFromTemplate(res, "RESOURCE_ROW"))
-  }
+    for (var i=0;i<ge.resources.length;i++){
+      var res=ge.resources[i];
+      resTbl.append($.JST.createFromTemplate(res, "RESOURCE_ROW"))
+    }
 
 
-  //bind add resource
-  resourceEditor.find("#addResource").click(function(){
-    resTbl.append($.JST.createFromTemplate({id:"new",name:"resource"}, "RESOURCE_ROW"))
-  });
+    //bind add resource
+    resourceEditor.find("#addResource").click(function(){
+      resTbl.append($.JST.createFromTemplate({id:"new",name:"resource"}, "RESOURCE_ROW"))
+    });
 
-  //bind save event
-  resourceEditor.find("#resSaveButton").click(function(){
+    //bind save event
+    resourceEditor.find("#resSaveButton").click(function(){
     var newRes=[];
     //find for deleted res
     for (var i=0;i<ge.resources.length;i++){
@@ -1742,7 +1739,7 @@
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <script src="/static/js/jquery.form.js"></script>
   <script type="text/javascript">
-  function importgants(){
+    function importgants(){
         $('#importgants').modal({
         show:true,
         backdrop:'static'

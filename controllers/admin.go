@@ -45,177 +45,203 @@ func init() {
 // }
 
 func (c *AdminController) Get() {
-	role := Getiprole(c.Ctx.Input.IP())
+	username, role := checkprodRole(c.Ctx)
 	if role == 1 {
-		c.TplName = "admin/admin.tpl"
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
 	} else {
-		c.Data["json"] = "权限不够！"
-		c.ServeJSON()
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
 	}
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	if role != 1 {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
+	c.TplName = "admin/admin.tpl"
+
 }
 
 func (c *AdminController) Admin() {
-	id := c.Ctx.Input.Param(":id")
-	role := Getiprole(c.Ctx.Input.IP())
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["Id"] = id
 	c.Data["role"] = role
-	// c.Data["IsLogin"] = checkAccount(c.Ctx)
-	// //1.首先判断是否注册
-	// if !checkAccount(c.Ctx) {
-	// 	route := c.Ctx.Request.URL.String()
-	// 	c.Data["Url"] = route
-	// 	c.Redirect("/login?url="+route, 302)
-	// 	return
-	// }
-	// //4.取得客户端用户名
-	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	// v := sess.Get("uname")
-	// if v != nil {
-	// 	c.Data["Uname"] = v.(string)
-	// }
-	// //4.取出用户的权限等级
-	// role, err := checkRole(c.Ctx) //login里的
-	// if err != nil {
-	// 	beego.Error(err)
-	// } else {
-	// 	//5.进行逻辑分析：
-	// 	if role > 2 { //
-	// 		route := c.Ctx.Request.URL.String()
-	// 		c.Data["Url"] = route
-	// 		c.Redirect("/roleerr?url="+route, 302)
-	// 		return
-	// 	}
-	// }
-	switch id {
-	case "010": //日历事件
-		c.TplName = "admin/admin_calendar.tpl"
-	case "011": //基本设置
-		c.TplName = "admin/admin_base.tpl"
-	case "012": //组织
-		c.TplName = "admin/admin_department.tpl"
-	case "013": //分级目录
-		c.TplName = "admin/admin_category.tpl"
-	case "014": //搜索引擎
-		c.TplName = "admin/admin_spiderip.tpl"
-	case "021": //项目编辑
-		c.TplName = "admin/admin_projectstree.tpl"
-	case "022": //同步IP async
-		c.TplName = "admin/admin_projectsynch.tpl"
-	case "023": //项目权限
-		c.TplName = "admin/admin_projectsrole.tpl"
-	case "024": //项目目录快捷编辑
-		c.TplName = "admin/admin_projectseditor.tpl"
-	case "031": //成果类型
-		c.TplName = "admin/admin_achievcategory.tpl"
-	case "032": //科室成果类型
-		c.TplName = "admin/admin_departachievcate.tpl"
-	case "033": //本周成果编辑
-		c.TplName = "admin/admin_achievementseditor.tpl"
-	case "034": //本月成果编辑
-		c.TplName = "admin/admin_projectsynch.tpl"
-	case "035": //上月成果编辑
-		c.TplName = "admin/admin_projectcaterole.tpl"
-	case "036": //当年成果编辑
-		c.TplName = "admin/admin_projectcaterole.tpl"
+	if role == 1 {
+		id := c.Ctx.Input.Param(":id")
+		c.Data["Id"] = id
+		// c.Data["IsLogin"] = checkAccount(c.Ctx)
+		// //1.首先判断是否注册
+		// if !checkAccount(c.Ctx) {
+		// 	route := c.Ctx.Request.URL.String()
+		// 	c.Data["Url"] = route
+		// 	c.Redirect("/login?url="+route, 302)
+		// 	return
+		// }
+		// //4.取得客户端用户名
+		// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+		// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+		// v := sess.Get("uname")
+		// if v != nil {
+		// 	c.Data["Uname"] = v.(string)
+		// }
+		// //4.取出用户的权限等级
+		// role, err := checkRole(c.Ctx) //login里的
+		// if err != nil {
+		// 	beego.Error(err)
+		// } else {
+		// 	//5.进行逻辑分析：
+		// 	if role > 2 { //
+		// 		route := c.Ctx.Request.URL.String()
+		// 		c.Data["Url"] = route
+		// 		c.Redirect("/roleerr?url="+route, 302)
+		// 		return
+		// 	}
+		// }
+		switch id {
+		case "010": //日历事件
+			c.TplName = "admin/admin_calendar.tpl"
+		case "011": //基本设置
+			c.TplName = "admin/admin_base.tpl"
+		case "012": //组织
+			c.TplName = "admin/admin_department.tpl"
+		case "013": //分级目录
+			c.TplName = "admin/admin_category.tpl"
+		case "014": //搜索引擎
+			c.TplName = "admin/admin_spiderip.tpl"
+		case "021": //项目编辑
+			c.TplName = "admin/admin_projectstree.tpl"
+		case "022": //同步IP async
+			c.TplName = "admin/admin_projectsynch.tpl"
+		case "023": //项目权限
+			c.TplName = "admin/admin_projectsrole.tpl"
+		case "024": //项目目录快捷编辑
+			c.TplName = "admin/admin_projectseditor.tpl"
+		case "031": //成果类型
+			c.TplName = "admin/admin_achievcategory.tpl"
+		case "032": //科室成果类型
+			c.TplName = "admin/admin_departachievcate.tpl"
+		case "033": //本周成果编辑
+			c.TplName = "admin/admin_achievementseditor.tpl"
+		case "034": //本月成果编辑
+			c.TplName = "admin/admin_projectsynch.tpl"
+		case "035": //上月成果编辑
+			c.TplName = "admin/admin_projectcaterole.tpl"
+		case "036": //当年成果编辑
+			c.TplName = "admin/admin_projectcaterole.tpl"
 
-	case "041": //定义价值
-		c.TplName = "admin/admin_merit.tpl"
-	case "042": //科室价值
-		achsecoffice := make([]AchSecoffice, 0)
-		achdepart := make([]AchDepart, 0)
-		category1, err := models.GetAdminDepart(0) //得到多个分院
-		if err != nil {
-			beego.Error(err)
-		}
-		for i1, _ := range category1 {
-			aa := make([]AchDepart, 1)
-			aa[0].Id = category1[i1].Id
-			aa[0].Level = "1"
-			// aa[0].Pid = category[0].Id
-			aa[0].Title = category1[i1].Title //分院名称
-			// beego.Info(category1[i1].Title)
-			category2, err := models.GetAdminDepart(category1[i1].Id) //得到多个科室
+		case "041": //定义价值
+			c.TplName = "admin/admin_merit.tpl"
+		case "042": //科室价值
+			achsecoffice := make([]AchSecoffice, 0)
+			achdepart := make([]AchDepart, 0)
+			category1, err := models.GetAdminDepart(0) //得到多个分院
 			if err != nil {
 				beego.Error(err)
 			}
-			//如果返回科室为空，则直接取得员工
-			//这个逻辑判断不完美，如果一个部门即有科室，又有人没有科室属性怎么办，直接挂在部门下的呢？
-			//应该是反过来找出所有没有科室字段的人员，把他放在部门下
-			if len(category2) > 0 {
-				for i2, _ := range category2 {
-					bb := make([]AchSecoffice, 1)
-					bb[0].Id = category2[i2].Id
-					bb[0].Level = "2"
-					bb[0].Pid = category1[i1].Id
-					bb[0].Title = category2[i2].Title //科室名称
-					// beego.Info(category2[i2].Title)
-					//根据分院和科室查所有员工
-					// users, count, err := models.GetUsersbySec(category1[i1].Title, category2[i2].Title) //得到员工姓名
-					// if err != nil {
-					// 	beego.Error(err)
-					// }
-					// for i3, _ := range users {
-					// 	cc := make([]AchEmployee, 1)
-					// 	cc[0].Id = users[i3].Id
-					// 	cc[0].Level = "3"
-					// 	cc[0].Pid = category2[i2].Id
-					// 	cc[0].Nickname = users[i3].Nickname //名称
-					// 	// beego.Info(users[i3].Nickname)
-					// 	// cc[0].Selectable = false
-					// 	achemployee = append(achemployee, cc...)
-					// }
-					// bb[0].Tags[0] = strconv.Itoa(count)
-					// bb[0].Employee = achemployee
-					bb[0].Selectable = true
-					// achemployee = make([]AchEmployee, 0) //再把slice置0
-					achsecoffice = append(achsecoffice, bb...)
-					// depcount = depcount + count //部门人员数=科室人员数相加
+			for i1, _ := range category1 {
+				aa := make([]AchDepart, 1)
+				aa[0].Id = category1[i1].Id
+				aa[0].Level = "1"
+				// aa[0].Pid = category[0].Id
+				aa[0].Title = category1[i1].Title //分院名称
+				// beego.Info(category1[i1].Title)
+				category2, err := models.GetAdminDepart(category1[i1].Id) //得到多个科室
+				if err != nil {
+					beego.Error(err)
 				}
+				//如果返回科室为空，则直接取得员工
+				//这个逻辑判断不完美，如果一个部门即有科室，又有人没有科室属性怎么办，直接挂在部门下的呢？
+				//应该是反过来找出所有没有科室字段的人员，把他放在部门下
+				if len(category2) > 0 {
+					for i2, _ := range category2 {
+						bb := make([]AchSecoffice, 1)
+						bb[0].Id = category2[i2].Id
+						bb[0].Level = "2"
+						bb[0].Pid = category1[i1].Id
+						bb[0].Title = category2[i2].Title //科室名称
+						// beego.Info(category2[i2].Title)
+						//根据分院和科室查所有员工
+						// users, count, err := models.GetUsersbySec(category1[i1].Title, category2[i2].Title) //得到员工姓名
+						// if err != nil {
+						// 	beego.Error(err)
+						// }
+						// for i3, _ := range users {
+						// 	cc := make([]AchEmployee, 1)
+						// 	cc[0].Id = users[i3].Id
+						// 	cc[0].Level = "3"
+						// 	cc[0].Pid = category2[i2].Id
+						// 	cc[0].Nickname = users[i3].Nickname //名称
+						// 	// beego.Info(users[i3].Nickname)
+						// 	// cc[0].Selectable = false
+						// 	achemployee = append(achemployee, cc...)
+						// }
+						// bb[0].Tags[0] = strconv.Itoa(count)
+						// bb[0].Employee = achemployee
+						bb[0].Selectable = true
+						// achemployee = make([]AchEmployee, 0) //再把slice置0
+						achsecoffice = append(achsecoffice, bb...)
+						// depcount = depcount + count //部门人员数=科室人员数相加
+					}
+				}
+				//查出所有有这个部门但科室名为空的人员
+				//根据分院查所有员工
+				// beego.Info(category1[i1].Title)
+				// users, count, err := models.GetUsersbySecOnly(category1[i1].Title) //得到员工姓名
+				// if err != nil {
+				// 	beego.Error(err)
+				// }
+				// beego.Info(users)
+				// for i3, _ := range users {
+				// 	dd := make([]AchSecoffice, 1)
+				// 	dd[0].Id = users[i3].Id
+				// 	dd[0].Level = "3"
+				// 	// dd[0].Href = users[i3].Ip + ":" + users[i3].Port
+				// 	dd[0].Pid = category1[i1].Id
+				// 	dd[0].Title = users[i3].Nickname //名称——关键，把人员当作科室名
+				// 	dd[0].Selectable = true
+				// 	achsecoffice = append(achsecoffice, dd...)
+				// }
+				// aa[0].Tags[0] = count + depcount
+				// count = 0
+				// depcount = 0
+				aa[0].Secoffice = achsecoffice
+				aa[0].Selectable = true                //默认是false点击展开
+				achsecoffice = make([]AchSecoffice, 0) //再把slice置0
+				achdepart = append(achdepart, aa...)
 			}
-			//查出所有有这个部门但科室名为空的人员
-			//根据分院查所有员工
-			// beego.Info(category1[i1].Title)
-			// users, count, err := models.GetUsersbySecOnly(category1[i1].Title) //得到员工姓名
-			// if err != nil {
-			// 	beego.Error(err)
-			// }
-			// beego.Info(users)
-			// for i3, _ := range users {
-			// 	dd := make([]AchSecoffice, 1)
-			// 	dd[0].Id = users[i3].Id
-			// 	dd[0].Level = "3"
-			// 	// dd[0].Href = users[i3].Ip + ":" + users[i3].Port
-			// 	dd[0].Pid = category1[i1].Id
-			// 	dd[0].Title = users[i3].Nickname //名称——关键，把人员当作科室名
-			// 	dd[0].Selectable = true
-			// 	achsecoffice = append(achsecoffice, dd...)
-			// }
-			// aa[0].Tags[0] = count + depcount
-			// count = 0
-			// depcount = 0
-			aa[0].Secoffice = achsecoffice
-			aa[0].Selectable = true                //默认是false点击展开
-			achsecoffice = make([]AchSecoffice, 0) //再把slice置0
-			achdepart = append(achdepart, aa...)
-		}
-		c.Data["json"] = achdepart
-		c.TplName = "admin/admin_secofficemerit.tpl"
-	case "051": //用户
-		c.TplName = "admin/admin_users.tpl"
-	case "052": //IP地址段
-		c.TplName = "admin/admin_ipsegment.tpl"
-	case "053": //用户组
-		c.TplName = "admin/admin/admin_usergroup.tpl"
-	case "061": //系统权限
-		c.TplName = "admin/admin_systemrole.tpl"
-	case "062": //项目权限
-		c.TplName = "admin/admin_projectrole.tpl"
+			c.Data["json"] = achdepart
+			c.TplName = "admin/admin_secofficemerit.tpl"
+		case "051": //用户
+			c.TplName = "admin/admin_users.tpl"
+		case "052": //IP地址段
+			c.TplName = "admin/admin_ipsegment.tpl"
+		case "053": //用户组
+			c.TplName = "admin/admin/admin_usergroup.tpl"
+		case "061": //系统权限
+			c.TplName = "admin/admin_systemrole.tpl"
+		case "062": //项目权限
+			c.TplName = "admin/admin_projectrole.tpl"
 
-	default:
-		c.TplName = "admin/admin_calendar.tpl"
+		default:
+			c.TplName = "admin/admin_calendar.tpl"
+		}
 	}
 }
 
@@ -940,8 +966,18 @@ func Createip() {
 
 //取得访问者的权限
 func Getiprole(ip string) (role int) {
-	role = Iprolemaps[ip]
-	return role
+	role, ok := Iprolemaps[ip]
+	if ok {
+		return role
+	} else {
+		return 5
+	}
+	//元素查找，这是通用的使用方法
+	// v, ok := personDB["test1"]
+	// if !ok {
+	//     fmt.Println(" 没有找到信息")
+	//     return
+	// }
 }
 
 //获取下一个IP

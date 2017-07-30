@@ -271,7 +271,7 @@
               id: '042',
               state: {
                   // checked: true,
-                  disabled: true,
+                  // disabled: true,
                   // expanded: true,
                   // selected: true
                 }

@@ -208,6 +208,8 @@ func (c *Achievement) GetAchievement() {
 		beego.Error(err)
 	}
 	var depcount int
+	// beego.Info(username)
+	// beego.Info(role)
 	switch role {
 	case 1: //管理员登录显示的侧栏是全部的
 		category1, err := models.GetAdminDepart(0) //得到多个分院

@@ -522,6 +522,7 @@ func checkprodRole(ctx *context.Context) (uname string, role int) {
 		uname = ctx.Input.IP()
 	}
 	iprole := Getiprole(ctx.Input.IP())
+	// beego.Info(iprole)
 	if iprole <= userrole {
 		role = iprole
 	} else {

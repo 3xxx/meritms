@@ -205,18 +205,17 @@ function queryParams(params) {
 $(function () {
         $('#button1').click(function () {
             //已完成
-            $('#table').bootstrapTable('refresh', {url:'/completed'});
+            $('#table').bootstrapTable('refresh', {url:'/achievement/send/6'});
             //已提交
-            $('#table1').bootstrapTable('refresh', {url:'/running'});
+            $('#table1').bootstrapTable('refresh', {url:'/achievement/send/5'});
             //待提交
-            $('#table2').bootstrapTable('refresh', {url:'/myself'});
+            $('#table2').bootstrapTable('refresh', {url:'/achievement/send/1'});
             //待我处理的设计
-            $('#table3').bootstrapTable('refresh', {url:'/designd'});
+            $('#table3').bootstrapTable('refresh', {url:'/achievement/send/2'});
             //待我处理的校核
-            $('#table4').bootstrapTable('refresh', {url:'/checked'});
-            //待我处理的审查
-            $('#table5').bootstrapTable('refresh', {url:'/examined'});
-
+            $('#table4').bootstrapTable('refresh', {url:'/achievement/send/3'});
+           //待我处理的审查 
+            $('#table5').bootstrapTable('refresh', {url:'/achievement/send/4'});
         });
     }); 
 </script>

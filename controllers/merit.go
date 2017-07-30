@@ -585,35 +585,31 @@ func (c *MeritController) GetMerit() {
 //上面那个是显示侧栏
 //这个是显示右侧iframe框架内容——科室内人员情况统计
 func (c *MeritController) Secofficeshow() {
-	//1.首先判断是否注册
-	if !checkAccount(c.Ctx) {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/login?url="+route, 302)
-		return
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
 	}
-	//2.取得客户端用户名
-	var uname string
-	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := c.GetSession("uname")
-	if v != nil {
-		uname = v.(string)
-		c.Data["Uname"] = v.(string)
-	}
-	//由uname取得user
-	user, err := models.GetUserByUsername(uname)
-	if err != nil {
-		beego.Error(err)
-	}
-	//3.取出用户的权限等级
-	role, _ := checkRole(c.Ctx) //login里的
-	if role > 4 {               //
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	if role > 4 { //
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
 		return
 	}
+	//由uname取得user
+	user, err := models.GetUserByUsername(username)
+	if err != nil {
+		beego.Error(err)
+	}
+
 	//分院——科室——价值分类——价值
 	secid := c.Input().Get("secid")
 	if secid == "" { //如果为空，则用登录的
@@ -920,31 +916,27 @@ func (c *MeritController) Myself() {
 		}
 	} else { //显示登录用户的
 		//1.首先判断是否注册
-		if !checkAccount(c.Ctx) {
-			route := c.Ctx.Request.URL.String()
-			c.Data["Url"] = route
-			c.Redirect("/login?url="+route, 302)
-			return
+		username, role := checkprodRole(c.Ctx)
+		if role == 1 {
+			c.Data["IsAdmin"] = true
+		} else if role > 1 && role < 5 {
+			c.Data["IsLogin"] = true
+		} else {
+			c.Data["IsAdmin"] = false
+			c.Data["IsLogin"] = false
 		}
-		//4.取得客户端用户名
-		var uname string
-		// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-		// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-		v := c.GetSession("uname")
-		if v != nil {
-			uname = v.(string)
-			c.Data["Uname"] = v.(string)
-		}
-		//4.取出用户的权限等级
-		role, _ := checkRole(c.Ctx) //login里的
-		if role > 4 {               //
+		c.Data["Username"] = username
+		c.Data["IsProjects"] = true
+		c.Data["Ip"] = c.Ctx.Input.IP()
+		c.Data["role"] = role
+		if role > 4 { //
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
 			c.Redirect("/roleerr?url="+route, 302)
 			return
 		}
 
-		user, err := models.GetUserByUsername(uname)
+		user, err := models.GetUserByUsername(username)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -1018,31 +1010,28 @@ func (c *MeritController) MeritSend() {
 	}
 	//如果是主任以上权限人查看，则id代表用户名id，个人查看，id则代表价值id
 	//1.首先判断是否注册
-	if !checkAccount(c.Ctx) {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/login?url="+route, 302)
-		return
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
 	}
-	//4.取得客户端用户名
-	var uname string
-	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := c.GetSession("uname")
-	if v != nil {
-		uname = v.(string)
-		c.Data["Uname"] = v.(string)
-	}
-	//4.取出用户的权限等级
-	role, _ := checkRole(c.Ctx) //login里的
-	if role > 4 {               //
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+
+	if role > 4 { //
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
 		return
 	}
 
-	user, err := models.GetUserByUsername(uname)
+	user, err := models.GetUserByUsername(username)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -1138,8 +1127,21 @@ func (c *MeritController) MeritExamined() {
 	// c.Data["Uname"] = v.(string)
 	// }
 	//4.取出用户的权限等级
-	role, _ := checkRole(c.Ctx) //login里的
-	if role > 4 {               //
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
+	}
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+
+	if role > 4 { //
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -1277,17 +1279,22 @@ func (c *MeritController) AddMerit() {
 	title := c.Input().Get("title")
 	choose := c.Input().Get("choose")
 	content := c.Input().Get("content")
-	//2.取得客户端用户名
-	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := c.GetSession("uname")
-	var uname string
-	if v != nil {
-		uname = v.(string)
-		c.Data["Uname"] = v.(string)
+	username, role := checkprodRole(c.Ctx)
+	if role == 1 {
+		c.Data["IsAdmin"] = true
+	} else if role > 1 && role < 5 {
+		c.Data["IsLogin"] = true
+	} else {
+		c.Data["IsAdmin"] = false
+		c.Data["IsLogin"] = false
 	}
+	c.Data["Username"] = username
+	c.Data["IsProjects"] = true
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+
 	//先由uname取得uid
-	user, err := models.GetUserByUsername(uname)
+	user, err := models.GetUserByUsername(username)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -1339,8 +1346,8 @@ func (c *MeritController) SendMerit() {
 	}
 	stateint1 := stateint + 1
 	statestring := strconv.Itoa(stateint1)
-	beego.Info(statestring)
-	beego.Info(id)
+	// beego.Info(statestring)
+	// beego.Info(id)
 	err = models.UpdateMerit(id, "State", statestring)
 	if err != nil {
 		beego.Error(err)
