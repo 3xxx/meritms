@@ -13,6 +13,7 @@ func init() {
 	//1.首页index
 	// beego.Router("/", &controllers.MainController{})
 	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")
+	beego.Router("/zsj", &controllers.MainController{}, "*:ZSJ")
 	// beego.Router("/postdata", &controllers.MainController{}, "*:Postdata")
 	//显示首页
 	beego.Router("/", &controllers.IndexController{}, "*:GetIndex")

@@ -11,15 +11,16 @@
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
   </head>
-  <body>
-    <div class="navbar navba-default navbar-fixed-top">
+  
+    <!-- <div class="navbar navba-default navbar-fixed-top"> -->
       <div class="container-fill">{{template "tpl/T.navbar.tpl" .}}</div>
-    </div>
+    <!-- </div> -->
+    <body>
     <!-- 侧栏 -->
-    <div id="treeview" class="col-xs-3"></div>
+    <div id="treeview" class="col-xs-3 col-sm-3 col-md-3 col-lg-3"></div>
 
     <!-- <a href="/category/view?id={{.Id}}" target='main'> -->
-    <div class="col-lg-9">
+    <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
     <!-- <div class="form-group"> -->
         <!-- <label class="control-label" id="regis" for="LoginForm-UserName"></label> 显示部门名称  -->
     <!-- </div> -->

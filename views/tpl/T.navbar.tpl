@@ -1,7 +1,7 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-static-top">
     <ul class="nav navbar-nav">
       <li {{if .IsIndex}}class="active"{{end}}>
-        <a href="/index">水利设计院</a>
+        <a href="/index">设计院</a>
       </li>
       <!-- <li {{if .IsProjects}}class="active"{{end}}>
         <a href="/project">项目</a>
@@ -44,11 +44,18 @@
       <li {{if .IsMerit}} class="active" {{end}} >
         <a href="/merit">价值</a>
       </li>
-      <li>
-        <a href="http://192.168.9.13:8081/standard" target="_blank">规范</a>
-      </li>
-      <li>
-        <a href="http://192.168.9.13:8081/legislation" target="_blank">对标</a>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          规范 <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <li>
+            <a href="http://112.74.42.44:8081/standard" target="_blank">查询</a>
+          </li>
+          <li>
+            <a href="http://112.74.42.44:8081/legislation" target="_blank">对标</a>
+          </li>
+        </ul>
       </li>
       
       <li {{if .IsMeetingroomCalendar}}class="active"{{end}}>

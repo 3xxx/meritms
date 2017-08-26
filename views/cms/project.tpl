@@ -22,11 +22,10 @@
   <!-- <script src="/static/js/tableExport.js"></script> -->
 </head>
 
-<body>
-<div class="navbar navba-default navbar-fixed-top">
+<!-- <div class="navbar navba-default navbar-fixed-top"> -->
   <div class="container-fill">{{template "tpl/T.navbar.tpl" .}}</div>
-</div>
-
+<!-- </div> -->
+<body>
 <div class="col-lg-3">
   <div id="tree"></div>
 </div>

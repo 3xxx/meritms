@@ -23,11 +23,11 @@
   <!-- <script src="/static/js/tableExport.js"></script> -->
 </head>
 <body>
-<div class="col-lg-2">
+<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
   <div id="tree"></div>
 </div>
 <!-- 菜单顶部 -->
-  <div class="col-lg-10">
+  <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
     <div class="navbar navbar-top">
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -496,7 +496,7 @@
     }
 </script>
 
-  <div class="col-lg-10">
+  <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
     <iframe src="/admin/01" name='main' frameborder="0"  width="100%" scrolling="no" marginheight="0" marginwidth="0" id="iframepage" onload="this.height=100"></iframe> 
   </div>  
 

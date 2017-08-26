@@ -31,6 +31,10 @@ func (c *MainController) Slide() {
 	c.TplName = "slide.tpl"
 }
 
+func (c *MainController) ZSJ() {
+	c.TplName = "zsj.tpl"
+}
+
 func (c *MainController) IsSubmitAgain(token string) bool {
 	cotoken := c.Ctx.GetCookie("token")
 	if token == "" || len(token) == 0 || token != cotoken || strings.Compare(cotoken, token) != 0 {
