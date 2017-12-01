@@ -38,11 +38,14 @@ Demo(http://112.74.42.44/)
 
 Merit source code is licensed under the Apache Licence, Version 2.0
 (http://www.apache.org/licenses/LICENSE-2.0.html).
+
 1.项目进度展示
 ![](https://cloud.githubusercontent.com/assets/10678867/25748417/8dc743b0-31dd-11e7-920f-8a54f7e5b23d.png)
 
+2.与project wise校审流程对比
 ![](https://user-images.githubusercontent.com/10678867/33466124-e8c03198-d686-11e7-8359-b394064e6c39.png)
-![](https://user-images.githubusercontent.com/10678867/33466218-73d4e562-d687-11e7-971c-47d6613d1699.png)
 
+3.简洁的校审流程设计
+![](https://user-images.githubusercontent.com/10678867/33466218-73d4e562-d687-11e7-971c-47d6613d1699.png)
 ![](https://user-images.githubusercontent.com/10678867/33466220-7401580e-d687-11e7-84f0-758e3c4be83d.png)
 ![](https://user-images.githubusercontent.com/10678867/31264191-fe325a56-aa99-11e7-9689-5cc1c130de85.gif)
