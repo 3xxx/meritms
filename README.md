@@ -46,6 +46,7 @@ Merit source code is licensed under the Apache Licence, Version 2.0
 ![](https://user-images.githubusercontent.com/10678867/33466124-e8c03198-d686-11e7-8359-b394064e6c39.png)
 
 3.简洁的校审流程设计
-![](https://user-images.githubusercontent.com/10678867/33466218-73d4e562-d687-11e7-971c-47d6613d1699.png)
 ![](https://user-images.githubusercontent.com/10678867/33466220-7401580e-d687-11e7-84f0-758e3c4be83d.png)
+![](https://user-images.githubusercontent.com/10678867/33466218-73d4e562-d687-11e7-971c-47d6613d1699.png)
+
 ![](https://user-images.githubusercontent.com/10678867/31264191-fe325a56-aa99-11e7-9689-5cc1c130de85.gif)
