@@ -47,8 +47,8 @@ Demo(http://112.74.42.44:8080/)
 Merit source code is licensed under the Apache Licence, Version 2.0
 (http://www.apache.org/licenses/LICENSE-2.0.html).
 
-1.项目进度展示
-![](https://cloud.githubusercontent.com/assets/10678867/25748417/8dc743b0-31dd-11e7-920f-8a54f7e5b23d.png)
+1.成果在线登记
+![default](https://user-images.githubusercontent.com/10678867/35192561-dd749b32-fecf-11e7-8b58-03a0e037e3c8.png)
 
 2.与project wise校审流程对比
 ![](https://user-images.githubusercontent.com/10678867/33466124-e8c03198-d686-11e7-8359-b394064e6c39.png)
@@ -56,5 +56,23 @@ Merit source code is licensed under the Apache Licence, Version 2.0
 3.简洁的校审流程设计
 ![](https://user-images.githubusercontent.com/10678867/33466220-7401580e-d687-11e7-84f0-758e3c4be83d.png)
 ![](https://user-images.githubusercontent.com/10678867/33466218-73d4e562-d687-11e7-971c-47d6613d1699.png)
+
+5.价值评测项目设置
+![snap16](https://user-images.githubusercontent.com/10678867/35192571-1c745502-fed0-11e7-87d0-0b4ef514ce21.png)
+
+6.价值登记
+
+![snap15](https://user-images.githubusercontent.com/10678867/35192570-1602be52-fed0-11e7-84a3-480c7c64e26a.png)
+
+7.价值审核
+
+![snap18](https://user-images.githubusercontent.com/10678867/35192567-085a6282-fed0-11e7-9b31-009e2320013f.png)
+
+8.价值统计
+
+![snap19](https://user-images.githubusercontent.com/10678867/35192563-f509b2a0-fecf-11e7-9c8c-b706bc9f2713.png)
+
+9.项目进度展示
+![](https://cloud.githubusercontent.com/assets/10678867/25748417/8dc743b0-31dd-11e7-920f-8a54f7e5b23d.png)
 
 ![](https://user-images.githubusercontent.com/10678867/31264191-fe325a56-aa99-11e7-9689-5cc1c130de85.gif)
