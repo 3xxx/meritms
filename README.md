@@ -74,4 +74,5 @@ Merit source code is licensed under the Apache Licence, Version 2.0
 ![](https://cloud.githubusercontent.com/assets/10678867/25748417/8dc743b0-31dd-11e7-920f-8a54f7e5b23d.png)
 
 带图标的select2设计
+
 ![](https://user-images.githubusercontent.com/10678867/31264191-fe325a56-aa99-11e7-9689-5cc1c130de85.gif)
