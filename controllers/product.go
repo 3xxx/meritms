@@ -203,7 +203,7 @@ func (c *ProdController) GetProducts() {
 		for _, x := range Articles {
 			articlearr := make([]ArticleContent, 1)
 			articlearr[0].Id = x.Id
-			articlearr[0].Content = x.Content
+			articlearr[0].Content = x.Content //返回的content是空，因为真要返回内容，会很影响速度，也没必要
 			articlearr[0].Link = "/project/product/article"
 			Articleslice = append(Articleslice, articlearr...)
 		}
@@ -350,12 +350,26 @@ func (c *ProdController) GetsynchProducts() {
 	if err != nil {
 		beego.Error(err)
 	}
+	var projid int64
 	//根据目录id取出项目id，以便得到同步ip
-	array := strings.Split(proj.ParentIdPath, "-")
-	projid, err := strconv.ParseInt(array[0], 10, 64)
-	if err != nil {
-		beego.Error(err)
+	// array := strings.Split(proj.ParentIdPath, "-")
+	if proj.ParentIdPath != "" { //如果不是根目录
+		array := strings.Split(proj.ParentIdPath, "-")
+		//pid转成64位
+		projid, err = strconv.ParseInt(array[0], 10, 64)
+		beego.Info(projid)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		projid = proj.Id
+		beego.Info(projid)
 	}
+	// projid, err := strconv.ParseInt(array[0], 10, 64)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+
 	//取得项目同步ip——进行循环ip——根据parenttitlepath和自身title查询ip上分级id——获取这个id下成果
 	projsynchip, err := models.GetAdminSynchIp(projid)
 	if err != nil {

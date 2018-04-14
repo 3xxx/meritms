@@ -1,6 +1,6 @@
 <!-- 具体一个项目侧栏id下所有成果，不含子目录下的成果 -->
 <!DOCTYPE html>
-{{template "header"}}
+{{template "tpl/T.header.tpl"}}
 <title>项目成果-EngiCMS</title>
 <head>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
@@ -23,7 +23,7 @@
   <script src="/static/js/tableExport.js"></script>
 
   <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
-  <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.js"> </script>
+  <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.min.js"> </script>
     <!--建议手动加在语言，避免在ie下有时因为加载语言失败导致编辑器加载失败-->
     <!--这里加载的语言文件会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的中文，那最后就是中文-->
   <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
@@ -36,11 +36,12 @@
   <!-- <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script> -->
 </head>
 
-<body>
-<div class="navbar navba-default navbar-fixed-top">
-  <div class="container-fill">{{template "navbar" .}}</div>
-</div>
 
+<!-- <div class="navbar navba-default navbar-fixed-top"> -->
+  <div class="container-fill">{{template "tpl/T.navbar.tpl" .}}</div>
+
+<!-- </div> -->
+<body>
 <div class="col-lg-12">
   <!-- 面包屑导航 -->
   <div class="breadcrumbs">

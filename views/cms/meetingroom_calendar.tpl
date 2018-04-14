@@ -1,10 +1,13 @@
 
 <!DOCTYPE html>
 {{template "tpl/T.header.tpl"}}
-
-<title>会议室预定</title>
+<title>会议室预约</title>
 <link rel='stylesheet' href='/static/css/fullcalendar.min.css' />
 <script src='/static/js/moment.min.js'></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
+  <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
 <script src='/static/js/fullcalendar.min.js'></script>
 <script src='/static/js/fullcalendar.zh-cn.js'></script>
 <script src='/static/js/bootstrap-datetimepicker.min.js'></script>
@@ -130,6 +133,9 @@
 		  }
 </style>
 </head>
+
+<div class="container-fill">{{template "tpl/T.navbar.tpl" .}}</div>
+
 <!-- <body> -->
 <script type="text/javascript">
 $(document).ready(function() {
@@ -137,10 +143,15 @@ $(document).ready(function() {
     $('#calendar').fullCalendar({
         // put your options and callbacks here
       header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,agendaWeek,agendaDay,listMonth'
-			},
+        left: 'prev,next today myCustomButton',
+        center: 'title',
+        right: 'month,agendaWeek,agendaDay,listMonth'
+      },
+   //    header: {
+			// 	left: 'prev,next today',
+			// 	center: 'title',
+			// 	right: 'month,agendaWeek,agendaDay,listMonth'
+			// },
 			// defaultDate: '2017-01-12',
 			navLinks: true, // can click day/week names to navigate views
 			editable: true,
@@ -284,12 +295,11 @@ $(document).ready(function() {
               // $("#ispublic1").prop('checked',data.Public);
               // alert(data.end);
       				$("#start1").val(data.start.format('YYYY-MM-DD HH:mm'));
-      				if (data.allDay){
-
-      				}else{
-								$("#end1").val(data.end.format('YYYY-MM-DD HH:mm'));
-      				}
-      				
+              // if (data.allDay){
+              if (data.end){
+              // }else{
+                $("#end1").val(data.end.format('YYYY-MM-DD HH:mm'));
+              }
 					    $('#add-new-event1').css({"background-color": data.color, "border-color": data.color});
               // var $list1 = $('#fileList1');
               // $("img").remove();
@@ -337,9 +347,14 @@ $(document).ready(function() {
                 }
             });     
           }
-});
-});
-// RGB 转16进制
+  });
+
+  $('#calendar .fc-left').append('<div class="input-group"><input type="text" id="eventtext" class="fc-prev-button fc-button fc-state-default fc-corner-left" style="width:100px;height:29px;" placeholder="搜索事件"><button type="button" id="searchbutton" class="fc-next-button fc-button fc-state-default fc-corner-right"><span class="fa fa-search"></span></button></div>');
+  $('#calendar .fc-right').prepend('<div class="input-group"><input id="monthpicker" type="text" class="fc-prev-button fc-button fc-state-default fc-corner-left" style="width:100px;height:29px;" placeholder="输入年-月"><button type="button" id="monthbutton" class="fc-next-button fc-button fc-state-default fc-corner-right"><span class="add-on">goto<i class="icon-th"></i></span></button></div>');
+
+  // <div class="input-group date form_datetime" data-link-field="dtp_input1"><input type="text" id="dtp_input1" readonly="" class="date form_datetime fc-prev-button fc-button fc-state-default fc-corner-left" style="width:100px;height:29px;"><button type="button" id="gotobutton" class="fc-next-button fc-button fc-state-default fc-corner-right"><span>goto</span></button></div>
+  });
+  // RGB 转16进制
   var rgbToHex = function(rgb) {
     // rgb(x, y, z)
     var color = rgb.toString().match(/\d+/g); // 把 x,y,z 推送到 color 数组里
@@ -470,7 +485,50 @@ $(document).ready(function() {
                 }
               });  
         }
-    } 
+  }
+  //搜索事件，得到事件列表
+  $(document).ready(function() {
+    $("#searchbutton").click(function() {
+      var eventtext = $("#eventtext").val();
+
+      $('#searchtable').bootstrapTable('refresh', {url:'/meetingroom/searchcalendar?title='+eventtext});
+
+      $('#modalsearch').modal({
+        show:true,
+        backdrop:'static'
+      });
+    })
+  })
+
+  function index1(value,row,index){
+    return index+1
+  }
+
+  function localDateFormatter(value) {
+    return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
+  }
+
+  //将搜索的事件标题加点击事件进行跳转
+  function settile(value,row,index){
+    articleUrl= '<a class="gotodate" href="javascript:void(0)" title="跳转"><i class="fa fa-file-text-o"></i>'+row.title+'</a>';
+      return articleUrl;
+  }
+  //搜索事件结果表中的事件进行跳转
+  window.actionEvents = {
+    'click .gotodate': function (e, value, row, index) {
+      var date =$.fullCalendar.moment(row.start);
+      $('#calendar').fullCalendar('gotoDate', date);
+      $('#modalsearch').modal('hide');
+    },
+  }
+  //跳转到某月
+  $(document).ready(function() {
+    $("#monthbutton").click(function() {
+      var monthtext = $("#monthpicker").val();
+      var date =$.fullCalendar.moment(monthtext);
+      $('#calendar').fullCalendar('gotoDate', date);
+    })
+  })
 </script>
 <!-- <div class="col-lg-12"> -->
 	<div id='calendar'></div>
@@ -572,7 +630,7 @@ $(document).ready(function() {
       </div>
     </div>
   </div>
-</form>
+  </form>
 </div>
 
 <!-- 编辑日程窗口 -->
@@ -610,7 +668,7 @@ $(document).ready(function() {
                   <label>
                   <input type="radio" id="ispublic1" value="false" name="public1">私有</label> -->
                 </div>
-                <label class="col-sm-3 control-label">预订者：{{.Ip}}</label>
+                <label class="col-sm-4 control-label">创建人：{{.Ip}}</label>
               </div>
               <!-- <div class="form-group must">
                 <label class="col-sm-3 control-label">是否作为大事记</label>
@@ -681,10 +739,76 @@ $(document).ready(function() {
           <button type="button" class="btn btn-danger" onclick="delete_event()">删除</button>
         </div>
       </div>
+      </div>
+    </div>
     </div>
   </div>
-</div>
-</div> 
+
+  <!-- 搜索日程结果窗口 -->
+  <div class="form-horizontal">
+    <div class="modal fade" id="modalsearch">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title" id="attachtitle">事件搜索结果</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">
+              <!-- <table id="searchtable"没有data-toggle="table"就不行
+                    data-query-params="queryParams"
+                    data-page-size="5"
+                    data-page-list="[5, 25, 50, All]"
+                    data-unique-id="id"
+                    data-toolbar="#searchbar"
+                    data-pagination="true"
+                    data-side-pagination="client"
+                    data-show-refresh="true"
+                    data-click-to-select="true">
+                <tr> 
+                  <th data-formatter="index1">#</th>
+                  <th data-field="Title" data-formatter="setTtile">名称</th>
+                  <th data-field="Content">内容</th>
+                  <th data-field="Starttime" data-formatter="localDateFormatter">开始时间</th>
+                  <th data-field="Endtime" data-formatter="localDateFormatter">结束时间</th>
+                </tr>
+              </table> -->
+              <div id="attachtoolbar" class="btn-group">
+                <button type="button" data-name="deleteAttachButton" id="deleteAttachButton" class="btn btn-default">
+                <i class="fa fa-trash">删除</i>
+                </button>
+              </div>
+              <table id="searchtable"
+                    data-toggle="table"
+                    data-toolbar="#attachtoolbar"
+                    data-page-size="5"
+                    data-page-list="[5, 25, 50, All]"
+                    data-unique-id="id"
+                    data-pagination="true"
+                    data-side-pagination="client"
+                    data-click-to-select="true">
+                  <thead>     
+                  <tr>
+                    <th data-formatter="index1">#</th>
+                    <th data-field="title" data-formatter="settile" data-events="actionEvents">名称</th>
+                    <th data-field="content">内容</th>
+                    <th data-field="start" data-formatter="localDateFormatter">开始时间</th>
+                    <th data-field="end" data-formatter="localDateFormatter">结束时间</th>
+                  </tr>
+                </thead>
+              </table>
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <script type="text/javascript">
     $('.form_datetime').datetimepicker({
@@ -718,8 +842,18 @@ $(document).ready(function() {
 		maxView: 1,
 		forceParse: 0
     });
-</script>
-<script>
+
+    //只选择月份
+    $("#monthpicker").datetimepicker({
+        language:  'zh-CN',
+        format: 'yyyy-mm',
+        autoclose: true,
+        todayBtn: true,
+        startView: 'year',
+        minView:'year',
+        maxView:'decade'
+    });
+
   var currColor = "#3c8dbc"; //Red by default
   $(function () {
     /* ADDING EVENTS */
@@ -742,12 +876,10 @@ $(document).ready(function() {
   });
 
 </script>
-<body>
-  <div class="navbar navba-default navbar-fixed-top">
-    <div class="container-fill">{{template "tpl/T.navbar.tpl" .}}</div>
-  </div>
+
+ <body> 
 <!-- <div class="col-lg-12"> -->
 	<div id='calendar'></div>
 <!-- </div> -->
-</body>
+  </body>
 </html>

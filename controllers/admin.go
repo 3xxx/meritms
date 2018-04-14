@@ -426,7 +426,7 @@ func (c *AdminController) SecofficeMerit() {
 	for _, v1 := range allmerits {
 		for _, v2 := range merits {
 			if v2.MeritId == v1.Id {
-				beego.Info(v2.MeritId)
+				// beego.Info(v2.MeritId)
 				level = "1"
 				// merittitle, err := models.GetAdminMeritbyId(v2.MeritId) //因为这个数据库只是科室和分类的对应表
 				// if err != nil {

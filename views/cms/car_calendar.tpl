@@ -1,8 +1,7 @@
 
 <!DOCTYPE html>
 {{template "tpl/T.header.tpl"}}
-
-<title>车辆预定</title>
+<title>车辆预约</title>
 <link rel='stylesheet' href='/static/css/fullcalendar.min.css' />
 <script src='/static/js/moment.min.js'></script>
 <script src='/static/js/fullcalendar.min.js'></script>
@@ -130,6 +129,8 @@
 		  }
 </style>
 </head>
+<div class="container-fill">{{template "tpl/T.navbar.tpl" .}}</div>
+
 <!-- <body> -->
 <script type="text/javascript">
 $(document).ready(function() {
@@ -607,7 +608,7 @@ $(document).ready(function() {
                   <label>
                   <input type="radio" id="ispublic1" value="false" name="public1">私有</label> -->
                 </div>
-                <label class="col-sm-3 control-label">预订者：{{.Ip}}</label>
+                <label class="col-sm-4 control-label">创建人：{{.Ip}}</label>
               </div>
               <!-- <div class="form-group must">
                 <label class="col-sm-3 control-label">是否作为大事记</label>
@@ -715,8 +716,7 @@ $(document).ready(function() {
 		maxView: 1,
 		forceParse: 0
     });
-</script>
-<script>
+
   var currColor = "#3c8dbc"; //Red by default
   $(function () {
     /* ADDING EVENTS */
@@ -739,10 +739,8 @@ $(document).ready(function() {
   });
 
 </script>
-<body>
-  <div class="navbar navba-default navbar-fixed-top">
-    <div class="container-fill">{{template "tpl/T.navbar.tpl" .}}</div>
-  </div>
+
+<body>  
 <!-- <div class="col-lg-12"> -->
 	<div id='calendar'></div>
 <!-- </div> -->

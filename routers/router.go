@@ -14,7 +14,17 @@ func init() {
 	// beego.Router("/", &controllers.MainController{})
 	beego.Router("/1/slide", &controllers.MainController{}, "*:Slide")
 	beego.Router("/zsj", &controllers.MainController{}, "*:ZSJ")
+	beego.Router("/pro", &controllers.MainController{}, "*:Progress")
+	beego.Router("/getprogress", &controllers.MainController{}, "*:GetProgress")
+	beego.Router("/getselect", &controllers.MainController{}, "*:GetSelect")
+	beego.Router("/getprogress1", &controllers.MainController{}, "*:GetProgress1")
+
+	beego.Router("/modifyprogress", &controllers.MainController{}, "*:ModifyProgress")
+
+	beego.Router("/shower", &controllers.MainController{}, "*:Shower")
 	// beego.Router("/postdata", &controllers.MainController{}, "*:Postdata")
+	beego.Router("/pdf", &controllers.MainController{}, "*:Pdf")
+
 	//显示首页
 	beego.Router("/", &controllers.IndexController{}, "*:GetIndex")
 	beego.Router("/index", &controllers.IndexController{}, "*:GetIndex")
@@ -231,7 +241,7 @@ func init() {
 	beego.Router("/regist", &controllers.RegistController{})
 	// beego.Router("/registerr", &controllers.RegistController{}, "get:RegistErr")
 	beego.Router("/regist/checkuname", &controllers.RegistController{}, "post:CheckUname")
-	beego.Router("/regist/getuname", &controllers.RegistController{}, "post:GetUname")
+	beego.Router("/regist/getuname", &controllers.RegistController{}, "*:GetUname")
 	//get方法用于x-editable的select2方法_作废，select2不必须要动态数据
 	beego.Router("/regist/getuname1", &controllers.RegistController{}, "get:GetUname1")
 

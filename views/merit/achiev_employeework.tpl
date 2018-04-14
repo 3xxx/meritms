@@ -41,11 +41,11 @@
         }
     </style>
   </head>
-
-<body>
-    <div class="navbar navba-default navbar-fixed-top">
+<!-- <div class="navbar navba-default navbar-fixed-top"> -->
       <div class="container-fill">{{template "tpl/T.navbar.tpl" .}}</div>
-    </div>
+    <!-- </div> -->
+<body>
+    
     <div class="col-lg-12">
 
     <h2>{{.UserNickname}}</h2>

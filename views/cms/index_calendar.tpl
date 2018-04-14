@@ -1,6 +1,6 @@
 <!-- iframe里日历-->
 <!DOCTYPE html>
-{{template "header"}}
+{{template "tpl/T.header.tpl"}}
 <title>EngineerCMS</title>
 
 <link rel='stylesheet' href='/static/css/fullcalendar.min.css' />
@@ -88,7 +88,8 @@
 </script>
 
   <!-- <div class="navbar navba-default navbar-fixed-top"> -->
-    <div class="container-fill">{{template "navbar" .}}</div>
+    <div class="container-fill">{{template "tpl/T.navbar.tpl" .}}</div>
+
   <!-- </div> -->
 <body>  
 <!-- <div class="col-lg-12"> -->

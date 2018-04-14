@@ -173,7 +173,8 @@ func GetProj(id int64) (proj Project, err error) {
 // 	}
 // 	return proj, err
 // }
-//根据id查出所有子孙，用ParentIdPath
+
+//根据id查出所有子孙，用ParentIdPath，这个id类型不一致也不影响
 func GetProjectsbyPid(id int64) (projects []*Project, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project")
