@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-{{template "tpl/T.header.tpl"}}
+{{template "header"}}
 <title>Wiki详细</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
     <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
@@ -16,7 +16,7 @@
 </head>
 
 <!-- <div class="navbar navbar-default navbar-static-top"> -->
-  <div class="container-fill">{{template "tpl/T.navbar.tpl" .}}</div>
+  <div class="container-fill">{{template "navbar" .}}</div>
   
 <body>
 <div class="col-md-8 col-md-offset-2">
@@ -59,7 +59,7 @@
     <input type="hidden" name="tid" value="{{.Wiki.Id}}">
     <div class="form-group">
       <label>显示昵称：</label>
-      <input type="text" class="form-control" id="nickname" name="nickname" value="{{.Uname}}"></div>
+      <input type="text" class="form-control" id="nickname" name="nickname" value="{{.Username}}"></div>
     <div class="form-group">
       <label>内容：</label>
       <div>

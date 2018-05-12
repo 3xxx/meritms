@@ -6,7 +6,7 @@ import (
 	// "fmt"
 	"github.com/astaxie/beego"
 	// "github.com/tealeg/xlsx"
-	m "meritms/models"
+	m "github.com/3xxx/meritms/models"
 	// "github.com/bitly/go-simplejson"
 	// "io/ioutil"
 	"github.com/astaxie/beego/logs"

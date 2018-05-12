@@ -6,8 +6,8 @@ import (
 	"github.com/astaxie/beego/toolbox"
 	_ "github.com/mattn/go-sqlite3"
 	// "merit/models"
-	"meritms/controllers"
-	_ "meritms/routers"
+	"github.com/3xxx/meritms/controllers"
+	_ "github.com/3xxx/meritms/routers"
 )
 
 //自定义模板函数，序号加1

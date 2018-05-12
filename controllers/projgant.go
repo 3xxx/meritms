@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/tealeg/xlsx"
 	// "github.com/astaxie/beego/utils/pagination"
-	"meritms/models"
+	"github.com/3xxx/meritms/models"
 	"os"
 	// "path"
 	// "path/filepath"
@@ -93,19 +93,30 @@ type Rolesvalue struct {
 
 //项目列表页面
 func (c *ProjGantController) Get() {
-	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
+	// username, role := checkprodRole(c.Ctx)
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if role == "1" {
+	// 	c.Data["IsAdmin"] = true
+	// } else if roleint > 1 && roleint < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	c.Data["IsProjectgant"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
 	c.TplName = "cms/projects_gant.tpl"
 
 	projgants, err := models.GetProjGants()
@@ -541,7 +552,7 @@ func (c *ProjGantController) ImportProjGant() {
 				j := 1
 				//读取编号
 				if len(row.Cells) >= 2 { //总列数，从1开始
-					code, err = row.Cells[j].String()
+					code = row.Cells[j].String()
 					if err != nil {
 						beego.Error(err)
 					}
@@ -582,14 +593,14 @@ func (c *ProjGantController) ImportProjGant() {
 				}
 				//读取描述
 				if len(row.Cells) >= 10 {
-					description, err = row.Cells[j+8].String()
+					description = row.Cells[j+8].String()
 					if err != nil {
 						beego.Error(err)
 					}
 				}
 				//读取项目名称
 				if len(row.Cells) >= 3 {
-					name, err = row.Cells[j+1].String()
+					name = row.Cells[j+1].String()
 					if err != nil {
 						beego.Error(err)
 					}
@@ -607,7 +618,7 @@ func (c *ProjGantController) ImportProjGant() {
 				}
 				//读取阶段
 				if len(row.Cells) >= 4 {
-					designstage, err := row.Cells[j+2].String()
+					designstage := row.Cells[j+2].String()
 					if err != nil {
 						beego.Error(err)
 					}
@@ -626,7 +637,7 @@ func (c *ProjGantController) ImportProjGant() {
 
 				//读取专业
 				if len(row.Cells) >= 5 {
-					section, err := row.Cells[j+3].String()
+					section := row.Cells[j+3].String()
 					if err != nil {
 						beego.Error(err)
 					}

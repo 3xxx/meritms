@@ -1,14 +1,14 @@
 package models
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"errors"
 	"strconv"
 	// "fmt"
 	"log"
 	"time"
 	// "github.com/astaxie/beego"
-	"crypto/md5"
-	"encoding/hex"
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/validation"
 	. "github.com/beego/admin/src/lib"
@@ -17,10 +17,10 @@ import (
 //用户表
 type User struct {
 	Id            int64  `PK`
-	Username      string `orm:"unique"` //这个拼音的简写
+	Username      string `json:"name",orm:"unique"` //这个拼音的简写
 	Nickname      string //中文名，注意这里，很多都要查询中文名才行`orm:"unique;size(32)" form:"Nickname" valid:"Required;MaxSize(20);MinSize(2)"`
 	Password      string
-	Repassword    string `orm:"-" form:"Repassword" valid:"Required"`
+	Repassword    string `orm:"-" form:"Repassword" valid:"Required" form:"-"`
 	Email         string `orm:"size(32)" form:"Email" valid:"Email"`
 	Department    string //分院
 	Secoffice     string //科室,这里应该用科室id，才能保证即时重名也不怕。否则，查看科室必须要上溯到分院才能避免科室名称重复问题
@@ -28,10 +28,11 @@ type User struct {
 	Ip            string //ip地址
 	Port          string
 	Status        int       `orm:"default(2)" form:"Status" valid:"Range(1,2)"`
-	Lastlogintime time.Time `orm:"null;type(datetime)" form:"-"`
+	Lastlogintime time.Time `orm:"type(datetime);auto_now_add" form:"-"`
 	Createtime    time.Time `orm:"type(datetime);auto_now_add" `
-	Updated       time.Time `orm:"null;type(datetime);auto_now_add" `
-	Role          int
+	Updated       time.Time `orm:"type(datetime);auto_now_add" `
+	Role          string    `json:"role"`
+	// Roles         []*Role   `orm:"rel(m2m)"`
 }
 
 func init() {
@@ -75,19 +76,22 @@ func SaveUser(user User) (uid int64, err error) {
 }
 
 func ValidateUser(user User) error {
+	cond := orm.NewCondition()
+	cond1 := cond.Or("status", 1).Or("status", 2)
+	cond2 := cond.AndCond(cond1).And("username", user.Username).And("password", user.Password)
+	// _, err = qs.Distinct().OrderBy("-created").All(&proj) //qs.Filter("Drawn", user.Nickname).All(&aa)
 	orm := orm.NewOrm()
 	var u User
-
 	// user = new(User)
 	qs := orm.QueryTable("user")
-	err := qs.Filter("username", user.Username).Filter("password", user.Password).One(&u)
+	qs = qs.SetCond(cond2)
+	err := qs.One(&u)
 	if err != nil {
 		return err
 	}
-
 	// orm.Where("username=? and pwd=?", user.Username, user.Pwd).Find(&u)
 	if u.Username == "" {
-		return errors.New("用户名或密码错误！")
+		return errors.New("用户名或密码错误！或用户被禁止！")
 	}
 	return nil
 }
@@ -210,13 +214,13 @@ func GetAllusers(page int64, page_size int64, sort string) (users []*User, count
 	return users, count
 }
 
-//根据分院和科室名称查所有用户
+//根据分院和科室名称查所有用户，只有状态1的
 func GetUsersbySec(department, secoffice string) (users []*User, count int, err error) {
 	o := orm.NewOrm()
 	// cates := make([]*Category, 0)
 	qs := o.QueryTable("user")
 	//这里进行过滤
-	_, err = qs.Filter("Department", department).Filter("Secoffice", secoffice).OrderBy("Username").All(&users)
+	_, err = qs.Filter("Department", department).Filter("Secoffice", secoffice).Filter("Status", 1).OrderBy("Username").All(&users)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -314,7 +318,7 @@ func UpdateUser(cid int64, fieldname, value string) error {
 		const lll = "2006-01-02"
 		user.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
 		switch fieldname {
-		case "Username":
+		case "name":
 			user.Username = value
 			_, err := o.Update(&user, "Username", "Updated")
 			if err != nil {
@@ -394,11 +398,8 @@ func UpdateUser(cid int64, fieldname, value string) error {
 			} else {
 				return nil
 			}
-		case "Role":
-			user.Role, err = strconv.Atoi(value)
-			if err != nil {
-				return err
-			}
+		case "role":
+			user.Role = value
 			_, err := o.Update(&user, "Role", "Updated") //这里不能用&user
 			if err != nil {
 				return err
@@ -445,10 +446,25 @@ func GetUserByUsername(username string) (user User, err error) {
 	if err != nil {
 		return user, err
 	}
-	// user = User{Username: username} //指定字段查询，这样也行
-	// o := orm.NewOrm()
-	// o.Read(&user,"Username")
 	return user, err
+}
+
+//根据ip查询用户
+func GetUserByIp(ip string) (user User, err error) {
+	o := orm.NewOrm()
+	// var user User
+	err = o.QueryTable("user").Filter("ip", ip).One(&user)
+	if err == orm.ErrMultiRows {
+		// 多条的时候报错
+		// fmt.Printf("Returned Multi Rows Not One")
+		return user, err
+	} else if err == orm.ErrNoRows {
+		// 没有找到记录
+		// fmt.Printf("Not row found")
+		return user, err
+	} else {
+		return user, err
+	}
 }
 
 //根据用户nickname取得用户
@@ -463,6 +479,7 @@ func GetUserByNickname(nickname string) (user User) {
 	return user
 }
 
+//取到一个用户数据，不是数组，所以table无法显示
 func GetUserByUserId(userid int64) (user User) {
 	user = User{Id: userid}
 	o := orm.NewOrm()
@@ -484,17 +501,16 @@ func GetUserByUserId(userid int64) (user User) {
 
 // }
 
-func GetRoleByUserId(userid int64) (roles []*Role, count int64) { //*Topic, []*Attachment, error
-	roles = make([]*Role, 0)
-	o := orm.NewOrm()
-	// role := new(Role)
-	count, _ = o.QueryTable("role").Filter("Users__User__Id", userid).All(&roles)
-	return roles, count
-	// 通过 post title 查询这个 post 有哪些 tag
-	// var tags []*Tag
-	// num, err := dORM.QueryTable("tag").Filter("Posts__Post__Title", "Introduce Beego ORM").All(&tags)
-
-}
+// func GetRoleByUserId(userid int64) (roles []*Role, count int64) { //*Topic, []*Attachment, error
+// 	roles = make([]*Role, 0)
+// 	o := orm.NewOrm()
+// 	// role := new(Role)
+// 	count, _ = o.QueryTable("role").Filter("Users__User__Id", userid).All(&roles)
+// 	return roles, count
+// 	// 通过 post title 查询这个 post 有哪些 tag
+// 	// var tags []*Tag
+// 	// num, err := dORM.QueryTable("tag").Filter("Posts__Post__Title", "Introduce Beego ORM").All(&tags)
+// }
 
 func GetRoleByUsername(username string) (roles []*Role, count int64, err error) { //*Topic, []*Attachment, error
 	roles = make([]*Role, 0)

@@ -4,12 +4,13 @@ package controllers
 
 import (
 	"encoding/json"
+	"github.com/3xxx/meritms/models"
 	"github.com/astaxie/beego"
-	"meritms/models"
 	// "github.com/astaxie/beego/context"
 	"github.com/astaxie/beego/httplib"
 	"os"
 	"path"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -24,6 +25,7 @@ type ProductLink struct {
 	Code           string
 	Title          string
 	Label          string
+	Relevancy      []models.Relevancy
 	Uid            int64
 	Principal      string
 	ProjectId      int64
@@ -72,10 +74,79 @@ type ArticleContent struct {
 func (c *ProdController) GetProjProd() {
 	c.Data["IsProject"] = true
 	id := c.Ctx.Input.Param(":id")
+	//id转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
 	// beego.Info(id)
 	c.Data["Id"] = id
-	_, role := checkprodRole(c.Ctx)
+	// _, role := checkprodRole(c.Ctx)
+	// c.Data["role"] = role
+
+	//这里取到用户的权限
+	//添加权限POST
+	//修改权限PUT——页面上，任何人可以修改自己的product
+	//删除权限DELETE——页面上，任何人可以删除自己的product
+	//1.取得客户端用户名
+	// var uname, useridstring string
+	// v := c.GetSession("uname")
+	// // var role, userrole int
+	// if v != nil {
+	// 	uname = v.(string)
+	// 	c.Data["Uname"] = v.(string)
+
+	// 	user, err := models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// 	c.Data["Uid"] = user.Id
+	// 	// userrole = user.Role
+	// 	useridstring = strconv.FormatInt(user.Id, 10)
+	// }
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	useridstring := strconv.FormatInt(uid, 10)
+	//else {
+	// userrole = 5
+	// route := c.Ctx.Request.URL.String()
+	// c.Data["Url"] = route
+	// c.Redirect("/roleerr?url="+route, 302)
+	// return
+	//}
+	//2.取得侧栏目录路径——路由id
+	//2.1 根据id取得路由
+	var projurls string
+	proj, err := models.GetProj(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	if proj.ParentId == 0 { //如果是项目根目录
+		projurls = "/" + strconv.FormatInt(proj.Id, 10)
+	} else {
+		projurls = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10)
+	}
+
+	if e.Enforce(useridstring, projurls+"/", "POST", ".1") {
+		c.Data["RoleAdd"] = "true"
+	} else {
+		c.Data["RoleAdd"] = "false"
+	}
+	if e.Enforce(useridstring, projurls+"/", "PUT", ".1") {
+		c.Data["RoleUpdate"] = "true"
+	} else {
+		c.Data["RoleUpdate"] = "false"
+	}
+	if e.Enforce(useridstring, projurls+"/", "DELETE", ".1") {
+		c.Data["RoleDelete"] = "true"
+	} else {
+		c.Data["RoleDelete"] = "false"
+	}
 	// var categories []*models.ProjCategory
 	// var err error
 	//id转成64为
@@ -102,7 +173,16 @@ func (c *ProdController) GetProjProd() {
 
 	// c.Data["json"] = root
 	// c.ServeJSON()
-	c.TplName = "cms/project_products.tpl"
+	u := c.Ctx.Input.UserAgent()
+	matched, err := regexp.MatchString("AppleWebKit.*Mobile.*", u)
+	if err != nil {
+		beego.Error(err)
+	}
+	if matched == true {
+		c.TplName = "cms/mproject_products.tpl"
+	} else {
+		c.TplName = "cms/project_products.tpl"
+	}
 }
 
 //取得某个侧栏id下的成果给table
@@ -131,19 +211,18 @@ func (c *ProdController) GetProducts() {
 		// 	beego.Error(err)
 		// }
 		// beego.Info(Url)
-	} else {
-
-	}
+	} //else {
+	//}
 	//根据项目id取得所有成果
 	products, err := models.GetProducts(idNum)
 	if err != nil {
 		beego.Error(err)
 	}
 	//由proj id取得url
-	Url, _, err := GetUrlPath(idNum)
-	if err != nil {
-		beego.Error(err)
-	}
+	// Url, _, err := GetUrlPath(idNum)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
 	// beego.Info(Url)
 	link := make([]ProductLink, 0)
 	Attachslice := make([]AttachmentLink, 0)
@@ -180,13 +259,13 @@ func (c *ProdController) GetProducts() {
 				attacharr := make([]AttachmentLink, 1)
 				attacharr[0].Id = v.Id
 				attacharr[0].Title = v.FileName
-				attacharr[0].Link = Url
+				// attacharr[0].Link = Url
 				Attachslice = append(Attachslice, attacharr...)
 			} else if path.Ext(v.FileName) == ".pdf" || path.Ext(v.FileName) == ".PDF" {
 				pdfarr := make([]PdfLink, 1)
 				pdfarr[0].Id = v.Id
 				pdfarr[0].Title = v.FileName
-				pdfarr[0].Link = Url
+				// pdfarr[0].Link = Url
 				Pdfslice = append(Pdfslice, pdfarr...)
 			}
 		}
@@ -209,6 +288,51 @@ func (c *ProdController) GetProducts() {
 		}
 		linkarr[0].Articlecontent = Articleslice
 		Articleslice = make([]ArticleContent, 0)
+
+		//取得关联
+		relevancies, err := models.GetRelevancy(w.Id)
+		if err != nil {
+			beego.Error(err)
+		}
+		relevancies1 := make([]models.Relevancy, 0)
+		if len(relevancies) > 0 {
+			for _, tt := range relevancies {
+				relevancies2 := make([]models.Relevancy, 1)
+				relevancies2[0].Relevancy = tt.Relevancy
+				relevancies1 = append(relevancies1, relevancies2...)
+			}
+			linkarr[0].Relevancy = relevancies1
+			relevancies1 = make([]models.Relevancy, 0)
+		} else if len(relevancies) == 0 {
+			//循环所有relevancies,以,号分割，如果相等prodcode,则返回
+			relevancies3, err := models.GetAllRelevancies()
+			if err != nil {
+				beego.Error(err)
+			}
+			// if len(relevancies)>0{}
+			for _, vv := range relevancies3 {
+				array := strings.Split(vv.Relevancy, ",")
+				// beego.Info(array)
+				for _, ww := range array {
+					if ww == w.Code {
+						relevancies2 := make([]models.Relevancy, 1)
+						// v.ProductId查出prodcode
+						prod, err := models.GetProd(vv.ProductId)
+						if err != nil {
+							beego.Error(err)
+						} else {
+							// beego.Info(ww)        //20171228
+							// beego.Info(prod.Code) //20171231
+							relevancies2[0].Relevancy = prod.Code
+							relevancies1 = append(relevancies1, relevancies2...)
+						}
+						break
+					}
+				}
+			}
+			linkarr[0].Relevancy = relevancies1
+			// relevancies1 = make([]models.Relevancy, 0)
+		}
 		link = append(link, linkarr...)
 	}
 
@@ -504,6 +628,19 @@ func (c *ProdController) ProvidesynchProducts() {
 
 //向某个侧栏id下添加成果——这个没用，用attachment里的addattachment
 func (c *ProdController) AddProduct() {
+	//取得客户端用户名
+	// v := c.GetSession("uname")
+	// var user models.User
+	// var err error
+	// if v != nil {
+	// 	uname := v.(string)
+	// 	user, err = models.GetUserByUsername(uname)
+	// 	if err != nil {
+	// 		beego.Error(err)
+	// 	}
+	// }
+	_, _, uid, _, _ := checkprodRole(c.Ctx)
+
 	id := c.Ctx.Input.Param(":id")
 	pid := c.Input().Get("pid")
 	code := c.Input().Get("code")
@@ -519,7 +656,7 @@ func (c *ProdController) AddProduct() {
 		beego.Error(err)
 	}
 	//根据id添加成果code, title, label, principal, content string, projectid int64
-	_, err = models.AddProduct(code, title, label, principal, content, pidNum)
+	_, err = models.AddProduct(code, title, label, principal, content, uid, pidNum)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -531,138 +668,112 @@ func (c *ProdController) AddProduct() {
 
 //编辑成果信息
 func (c *ProdController) UpdateProduct() {
-	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		id := c.Input().Get("pid")
-		code := c.Input().Get("code")
-		title := c.Input().Get("title")
-		label := c.Input().Get("label")
-		principal := c.Input().Get("principal")
+	// _, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	id := c.Input().Get("pid")
+	code := c.Input().Get("code")
+	title := c.Input().Get("title")
+	label := c.Input().Get("label")
+	principal := c.Input().Get("principal")
 
-		//id转成64为
-		idNum, err := strconv.ParseInt(id, 10, 64)
-		if err != nil {
-			beego.Error(err)
-		}
-		//根据id添加成果code, title, label, principal, content string, projectid int64
-		err = models.UpdateProduct(idNum, code, title, label, principal)
-		if err != nil {
-			beego.Error(err)
-		}
-		c.Data["json"] = "ok"
-		c.ServeJSON()
-	} else {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
-		return
+	//id转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
 	}
+	//根据id添加成果code, title, label, principal, content string, projectid int64
+	err = models.UpdateProduct(idNum, code, title, label, principal)
+	if err != nil {
+		beego.Error(err)
+	}
+	c.Data["json"] = "ok"
+	c.ServeJSON()
+	// } else {
+	// 	route := c.Ctx.Request.URL.String()
+	// 	c.Data["Url"] = route
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
+	// 	return
+	// }
 }
 
 //删除成果，包含成果里的附件。删除附件用attachment中的
 func (c *ProdController) DeleteProduct() {
-	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		ids := c.GetString("ids")
-		array := strings.Split(ids, ",")
-		for _, v := range array {
-			// pid = strconv.FormatInt(v1, 10)
-			//id转成64位
-			idNum, err := strconv.ParseInt(v, 10, 64)
+	// _, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	ids := c.GetString("ids")
+	array := strings.Split(ids, ",")
+	for _, v := range array {
+		// pid = strconv.FormatInt(v1, 10)
+		//id转成64位
+		idNum, err := strconv.ParseInt(v, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		//循环删除成果
+		//根据成果id取得所有附件
+		attachments, err := models.GetAttachments(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		for _, w := range attachments {
+			//取得附件的成果id——再取得成果的项目目录id——再取得路径
+			attach, err := models.GetAttachbyId(w.Id)
 			if err != nil {
 				beego.Error(err)
 			}
-			//循环删除成果
-			//根据成果id取得所有附件
-			attachments, err := models.GetAttachments(idNum)
+			prod, err := models.GetProd(attach.ProductId)
 			if err != nil {
 				beego.Error(err)
 			}
-			for _, w := range attachments {
-				//取得附件的成果id——再取得成果的项目目录id——再取得路径
-				attach, err := models.GetAttachbyId(w.Id)
-				if err != nil {
-					beego.Error(err)
-				}
-				prod, err := models.GetProd(attach.ProductId)
-				if err != nil {
-					beego.Error(err)
-				}
-				//根据proj的id
-				_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
-				if err != nil {
-					beego.Error(err)
-				} else {
-					path := DiskDirectory + "\\" + attach.FileName
-					//删除附件
-					err = os.Remove(path)
-					if err != nil {
-						beego.Error(err)
-					}
-					//删除附件数据表
-					err = models.DeleteAttachment(w.Id)
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-			}
-			//删除文章，文章中的图片无法删除
-			//取得成果id下所有文章
-			articles, err := models.GetArticles(idNum)
-			if err != nil {
-				beego.Error(err)
-			}
-			//删除文章表
-			for _, z := range articles {
-				//删除文章数据表
-				err = models.DeleteArticle(z.Id)
-				if err != nil {
-					beego.Error(err)
-				}
-			}
-			err = models.DeleteProduct(idNum) //删除成果数据表
+			//根据proj的id
+			_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
 			if err != nil {
 				beego.Error(err)
 			} else {
-				c.Data["json"] = "ok"
-				c.ServeJSON()
+				path := DiskDirectory + "\\" + attach.FileName
+				//删除附件
+				err = os.Remove(path)
+				if err != nil {
+					beego.Error(err)
+				}
+				//删除附件数据表
+				err = models.DeleteAttachment(w.Id)
+				if err != nil {
+					beego.Error(err)
+				}
 			}
 		}
-	} else {
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
-		return
+		//删除文章，文章中的图片无法删除
+		//取得成果id下所有文章
+		articles, err := models.GetArticles(idNum)
+		if err != nil {
+			beego.Error(err)
+		}
+		//删除文章表
+		for _, z := range articles {
+			//删除文章数据表
+			err = models.DeleteArticle(z.Id)
+			if err != nil {
+				beego.Error(err)
+			}
+		}
+		err = models.DeleteProduct(idNum) //删除成果数据表
+		if err != nil {
+			beego.Error(err)
+		} else {
+			c.Data["json"] = "ok"
+			c.ServeJSON()
+		}
 	}
+	// } else {
+	// 	route := c.Ctx.Request.URL.String()
+	// 	c.Data["Url"] = route
+	// 	c.Redirect("/roleerr?url="+route, 302)
+	// 	// c.Redirect("/roleerr", 302)
+	// 	return
+	// }
 }
-
-// func checkprodRole(ctx *context.Context) (uname string, role int) {
-// 	// var uname string
-// 	sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
-// 	defer sess.SessionRelease(ctx.ResponseWriter)
-// 	v := sess.Get("uname")
-// 	var userrole int
-// 	if v != nil {
-// 		uname = v.(string)
-// 		user, err := models.GetUserByUsername(uname)
-// 		if err != nil {
-// 			beego.Error(err)
-// 		}
-// 		userrole = user.Role
-// 	} else {
-// 		userrole = 5
-// 		uname = ctx.Input.IP()
-// 	}
-// 	iprole := Getiprole(ctx.Input.IP())
-// 	if iprole <= userrole {
-// 		role = iprole
-// 	} else {
-// 		role = userrole
-// 	}
-// 	return uname, role
-// }
 
 // {
 //   "id": 33,

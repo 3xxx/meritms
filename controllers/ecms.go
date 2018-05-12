@@ -3,8 +3,8 @@ package controllers
 
 import (
 	"encoding/json"
+	"github.com/3xxx/meritms/models"
 	"github.com/astaxie/beego"
-	"meritms/models"
 	"time"
 )
 

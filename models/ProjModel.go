@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/astaxie/beego/orm"
-	_ "github.com/mattn/go-sqlite3"
+	// _ "github.com/mattn/go-sqlite3"
 	"strconv"
 	// "strings"
 	"fmt"
@@ -85,7 +85,7 @@ func init() {
 func AddProject(code, title, label, principal string, parentid int64, parentidpath, parenttitlepath string, grade int) (id int64, err error) {
 	o := orm.NewOrm()
 	//关闭写同步
-	// o.Raw("PRAGMA synchronous = OFF; ", 0, 0, 0).Exec()
+	o.Raw("PRAGMA synchronous = OFF; ", 0, 0, 0).Exec()
 	// var project Project
 	// if pid == "" {
 	project := &Project{
@@ -131,6 +131,8 @@ func UpdateProject(cid int64, code, title, label, principal string) error {
 //删除
 func DeleteProject(id int64) error {
 	o := orm.NewOrm()
+	//关闭写同步
+	o.Raw("PRAGMA synchronous = OFF; ", 0, 0, 0).Exec()
 	project := &Project{Id: id}
 	if o.Read(project) == nil {
 		_, err := o.Delete(project)
@@ -174,14 +176,37 @@ func GetProj(id int64) (proj Project, err error) {
 // 	return proj, err
 // }
 
-//根据id查出所有子孙，用ParentIdPath，这个id类型不一致也不影响
+//根据id查出所有子孙，用ParentIdPath
+//逻辑错误：110-210-310包含了10？？？？
+//20180107完美解决这个问题。同ProdModel.go中GetProjProducts一致
+//通过Id为projid，查出本级
+//parentid是projid，查出二级
+//parentidpath包含projid-，查出三级，以及往下
+//还是不严谨，projid-前面还有数据呢？必须前后都有限定符号才行
+//差点按照无闻的视频，将parentidpath存成$id1#$id2#$id3#
+//存：parentidpath="$"+id1+"#"
+//查：__contains,"$"+id1+"#"
+//取：stings.replace(stings.replace(parentidpath,"#",","-1),"$",""-1)
+//输出：strings.split(上面的，",")
 func GetProjectsbyPid(id int64) (projects []*Project, err error) {
+	idstring := strconv.FormatInt(id, 10)
+	cond := orm.NewCondition()
+	cond1 := cond.Or("Id", id).Or("ParentIdPath__contains", idstring+"-").Or("ParentId", id)
 	o := orm.NewOrm()
+	//先查出所有项目parent id path中包含id的数据
 	qs := o.QueryTable("Project")
-	_, err = qs.Filter("ParentIdPath__contains", id).All(&projects)
+	qs = qs.SetCond(cond1)
+
+	_, err = qs.All(&projects)
 	if err != nil {
 		return nil, err
 	}
+
+	// qs := o.QueryTable("Project")
+	// _, err = qs.Filter("ParentIdPath__contains", id).All(&projects)
+	// if err != nil {
+	// 	return nil, err
+	// }
 	return projects, err
 }
 
@@ -242,6 +267,17 @@ func GetProjbyParenttitlepath(parenttitlepath, title string) (proj Project, err 
 	o := orm.NewOrm()
 	qs := o.QueryTable("Project") //这个表名AchievementTopic需要用驼峰式，
 	err = qs.Filter("ParentTitlePath", parenttitlepath).Filter("title", title).One(&proj)
+	if err != nil {
+		return proj, err
+	}
+	return proj, err
+}
+
+//根据parentid和title取得proj目录
+func GetProjbyParentidTitle(parentid int64, title string) (proj Project, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("Project") //这个表名AchievementTopic需要用驼峰式，
+	err = qs.Filter("ParentId", parentid).Filter("title", title).One(&proj)
 	if err != nil {
 		return proj, err
 	}

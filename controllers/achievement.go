@@ -4,13 +4,13 @@ package controllers
 import (
 	"encoding/json"
 	// "fmt"
+	m "github.com/3xxx/meritms/models"
 	"github.com/astaxie/beego"
 	"github.com/tealeg/xlsx"
-	m "meritms/models"
 	// "github.com/bitly/go-simplejson"
 	// "io/ioutil"
+	"github.com/3xxx/meritms/models"
 	"github.com/astaxie/beego/logs"
-	"meritms/models"
 	"sort"
 	"strconv"
 	"strings"
@@ -161,20 +161,30 @@ type Employee struct { //职员的分院和科室属性
 
 //管理员登录显示侧栏结构，方便查看科室里员工总体情况，以及查看员工个人详细
 func (c *Achievement) GetAchievement() {
-	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		c.Data["IsAdmin"] = true
-	} else if role >= 1 && role < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
+	// username, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	// 	c.Data["IsAdmin"] = true
+	// } else if role >= 1 && role < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	c.Data["IsAchievement"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
 	//1.首先判断是否登录
 	// if !checkAccount(c.Ctx) {
 	// 	route := c.Ctx.Request.URL.String()
@@ -193,7 +203,7 @@ func (c *Achievement) GetAchievement() {
 	// }
 	//3.取出用户的权限等级
 	// role, _ := checkRole(c.Ctx) //login里的
-	if role > 4 { //
+	if roleint > 4 { //
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -211,7 +221,7 @@ func (c *Achievement) GetAchievement() {
 	// beego.Info(username)
 	// beego.Info(role)
 	switch role {
-	case 1: //管理员登录显示的侧栏是全部的
+	case "1": //管理员登录显示的侧栏是全部的
 		category1, err := models.GetAdminDepart(0) //得到多个分院
 		if err != nil {
 			beego.Error(err)
@@ -290,7 +300,7 @@ func (c *Achievement) GetAchievement() {
 			achsecoffice = make([]AchSecoffice, 0) //再把slice置0
 			achdepart = append(achdepart, aa...)
 		}
-	case 2: //分院领导登录显示的侧栏是本分院的所有科室
+	case "2": //分院领导登录显示的侧栏是本分院的所有科室
 		//由分院名称取得分院属性
 		category1, err := models.GetAdminDepartName(user.Department)
 		if err != nil {
@@ -360,7 +370,7 @@ func (c *Achievement) GetAchievement() {
 		aa[0].Selectable = false               //点击展开，默认是true
 		achsecoffice = make([]AchSecoffice, 0) //再把slice置0
 		achdepart = append(achdepart, aa...)
-	case 3: //主任登录显示的侧栏是本科室的所有人
+	case "3": //主任登录显示的侧栏是本科室的所有人
 		//由uname取得分院名称和科室名称
 		// user := models.GetUserByUsername(uname)
 		//由分院名称取得分院属性
@@ -405,7 +415,7 @@ func (c *Achievement) GetAchievement() {
 		aa[0].Tags[0] = count
 		achsecoffice = make([]AchSecoffice, 0) //再把slice置0
 		achdepart = append(achdepart, aa...)
-	case 4: //个人登录显示自己
+	case "4": //个人登录显示自己
 		//由uname取得分院名称和科室名称
 		// user := models.GetUserByUsername(uname)
 		//由分院名称取得分院属性
@@ -482,20 +492,31 @@ func (c *Achievement) GetAchievement() {
 //上面那个是显示侧栏
 //这个是显示右侧iframe框架内容——科室内人员成果情况统计
 func (c *Achievement) Secofficeshow() {
-	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		c.Data["IsAdmin"] = true
-	} else if role >= 1 && role < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
+	// username, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	// 	c.Data["IsAdmin"] = true
+	// } else if role >= 1 && role < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	c.Data["IsAchievement"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-	if role > 4 { //
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if roleint > 4 { //
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -571,7 +592,7 @@ func (c *Achievement) Secofficeshow() {
 			beego.Error(err)
 		}
 		//权限判断，并且属于这个分院
-		if role == 1 || role == 2 && user.Department == categoryname.Title { //
+		if role == "1" || role == "2" && user.Department == categoryname.Title { //
 
 			c.Data["Starttime"] = t1
 			c.Data["Endtime"] = t2
@@ -598,7 +619,7 @@ func (c *Achievement) Secofficeshow() {
 			beego.Error(err)
 		}
 		//1.进行权限读取,属于这个科室，或者属于这个分院
-		if role == 1 || role == 3 && user.Secoffice == categoryname.Title || role == 2 && user.Department == categoryname1.Title { //
+		if role == "1" || role == "3" && user.Secoffice == categoryname.Title || role == "2" && user.Department == categoryname1.Title { //
 
 			c.Data["Starttime"] = t1
 			c.Data["Endtime"] = t2
@@ -620,7 +641,7 @@ func (c *Achievement) Secofficeshow() {
 		//分2部分，一部分是已经完成状态的，state是4，另一部分是状态分别是3待审查通过,2，1的
 		usernickname := models.GetUserByUserId(secid1)
 		//1.进行权限读取，室主任以上并且属于这个科室，或者或本人
-		if role == 1 || role == 3 && user.Secoffice == usernickname.Secoffice || role == 2 && user.Department == usernickname.Department || user.Nickname == usernickname.Nickname { //
+		if role == "1" || role == "3" && user.Secoffice == usernickname.Secoffice || role == "2" && user.Department == usernickname.Department || user.Nickname == usernickname.Nickname { //
 			// employeecatalog := make([]models.Catalog, 0)
 			//根据员工id和成果类型查出所有成果，设计成果，校核成果，审查成果
 			//1、查图纸、报告……补充时间段secid即为userid
@@ -1253,20 +1274,31 @@ func (c *Achievement) SecofficeData() {
 //显示登录用户待提交，处于设计，校核，审查，已提交，已经完成的
 //author=登录的人名，登录名所处制图-状态为1；设计-状态为2；校核-状态为3；审查-状态为4；已经完成，6；已经提交，5
 func (c *Achievement) AchievementSend() {
-	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		c.Data["IsAdmin"] = true
-	} else if role >= 1 && role < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
-	c.Data["Username"] = username
+	// username, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	// 	c.Data["IsAdmin"] = true
+	// } else if role >= 1 && role < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
 	c.Data["IsAchievement"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-	if role > 4 { //
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
+	if roleint > 4 { //
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -2373,41 +2405,52 @@ func (c *Achievement) GetAchievementUser() {
 	//这个不用：转json数据b, err := json.Marshal(group) fmt.Println(string(b))
 	var user models.User
 	var err error
+	username, role, _, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+	roleint, err := strconv.Atoi(role)
+	if err != nil {
+		beego.Error(err)
+	}
 	//管理员可以查看
 	Uid := c.Input().Get("uid")
 	if Uid == "" { //如果是技术人员自己进行查看，则Uid为空
 		//1.首先判断是否注册
-		if !checkAccount(c.Ctx) {
-			route := c.Ctx.Request.URL.String()
-			c.Data["Url"] = route
-			c.Redirect("/login?url="+route, 302)
-			return
-		}
+		// if !checkAccount(c.Ctx) {
+		// 	route := c.Ctx.Request.URL.String()
+		// 	c.Data["Url"] = route
+		// 	c.Redirect("/login?url="+route, 302)
+		// 	return
+		// }
 		//2.取得文章的作者
 		//3.由用户id取得用户名
 		//4.取得客户端用户名
-		var uname string
+		// var uname string
 		// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
 		// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-		v := c.GetSession("uname")
-		if v != nil {
-			uname = v.(string)
-			c.Data["Uname"] = v.(string)
-		}
+		// v := c.GetSession("uname")
+		// if v != nil {
+		// 	uname = v.(string)
+		// 	c.Data["Uname"] = v.(string)
+		// }
 		//4.取出用户的权限等级
-		role, _ := checkRole(c.Ctx) //login里的
+		// role, _ := checkRole(c.Ctx) //login里的
 		//5.进行逻辑分析：
 		// rolename, err := strconv.ParseInt(role, 10, 64)
 		// if err != nil {
 		// 	beego.Error(err)
 		// }
-		if role > 5 { //
+		if roleint > 5 { //
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
 			c.Redirect("/roleerr?url="+route, 302)
 			return
 		}
-		user, err = models.GetUserByUsername(uname) //得到用户的id、分院和科室等
+		user, err = models.GetUserByUsername(username) //得到用户的id、分院和科室等
 		if err != nil {
 			beego.Error(err)
 		}
@@ -2502,53 +2545,29 @@ func (c *Achievement) Import_Xls_Catalog() {
 				// 15Updated       time.Time `orm:"index;auto_now_add;type(datetime)"`
 				// 16Author        string    //上传者
 				if len(row.Cells) >= 2 { //总列数，从1开始
-					catalog.ProjectNumber, err = row.Cells[j+1].String() //第一列从0开始,忽略第一列序号
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.ProjectNumber = row.Cells[j+1].String() //第一列从0开始,忽略第一列序号
 				}
 				if len(row.Cells) >= 3 {
-					catalog.ProjectName, err = row.Cells[j+2].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.ProjectName = row.Cells[j+2].String()
 				}
 				if len(row.Cells) >= 4 {
-					catalog.DesignStage, err = row.Cells[j+3].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.DesignStage = row.Cells[j+3].String()
 				}
 				if len(row.Cells) >= 5 {
-					catalog.Section, err = row.Cells[j+4].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.Section = row.Cells[j+4].String()
 				}
 				if len(row.Cells) >= 6 {
-					catalog.Tnumber, err = row.Cells[j+5].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.Tnumber = row.Cells[j+5].String()
 				}
 				if len(row.Cells) >= 7 {
-					catalog.Name, err = row.Cells[j+6].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.Name = row.Cells[j+6].String()
 				}
 
 				if len(row.Cells) >= 8 {
-					catalog.Category, err = row.Cells[j+7].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.Category = row.Cells[j+7].String()
 				}
 				if len(row.Cells) >= 9 {
-					catalog.Page, err = row.Cells[j+8].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.Page = row.Cells[j+8].String()
 				}
 				if len(row.Cells) >= 10 {
 					if row.Cells[j+9].Value != "" {
@@ -2562,40 +2581,22 @@ func (c *Achievement) Import_Xls_Catalog() {
 				}
 
 				if len(row.Cells) >= 11 {
-					catalog.Drawn, err = row.Cells[j+10].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.Drawn = row.Cells[j+10].String()
 				}
 				if len(row.Cells) >= 12 {
-					catalog.Designd, err = row.Cells[j+11].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.Designd = row.Cells[j+11].String()
 				}
 				if len(row.Cells) >= 13 {
-					catalog.Checked, err = row.Cells[j+12].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.Checked = row.Cells[j+12].String()
 				}
 				if len(row.Cells) >= 14 {
-					catalog.Examined, err = row.Cells[j+13].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.Examined = row.Cells[j+13].String()
 				}
 				if len(row.Cells) >= 15 {
-					catalog.Verified, err = row.Cells[j+14].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.Verified = row.Cells[j+14].String()
 				}
 				if len(row.Cells) >= 16 {
-					catalog.Approved, err = row.Cells[j+15].String()
-					if err != nil {
-						beego.Error(err)
-					}
+					catalog.Approved = row.Cells[j+15].String()
 				}
 
 				if len(row.Cells) >= 17 {
@@ -2684,7 +2685,7 @@ func (c *Achievement) Import_Xls_Catalog() {
 					// text1, _ := row.Cells[j+22].String()
 					// beego.Info(text1)
 				}
-				if user.Role == 1 {
+				if user.Role == "1" {
 					// catalog.State = 5
 					_, err, _ = m.SaveCatalog(catalog)
 					if err != nil {
@@ -3399,30 +3400,41 @@ func (c *Achievement) Specialty() {
 //显示自己一个月内成果类型情况
 func (c *Achievement) Echarts() {
 	//1.首先判断是否注册
-	if !checkAccount(c.Ctx) {
-		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/login?url="+route, 302)
-		return
-	}
-	//4.取得客户端用户名
-	var uname string
-	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := c.GetSession("uname")
-	if v != nil {
-		uname = v.(string)
-		c.Data["Uname"] = v.(string)
-	}
-	//由uname取得user
-	user, err := models.GetUserByUsername(uname)
+	// if !checkAccount(c.Ctx) {
+	// 	// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
+	// 	route := c.Ctx.Request.URL.String()
+	// 	c.Data["Url"] = route
+	// 	c.Redirect("/login?url="+route, 302)
+	// 	return
+	// }
+	// //4.取得客户端用户名
+	// var uname string
+	// // sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// // defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	// v := c.GetSession("uname")
+	// if v != nil {
+	// 	uname = v.(string)
+	// 	c.Data["Uname"] = v.(string)
+	// }
+	// //由uname取得user
+	// user, err := models.GetUserByUsername(uname)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// //4.取出用户的权限等级
+	// role, _ := checkRole(c.Ctx) //login里的
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	roleint, err := strconv.Atoi(role)
 	if err != nil {
 		beego.Error(err)
 	}
-	//4.取出用户的权限等级
-	role, _ := checkRole(c.Ctx) //login里的
-	if role > 4 {               //
+	if roleint > 4 { //
 		// port := strconv.Itoa(c.Ctx.Input.Port()) //c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
@@ -3432,7 +3444,7 @@ func (c *Achievement) Echarts() {
 	//分院——科室——人员甲（乙、丙……）——绘制——设计——校核——审查——合计——排序
 	secid := c.Input().Get("secid")
 	if secid == "" { //如果为空，则用登录的
-		secid = strconv.FormatInt(user.Id, 10)
+		secid = strconv.FormatInt(uid, 10)
 	}
 	secid1, err := strconv.ParseInt(secid, 10, 64)
 	if err != nil {
@@ -3474,30 +3486,41 @@ func (c *Achievement) Echarts() {
 //显示自己一年来，成果类型情况
 func (c *Achievement) Echarts2() {
 	//1.首先判断是否注册
-	if !checkAccount(c.Ctx) {
-		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/login?url="+route, 302)
-		return
-	}
-	//4.取得客户端用户名
-	var uname string
-	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	v := c.GetSession("uname")
-	if v != nil {
-		uname = v.(string)
-		c.Data["Uname"] = v.(string)
-	}
-	//由uname取得user
-	user, err := models.GetUserByUsername(uname)
+	// if !checkAccount(c.Ctx) {
+	// 	// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
+	// 	route := c.Ctx.Request.URL.String()
+	// 	c.Data["Url"] = route
+	// 	c.Redirect("/login?url="+route, 302)
+	// 	return
+	// }
+	// //4.取得客户端用户名
+	// var uname string
+	// // sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
+	// // defer sess.SessionRelease(c.Ctx.ResponseWriter)
+	// v := c.GetSession("uname")
+	// if v != nil {
+	// 	uname = v.(string)
+	// 	c.Data["Uname"] = v.(string)
+	// }
+	// //由uname取得user
+	// user, err := models.GetUserByUsername(uname)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// //4.取出用户的权限等级
+	// role, _ := checkRole(c.Ctx) //login里的
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+	c.Data["Username"] = username
+	c.Data["Ip"] = c.Ctx.Input.IP()
+	c.Data["role"] = role
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	roleint, err := strconv.Atoi(role)
 	if err != nil {
 		beego.Error(err)
 	}
-	//4.取出用户的权限等级
-	role, _ := checkRole(c.Ctx) //login里的
-	if role > 4 {               //
+	if roleint > 4 { //
 		// port := strconv.Itoa(c.Ctx.Input.Port()) //c.Ctx.Input.Site() + ":" + port +
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
@@ -3507,7 +3530,7 @@ func (c *Achievement) Echarts2() {
 	//分院——科室——人员甲（乙、丙……）——绘制——设计——校核——审查——合计——排序
 	secid := c.Input().Get("secid")
 	if secid == "" { //如果为空，则用登录的
-		secid = strconv.FormatInt(user.Id, 10)
+		secid = strconv.FormatInt(uid, 10)
 	}
 	secid1, err := strconv.ParseInt(secid, 10, 64)
 	if err != nil {

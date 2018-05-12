@@ -1,8 +1,9 @@
+<!-- 项目目录角色权限分配 -->
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>角色——权限分配</title>
+  <title>角色—权限分配</title>
 
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -56,13 +57,14 @@
         data-page-size="5"
         data-page-list="[5, 25, 50, All]"
         data-search="false"
+        data-select-item-name="role"
         >
         <thead>
-          <tr><!-- data-radio -->
-                <th data-field="state" data-checkbox="true" data-select-item-name="role"></th>
+          <tr><!-- data-checkbox -->
+                <th data-field="state" data-radio="true"></th>
                 <th data-formatter="index1">#</th>
                 <th data-field="Rolenumber">角色编码</th>
-                <th data-field="Rolename">角色名称</th>
+                <th data-field="name">角色名称</th>
                 <th data-align="center" data-formatter="StatusFormatter">状态</th>
                 <!-- <th data-field="domain_desc">所属域</th> -->
                 <!-- <th data-align="center"
@@ -94,10 +96,11 @@
         data-page-size="5"
         data-page-list="[5, 10, All]"
         data-query-params="queryParams"
+        data-select-item-name="project"
         >
         <thead>        
           <tr>
-          <th data-width="10" data-radio="true" data-select-item-name="proj"></th>
+          <th data-width="10" data-radio="true"></th>
           <th data-formatter="index1">#</th>
           <th data-field="Code">编号</th>
           <th data-field="Title">名称</th>
@@ -124,11 +127,12 @@
         data-detail-view="true"
         data-click-to-select="true"
         data-query-params="queryParams"
+        data-select-item-name="permission"
         >
         <thead>        
           <tr>
-            <!-- radiobox data-checkbox="true"-->
-            <th data-width="10" data-checkbox="true"></th>
+            <!-- data-checkbox="true"-->
+            <th data-width="10" data-radio="true"></th>
             <th data-formatter="index1">#</th>
             <th data-field="Title">权限名</th>
             <!-- <th data-field="PDF" data-formatter="checkDateFormatter">PDF</th>
@@ -158,12 +162,13 @@
                 {"Id":"2","Title":"编辑成果","Action":"PUT"},
                 {"Id":"3","Title":"删除成果","Action":"DELETE"},
                 {"Id":"4","Title":"读取成果","Action":"GET"}];
-    var json1 = [{"Id":"5","Title":"任意"},
-                {"Id":"6","Title":"PDF","checked":true},
-                {"Id":"7","Title":"DWG"},
-                {"Id":"8","Title":"DOC"},
-                {"Id":"8","Title":"XLS"},
-                {"Id":"8","Title":"DGN"}];              
+    var json1 = [{"Id":"5","Title":"任意","checked":true},
+                {"Id":"6","Title":"PDF"}
+                ];  
+                // {"Id":"7","Title":"DWG"},
+                // {"Id":"8","Title":"DOC"},
+                // {"Id":"9","Title":"XLS"},
+                // {"Id":"10","Title":"DGN"}            
     /*初始化table数据*/
     $(function(){
       $("#table3").bootstrapTable({
@@ -186,13 +191,14 @@
         if (index==3){
           $(cur_table).bootstrapTable({
             columns: [{
-                  checkbox: true,
+                  radio: true,//checkbox
                   formatter: "stateFormatter"
               }, {
                   field: 'Title',
                   title: '文件扩展名'
               }],
             data:json1,
+            clickToSelect:true
           })
         }
     }
@@ -231,24 +237,57 @@
     //         }
     //     });
     // };
+    //文件扩展名选择
+    // $(function(){
+    //   $("#table3").on("uncheck.bs.table",function(e,row,ele){
+    //         if (row.Id=="5"){
+    //           // for (var i=6;i<=10;i++){
+    //               // $('#table4').bootstrapTable('check',"1");
+    //               $('#table4 input').removeAttr("disabled"); 
+    //           // }
+    //         }
+    //     })
+    //   $("#table3").on("check.bs.table",function(e,row,ele){
+    //         if (row.Id=="5"){
+    //           // for (var i=6;i<=10;i++){
+    //               // $('#table4').bootstrapTable('uncheckAll');
+    //               $('#table4 input').attr("disabled", true);
+    //               $('[data-index="0"]').removeAttr("disabled");
+    //               $('#table4').bootstrapTable('check',"0");
+    //           // }
+    //         }
+    //     })
+    // })
 
     function index1(value,row,index){
       return index+1
     }
 
     function stateFormatter(value, row, index) {
-      if (row.checked === true) {
+      if (row.Id =="6") {
           return {
               // disabled: true,
               checked: true
           }
       }
-      return value;
+      // else{
+      //   return {
+      //         disabled: true
+      //         // checked: true
+      //     }
+      // }
+      
+      // if (row.checked === true) {
+      //     return {
+      //         checked: true
+      //     }
+      // }
+      // return value;
     }
 
     function StatusFormatter(value, row, index) {
       // alert(row.Status);
-      if (row.Status == "0") {
+      if (row.role == "0") {//Status
           return '正常';
       }else{
         return '失效';
@@ -263,7 +302,7 @@
     }
 
     $(document).ready(function() {
-      //添加角色
+      //显示添加角色模态框
       $("#addButton").click(function() {
         $('#modalTable').modal({
         show:true,
@@ -281,7 +320,7 @@
           // alert(row.Id);
           // return row.Id;
           // alert(row.Title);
-          return row.Title;
+          return row.name;
         })
         var ids="";
         for(var i=0;i<selectRow.length;i++){
@@ -298,14 +337,14 @@
        success:function(data,status){
          alert("删除“"+data+"”成功！(status:"+status+".)");
          //删除已选数据
-         $('#table1').bootstrapTable('remove',{
-           field:'Title',
+         $('#table').bootstrapTable('remove',{
+           field:'name',
            values:titles
          });
        }
         }); 
       })
-      //编辑角色模态框
+      //显示编辑角色模态框
       $("#editorButton").click(function() {
         var selectRow=$('#table').bootstrapTable('getSelections');
         if (selectRow.length<1){
@@ -319,9 +358,9 @@
         $("input#cid").remove();
         var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
         $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-        $("#Rolename1").val(selectRow[0].Rolename);
+        $("#Rolename1").val(selectRow[0].name);
         $("#Rolenumber1").val(selectRow[0].Rolenumber);
-        $("#Status1").val(selectRow[0].Status);
+        $("#Status1").val(selectRow[0].role);
         // alert(JSON.stringify(selectRow));
         // alert(selectRow[0].Id);
         // var title = $('#'+id).attr("value");
@@ -473,10 +512,11 @@
       // var title=$.map(selectRow,function(row){
       //   return row.Title;
       // })
+
       var permissionids="";
       for(var i=0;i<selectRow.length;i++){
         if(i==0){
-          permissionids=selectRow[i].Title;
+          permissionids=selectRow[i].Title;//这里直接用Action啊
         }else{
           permissionids=permissionids+","+selectRow[i].Title;
         }  
@@ -497,31 +537,31 @@
       }
 
       arr=$('#tree').treeview('getChecked');
-        if (arr.length==0){
-          alert("请先勾选目录！");
-          return;
-        }
+      var treenodeids="";
+      if (arr.length!=0){
+        // alert("请先勾选目录！");
+        // return;
         // alert(JSON.stringify(arr));
         // if (arr.length>=2){
         //   alert("请不要勾选一个以上！");
         //   return;
         // }
-      var treeids="";
-      var treenodeids="";
-      for(var i=0;i<arr.length;i++){
-        if(i==0){
-          treeids=arr[i].id;
-          treenodeids=arr[i].nodeId;
-        }else{
-          treeids=treeids+","+arr[i].id;
-          treenodeids=treenodeids+","+arr[i].nodeId;
-        }  
+        var treeids="";
+        for(var i=0;i<arr.length;i++){
+          if(i==0){
+            treeids=arr[i].id;
+            treenodeids=arr[i].nodeId;
+          }else{
+            treeids=treeids+","+arr[i].id;
+            treenodeids=treenodeids+","+arr[i].nodeId;
+          }  
+        }
       }
 
       $.ajax({
         type:"post",
         url:"/admin/role/permission",
-        data: {roleids:roleids,permissionids:permissionids,treeids:treeids,treenodeids:treenodeids,sufids:sufids},
+        data: {roleids:roleids,permissionids:permissionids,treeids:treeids,treenodeids:treenodeids,sufids:sufids,projid:rowid},//这里加上项目id
         success:function(data,status){
           alert("添加“"+data+"”成功！(status:"+status+".)");
           // $('#table').bootstrapTable('refresh', {url:'/admin/role/get/'});
@@ -534,14 +574,16 @@
   <script type="text/javascript">
     // 每次点击角色表table、权限表table2、项目表table3，3个表任何一个点击，都检查是否具备查询条件
     $(function(){
+      //点击角色表触发查询角色具备的项目目录权限
       $("#table").on("check.bs.table",function(e,row,ele){
         //检查table2项目表和table3权限表是否有选择，并且只能单选
         var selectRow2=$('#table2').bootstrapTable('getSelections');
         var selectRow3=$('#table3').bootstrapTable('getSelections');
+        var selectRow4=$('#table4').bootstrapTable('getSelections');
         if (selectRow2.length>1) {
           // alert("请不要勾选一个以上权限！");
           return false;
-        }else if(selectRow2.length==1 && selectRow2.length==1){
+        }else if(selectRow2.length==1 && selectRow3.length==1){
           var projectid="";
           for(var i=0;i<selectRow2.length;i++){
             if(i==0){
@@ -558,6 +600,18 @@
               action=action+","+selectRow3[i].Action;
             }  
           }
+          // if (selectRow.length<=0) {
+          //   alert("请先勾选权限！");
+          //   return false;
+          // }
+          var sufids="";
+          for(var i=0;i<selectRow4.length;i++){
+            if(i==0){
+              sufids=selectRow4[i].Title;
+            }else{
+              sufids=sufids+","+selectRow4[i].Title;
+            }  
+          }
           // alert(JSON.stringify(checkableNodes));
           // $('#btn-check-node.check-node').on('click', function (e) {
           //   $checkableTree.treeview('checkNode', [ checkableNodes, { silent: $('#chk-check-silent').is(':checked') }]);
@@ -569,7 +623,7 @@
             dataType : "json",//返回数据类型  
             // async:false, //同步会出现警告：Synchronous XMLHttpRequest on the main thread is deprecated because of its detrimental effects to the end user's experience 
             url: "/admin/role/getpermission",//请求的action路径  
-            data: {roleid:row.Id,action:action,projectid:projectid}, 
+            data: {roleid:row.Id,action:action,projectid:projectid,sufids:sufids}, 
              //同步请求将锁住浏览器，用户其它操作必须等待请求完成才可以执行  
             error: function () {//请求失败处理函数    
                 alert('请求失败');    
@@ -579,14 +633,16 @@
               //   return $('#tree').treeview('search', [ data, { ignoreCase: false, exactMatch: true } ]);//忽略大小写——这个只支持名称
               // };
               $('#tree').treeview('uncheckAll', { silent: true });
-              for(var i=0;i<data.length;i++){
-                // alert(data[i]);
-                var findCheckableNodess = function() {
-                  return $('#tree').treeview('findNodes', [data[i], 'id']);
-                }; 
-                var checkableNodes = findCheckableNodess();
-                // $('#tree').treeview('checkNode', [ checkableNodes, { silent: true } ]);
-                $('#tree').treeview('toggleNodeChecked', [ checkableNodes, { silent: true } ]);
+              if (data!=null){
+                for(var i=0;i<data.length;i++){
+                  // alert(data[i]);
+                  var findCheckableNodess = function() {
+                    return $('#tree').treeview('findNodes', [data[i], 'id']);
+                  }; 
+                  var checkableNodes = findCheckableNodess();
+                  // $('#tree').treeview('checkNode', [ checkableNodes, { silent: true } ]);
+                  $('#tree').treeview('toggleNodeChecked', [ checkableNodes, { silent: true } ]);
+                }
               }
             }
           });
@@ -597,21 +653,136 @@
         // }
       });
 
-      $("#table2").on("click-row.bs.table",function(e,row,ele){
-
+      //点击项目触发查询——这个不行，因为点击项目表触发显示目录了
+      $("#table2").on("check.bs.table",function(e,row,ele){
+        //检查table2项目表和table3权限表是否有选择，并且只能单选
+        var selectRow=$('#table').bootstrapTable('getSelections');
+        var selectRow3=$('#table3').bootstrapTable('getSelections');
+        if (selectRow.length>1) {
+          // alert("请不要勾选一个以上权限！");
+          return false;
+        }else if(selectRow.length==1 && selectRow3.length==1){
+          // var projectid="";
+          // for(var i=0;i<selectRow.length;i++){
+          //   if(i==0){
+          //     projectid=selectRow[i].Id;
+          //   }else{
+          //     projectid=projectid+","+selectRow[i].Id;
+          //   }  
+          // }
+          var action="";
+          for(var i=0;i<selectRow3.length;i++){
+            if(i==0){
+              action=selectRow3[i].Action;
+            }else{
+              action=action+","+selectRow3[i].Action;
+            }  
+          }
+          //刷新树   
+          $.ajax({  //JQuery的Ajax  
+            type: 'GET',    
+            dataType : "json",//返回数据类型  
+            // async:false, //同步会出现警告：Synchronous XMLHttpRequest on the main thread is deprecated because of its detrimental effects to the end user's experience 
+            url: "/admin/role/getpermission",//请求的action路径  
+            data: {roleid:selectRow[0].Id,action:action,projectid:row.Id}, 
+             //同步请求将锁住浏览器，用户其它操作必须等待请求完成才可以执行  
+            error: function () {//请求失败处理函数    
+                alert('请求失败');    
+            },  
+            success:function(data){ //请求成功后处理函数。取到Json对象data
+              $('#tree').treeview('uncheckAll', { silent: true });
+              if(data){
+                for(var i=0;i<data.length;i++){
+                  // alert(data[i]);
+                  var findCheckableNodess = function() {
+                    return $('#tree').treeview('findNodes', [data[i], 'id']);
+                  }; 
+                  var checkableNodes = findCheckableNodess();
+                  $('#tree').treeview('toggleNodeChecked', [ checkableNodes, { silent:  true } ]);
+                }
+              }
+            }
+          });
+        }
       });
 
-      $("#table3").on("click-row.bs.table",function(e,row,ele){
-
+      //点击权限表触发查询
+      //点击table4其实也是触发这个table3,并且row.action为空
+      $("#table3").on("check.bs.table",function(e,row,ele){
+        // alert(row.Action);
+        //检查table2项目表和table3权限表是否有选择，并且只能单选
+        var selectRow=$('#table').bootstrapTable('getSelections');
+        var selectRow2=$('#table2').bootstrapTable('getSelections');
+        var selectRow3=$('#table3').bootstrapTable('getSelections');
+        var selectRow4=$('#table4').bootstrapTable('getSelections');
+        // alert(selectRow4[0].Title);
+        if (selectRow.length>1) {
+          // alert("请不要勾选一个以上权限！");
+          return false;
+        }else if(selectRow.length==1 && selectRow2.length==1){
+          // var projectid="";
+          // for(var i=0;i<selectRow.length;i++){
+          //   if(i==0){
+          //     projectid=selectRow[i].Id;
+          //   }else{
+          //     projectid=projectid+","+selectRow[i].Id;
+          //   }  
+          // }
+          // var action="";
+          // for(var i=0;i<selectRow2.length;i++){
+          //   if(i==0){
+          //     action=selectRow2[i].Action;
+          //   }else{
+          //     action=action+","+selectRow2[i].Action;
+          //   }  
+          // }
+          
+          // if (selectRow.length<=0) {
+          //   alert("请先勾选权限！");
+          //   return false;
+          // }
+          var sufids="";
+          for(var i=0;i<selectRow4.length;i++){
+            if(i==0){
+              sufids=selectRow4[i].Title;
+            }else{
+              sufids=sufids+","+selectRow4[i].Title;
+            }  
+          }
+          //刷新树   
+          $.ajax({  //JQuery的Ajax  
+            type: 'GET',    
+            dataType : "json",//返回数据类型  
+            // async:false, //同步会出现警告：Synchronous XMLHttpRequest on the main thread is deprecated because of its detrimental effects to the end user's experience 
+            url: "/admin/role/getpermission",//请求的action路径  
+            data: {roleid:selectRow[0].Id,action:selectRow3[0].Action,projectid:selectRow2[0].Id,sufids:sufids}, 
+             //同步请求将锁住浏览器，用户其它操作必须等待请求完成才可以执行  
+            error: function () {//请求失败处理函数    
+                alert('请求失败');    
+            },  
+            success:function(data){ //请求成功后处理函数。取到Json对象data
+              $('#tree').treeview('uncheckAll', { silent: true });
+              if (data) {
+                for(var i=0;i<data.length;i++){
+                  // alert(data[i]);
+                  var findCheckableNodess = function() {
+                    return $('#tree').treeview('findNodes', [data[i], 'id']);
+                  }; 
+                  var checkableNodes = findCheckableNodess();
+                  $('#tree').treeview('toggleNodeChecked', [ checkableNodes, { silent: true } ]);
+                }
+              }
+            }
+          });
+        }
       });
+
     });
     // onClickRow  click-row.bs.table  row, $element 当用户点击某一行的时候触发，参数包括：
     // row：点击行的数据，
     // $element：tr 元素，
     // field：点击列的 field 名称
   </script>
-
-
 
   <!-- 添加角色 -->
   <div class="container">

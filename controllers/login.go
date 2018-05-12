@@ -7,8 +7,9 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
 	// "net/url"
-	"meritms/models"
-	// "strconv"
+	"github.com/3xxx/meritms/models"
+	"strconv"
+	// "github.com/astaxie/beego/session"
 )
 
 type LoginController struct {
@@ -40,8 +41,7 @@ func (c *LoginController) Get() {
 	// 	ctx.Input.CruSession.Flush()
 	// 	beego.GlobalSessions.SessionDestroy(ctx.ResponseWriter, ctx.Request)
 	// }
-	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
+
 	if isExit {
 		// c.Ctx.SetCookie("uname", "", -1, "/")
 		// c.Ctx.SetCookie("pwd", "", -1, "/")
@@ -51,8 +51,18 @@ func (c *LoginController) Get() {
 		// c.Ctx.Input.CruSession.Delete("gosessionid")这句与上面一句重复
 		// c.Ctx.Input.CruSession.Flush()
 		// beego.GlobalSessions.SessionDestroy(c.Ctx.ResponseWriter, c.Ctx.Request)
-		// sess.Delete("uname") //这个可行。
-		c.DelSession("uname")
+		v := c.GetSession("uname")
+		// islogin := false
+		if v != nil {
+			//删除指定的session
+			c.DelSession("uname")
+			//销毁全部的session
+			c.DestroySession()
+			// islogin = true
+
+			//beego.Info("当前的session:")
+			//beego.Info(c.CruSession)
+		}
 		// sess.Flush()//这个不灵
 		c.Redirect("/", 301)
 		return
@@ -62,7 +72,7 @@ func (c *LoginController) Get() {
 	//	c.Data["Email"] = "your.email.address@example.com"
 	//	c.Data["EmailName"] = "Your Name"
 	//	c.Data["Id"] = c.Ctx.Input.Param(":id")
-	c.TplName = "login.html"
+	c.TplName = "login.tpl"
 }
 
 func (c *LoginController) Loginerr() {
@@ -79,7 +89,7 @@ func (c *LoginController) Loginerr() {
 	// url := c.Ctx.Input.Site() + ":" + port + c.Ctx.Request.URL.String()
 	c.Data["Url"] = url
 	// beego.Info(url)
-	c.TplName = "loginerr.html"
+	c.TplName = "loginerr.tpl"
 }
 
 func (c *LoginController) Post() {
@@ -144,8 +154,6 @@ func (c *LoginController) Post() {
 		// c.Ctx.SetCookie("uname", user.Username, maxAge, "/")
 		c.SetSession("uname", user.Username)
 		c.SetSession("pwd", user.Password)
-		// sess.Set("uname", user.Username)
-		// sess.Set("pwd", user.Password)
 		// beego.Info(sess.Get("uname"))
 		// c.Ctx.SetCookie("pwd", user.Password, maxAge, "/")
 
@@ -193,16 +201,11 @@ func (c *LoginController) Post() {
 }
 
 func checkAccount(ctx *context.Context) bool {
-	// func checkAccount(c *LoginController) bool {
 	var user models.User
 	//（4）获取当前的请求会话，并返回当前请求会话的对象
 	//但是我还是建议大家采用 SetSession、GetSession、DelSession 三个方法来操作，避免自己在操作的过程中资源没释放的问题
 	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
 	// defer sess.SessionRelease(ctx.ResponseWriter)
-	// v := sess.Get("uname")
-	// ctx.Input.CruSession.Get("Adminname")            //读取Session
-	// ctx.Input.CruSession.Set("Adminname","value")    //设置Session
-	// ctx.Input.CruSession.Delete("Adminname")         //删除Session
 	v := ctx.Input.CruSession.Get("uname")
 	if v == nil {
 		return false
@@ -211,9 +214,7 @@ func checkAccount(ctx *context.Context) bool {
 	} else {
 		//     this.SetSession("asta", v.(int)+1)
 		//     this.Data["num"] = v.(int)
-
 		user.Username = v.(string)
-		// v = sess.Get("pwd")
 		v = ctx.Input.CruSession.Get("pwd")
 		user.Password = v.(string) //ck.Value
 		err := models.ValidateUser(user)
@@ -241,12 +242,10 @@ func checkAccount(ctx *context.Context) bool {
 	// 	beego.AppConfig.String("pwd") == pwd
 }
 
-func checkRole(ctx *context.Context) (role int, err error) { //这里返回用户的role
+func checkRole(ctx *context.Context) (role string, err error) { //这里返回用户的role
 	//（4）获取当前的请求会话，并返回当前请求会话的对象
 	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
 	// defer sess.SessionRelease(ctx.ResponseWriter)
-	// v := sess.Get("uname")
-	// func checkRole(c *LoginController) (role int, err error) {
 	v := ctx.Input.CruSession.Get("uname")
 	// ck, err := ctx.Request.Cookie("uname")
 	// if err != nil {
@@ -266,6 +265,69 @@ func checkRole(ctx *context.Context) (role int, err error) { //这里返回用�
 	// } else {
 	// 	return "", err
 	// }
+}
+
+//用户登录，则role是1则是admin，其余没有意义
+//ip区段，casbin中表示，比如9楼ip区段作为用户，赋予了角色，这个角色具有访问项目目录权限
+func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
+	// var uname string
+	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
+	// defer sess.SessionRelease(ctx.ResponseWriter)
+	v := ctx.Input.CruSession.Get("uname")
+	var userrole string
+	var user models.User
+	var err error
+	var iprole int
+	if v != nil { //如果登录了
+		islogin = true
+		uname = v.(string)
+		user, err = models.GetUserByUsername(uname)
+		if err != nil {
+			beego.Error(err)
+		} else {
+			uid = user.Id
+			if user.Role == "0" {
+				isadmin = false
+				userrole = "4"
+			} else if user.Role == "1" {
+				isadmin = true
+				userrole = user.Role
+			} else {
+				isadmin = false
+				userrole = user.Role
+			}
+		}
+	} else { //如果没登录,查询ip对应的用户
+		islogin = false
+		isadmin = false
+		uid = 0
+		uname = ctx.Input.IP()
+		user, err = models.GetUserByIp(uname)
+		if err != nil { //如果查不到，则用户名就是ip，role再根据ip地址段权限查询
+			beego.Error(err)
+			iprole = Getiprole(ctx.Input.IP()) //查不到，则是5——这个应该取消，采用casbin里的ip区段
+			userrole = strconv.Itoa(iprole)
+		} else { //如果查到，则role和用户名
+			if user.Role == "1" {
+				isadmin = true
+			}
+			uid = user.Id
+			userrole = user.Role
+			uname = user.Username
+		}
+	}
+	// beego.Info(iprole)
+	//如果用户登录，则以登录权限为优先，即使给这个用户设置的ip权限
+	// roleint, err := strconv.Atoi(userrole)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// if iprole <= roleint {
+	// 	role = strconv.Itoa(iprole)
+	// } else {
+	// 	role = userrole
+	// }
+	return uname, userrole, uid, isadmin, islogin
 }
 
 // func checkRole(ctx *context.Context) (roles []*models.Role, err error) {

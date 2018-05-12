@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	// "github.com/bitly/go-simplejson"
-	"meritms/models"
+	"github.com/3xxx/meritms/models"
 	"time"
 )
 
@@ -57,12 +57,11 @@ func (this *RegistController) Post() {
 	// fmt.Print(cipherStr)
 	// fmt.Print("\n")
 	// fmt.Print(hex.EncodeToString(cipherStr))
-
 	user.Password = hex.EncodeToString(cipherStr)
 	user.Lastlogintime = time.Now()
-	uid, err := models.SaveUser(user) //这里修改
+	_, err := models.SaveUser(user) //这里修改
 
-	_, err = models.AddRoleUser(4, uid)
+	// _, err = models.AddRoleUser(4, uid)
 	if err == nil {
 		this.TplName = "success.tpl"
 	} else {

@@ -1,64 +1,63 @@
 package controllers
 
 import (
-	"encoding/json"
+	// "crypto/md5"
+	// "encoding/hex"
+	// "encoding/json"
+	"github.com/3xxx/meritms/models"
 	"github.com/astaxie/beego"
+	// "github.com/astaxie/beego/httplib"
 	"github.com/astaxie/beego/logs"
-	"github.com/astaxie/beego/session"
-	"meritms/models"
 	"net"
 	"strconv"
 	"strings"
+	"time"
 )
 
 type AdminController struct {
 	beego.Controller
 }
 
-var globalSessions *session.Manager
-
-func init() {
-	config := `{"cookieName":"gosessionid","enableSetCookie":false,"gclifetime":3600,"ProviderConfig":"{\"cookieName\":\"gosessionid\",\"securityKey\":\"beegocookiehashkey\"}"}`
-
-	conf := new(session.ManagerConfig)
-	if err := json.Unmarshal([]byte(config), conf); err != nil {
-		beego.Error(err)
-	}
-	globalSessions, _ = session.NewManager("cookie", conf)
-
-	go globalSessions.GC()
-}
-
-//（2）建立一个全局session mananger对象
 // var globalSessions *session.Manager
 
-//（3）在初始化“全局session mananger对象”
 // func init() {
-// 	globalSessions, _ = session.NewManager("memory", `{"cookieName":"gosessionid", "enableSetCookie,omitempty": true, "gclifetime":3600, "maxLifetime": 3600, "secure": false, "cookieLifeTime": 3600, "providerConfig": ""}`)
+// 	config := `{"cookieName":"gosessionid","enableSetCookie":false,"gclifetime":3600,"ProviderConfig":"{\"cookieName\":\"gosessionid\",\"securityKey\":\"beegocookiehashkey\"}"}`
+
+// 	conf := new(session.ManagerConfig)
+// 	if err := json.Unmarshal([]byte(config), conf); err != nil {
+// 		beego.Error(err)
+// 	}
+// 	globalSessions, _ = session.NewManager("cookie", conf)
+
 // 	go globalSessions.GC()
 // }
 
-// func (c *AdminController) Get() {
-// 	// c.Data["Website"] = "beego.me"
-// 	// c.Data["Email"] = "astaxie@gmail.com"
-// 	c.TplName = "index.tpl"
-// }
-
 func (c *AdminController) Get() {
-	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
+	// username, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	// 	c.Data["IsAdmin"] = true
+	// } else if role > 1 && role < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
+	// c.Data["IsProjects"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
-	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-	if role != 1 {
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	if !isadmin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -70,20 +69,31 @@ func (c *AdminController) Get() {
 }
 
 func (c *AdminController) Admin() {
-	username, role := checkprodRole(c.Ctx)
-	if role == 1 {
-		c.Data["IsAdmin"] = true
-	} else if role > 1 && role < 5 {
-		c.Data["IsLogin"] = true
-	} else {
-		c.Data["IsAdmin"] = false
-		c.Data["IsLogin"] = false
-	}
+	// username, role := checkprodRole(c.Ctx)
+	// if role == 1 {
+	// 	c.Data["IsAdmin"] = true
+	// } else if role > 1 && role < 5 {
+	// 	c.Data["IsLogin"] = true
+	// } else {
+	// 	c.Data["IsAdmin"] = false
+	// 	c.Data["IsLogin"] = false
+	// }
+	// c.Data["Username"] = username
+	// c.Data["IsProjects"] = true
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
-	c.Data["IsProjects"] = true
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	c.Data["role"] = role
-	if role == 1 {
+	c.Data["IsAdmin"] = isadmin
+	c.Data["IsLogin"] = islogin
+	c.Data["Uid"] = uid
+	// roleint, err := strconv.Atoi(role)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	if isadmin {
 		id := c.Ctx.Input.Param(":id")
 		c.Data["Id"] = id
 		// c.Data["IsLogin"] = checkAccount(c.Ctx)
@@ -635,160 +645,6 @@ func (c *AdminController) DeleteMerit() {
 	}
 }
 
-// func (c *AdminController) Admin() {
-// 	c.Data["IsLogin"] = checkAccount(c.Ctx)
-// 	//1.首先判断是否注册
-// 	if !checkAccount(c.Ctx) {
-// 		// port := strconv.Itoa(c.Ctx.Input.Port())//c.Ctx.Input.Site() + ":" + port +
-// 		route := c.Ctx.Request.URL.String()
-// 		c.Data["Url"] = route
-// 		c.Redirect("/login?url="+route, 302)
-// 		// c.Redirect("/login", 302)
-// 		return
-// 	}
-// 	//4.取得客户端用户名
-// 	// var uname string
-// 	sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-// 	defer sess.SessionRelease(c.Ctx.ResponseWriter)
-// 	v := sess.Get("uname")
-// 	if v != nil {
-// 		// uname = v.(string)
-// 		c.Data["Uname"] = v.(string)
-// 	}
-// 	// uname := v.(string) //ck.Value
-// 	//4.取出用户的权限等级
-// 	role, err := checkRole(c.Ctx) //login里的
-// 	if err != nil {
-// 		beego.Error(err)
-// 	} else {
-// 		// beego.Info(role)
-// 		//5.进行逻辑分析：
-// 		// rolename, _ := strconv.ParseInt(role, 10, 64)
-// 		if role > 2 { //
-// 			// port := strconv.Itoa(c.Ctx.Input.Port()) //c.Ctx.Input.Site() + ":" + port +
-// 			route := c.Ctx.Request.URL.String()
-// 			c.Data["Url"] = route
-// 			c.Redirect("/roleerr?url="+route, 302)
-// 			// c.Redirect("/roleerr", 302)
-// 			return
-// 		}
-// 	}
-// 	// c.Data["Website"] = "beego.me"
-// 	// c.Data["Email"] = "astaxie@gmail.com"
-// 	c.TplName = "admin.tpl"
-// }
-// type List struct {
-// 	Name string `json:"name"`
-// }
-// type Listimage struct {
-// 	Id        int64    `json:"id"`
-// 	UserNo    string   `json:"userNo"`
-// 	DiagTime  string   `json:"diagTime"`
-// 	DiagDoc   string   `json:"diagDoc"`
-// 	Feature   string   `json:"feature"`
-// 	MatchList string   `json:"matchList"`
-// 	Result    string   `json:"result"`
-// 	Desc      string   `json:"desc"`
-// 	Images    []string `json:"images"`
-// 	Ctime     string   `json:"ctime"`
-// 	Utime     string   `json:"utime"`
-// }
-
-// func (c *AdminController) Test() {
-// 	c.Data["Website"] = "beego.me"
-// 	c.Data["Email"] = "astaxie@gmail.com"
-// 	c.TplName = "user_show.tpl"
-// 	imagelist1 := []string{"/static/img/1.jpg", "/static/img/2.jpg", "/static/img/3.jpg"}
-// 	imagelist2 := []string{"/static/img/4.jpg", "/static/img/5.jpg", "/static/img/6.jpg"}
-// 	imagelist3 := []string{"/static/img/7.jpg", "/static/img/8.jpg", "/static/img/9.jpg"}
-// 	imagelist4 := []string{"/static/img/10.jpg", "/static/img/11.jpg", "/static/img/12.jpg"}
-// 	imagelist5 := []string{"/static/img/13.jpg", "/static/img/14.jpg", "/static/img/15.jpg"}
-// 	imagelist6 := []string{"/static/img/16.jpg", "/static/img/17.jpg", "/static/img/18.jpg"}
-
-// 	listimage1 := Listimage{
-// 		1,
-// 		"uer0001",
-// 		"2017/03/18",
-// 		"秦晓川",
-// 		"通过图像识别获得眼像特征",
-// 		"知识库自动获取的饼子",
-// 		"根据病症信息分析结果",
-// 		"\n\t对综合揭露进行\n\t\t\t 行详细描述",
-// 		imagelist1,
-// 		"2017-03-18",
-// 		"",
-// 	}
-// 	listimage2 := Listimage{
-// 		2,
-// 		"uer0002",
-// 		"2017/03/14",
-// 		"秦晓川2",
-// 		"识别技术更新",
-// 		"来自库",
-// 		"分析结果",
-// 		"\n\t对综合\n\t\t\t 详细描述",
-// 		imagelist2,
-// 		"2017-03-13",
-// 		"",
-// 	}
-// 	listimage3 := Listimage{
-// 		3,
-// 		"uer0003",
-// 		"2017/03/10",
-// 		"秦晓川3",
-// 		"特征",
-// 		"自动获取",
-// 		"根据结果",
-// 		"\n\t进行\n\t\t\t 详细描述",
-// 		imagelist3,
-// 		"2017-03-10",
-// 		"",
-// 	}
-// 	listimage4 := Listimage{
-// 		4,
-// 		"uer0004",
-// 		"2017/03/02",
-// 		"秦晓川4",
-// 		"通过特征",
-// 		"知识库",
-// 		"分析结果",
-// 		"\n\t综合揭露\n\t\t\t 描述",
-// 		imagelist4,
-// 		"2014-07-13",
-// 		"",
-// 	}
-// 	listimage5 := Listimage{
-// 		5,
-// 		"uer0005",
-// 		"2016/07/14",
-// 		"秦晓川5",
-// 		"通过图像识别获得眼像特征",
-// 		"知识库自动获取的饼子",
-// 		"根据病症信息分析结果",
-// 		"\n\t对综合揭露进行\n\t\t\t 行详细描述",
-// 		imagelist5,
-// 		"2014-07-13",
-// 		"",
-// 	}
-// 	listimage6 := Listimage{
-// 		6,
-// 		"uer0006",
-// 		"2015/07/14",
-// 		"秦晓川6",
-// 		"眼像特征",
-// 		"获取",
-// 		"信息结果",
-// 		"\n\t揭露进行\n\t\t\t 详细描述",
-// 		imagelist6,
-// 		"2014-07-13",
-// 		"",
-// 	}
-// 	listimage := []Listimage{listimage1, listimage2, listimage3, listimage4, listimage5, listimage6}
-// 	c.Data["json"] = listimage
-// 	// c.Data["json"] = catalogs
-// 	c.ServeJSON()
-// }
-
 func (c *AdminController) Test1() {
 	c.Data["Website"] = "beego.me"
 	c.Data["Email"] = "astaxie@gmail.com"
@@ -1237,6 +1093,279 @@ func (c *AdminController) DeleteCategory() {
 	}
 }
 
+//********************日历开始**************
+//添加日历
+func (c *AdminController) AddCalendar() {
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	color := c.Input().Get("color")
+	allday1 := c.Input().Get("allday")
+	var allday bool
+	if allday1 == "true" {
+		allday = true
+	} else {
+		allday = false
+	}
+	public1 := c.Input().Get("public")
+	var public bool
+	if public1 == "true" {
+		public = true
+	} else {
+		public = false
+	}
+	const lll = "2006-01-02 15:04"
+	var starttime, endtime time.Time
+	var err error
+	if start != "" {
+		starttime, err = time.Parse(lll, start)
+		// beego.Info(start)
+		// beego.Info(starttime)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		starttime = time.Now()
+	}
+	if end != "" {
+		endtime, err = time.Parse(lll, end)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		endtime = starttime
+	}
+	_, err = models.AddAdminCalendar(title, content, color, allday, public, starttime, endtime)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = title
+		c.ServeJSON()
+	}
+}
+
+//返回日历json数据
+//如果是管理员，则显示全部，非管理员，显示公开
+func (c *AdminController) Calendar() {
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	const lll = "2006-01-02"
+	startdate, err := time.Parse(lll, start)
+	if err != nil {
+		beego.Error(err)
+	}
+	enddate, err := time.Parse(lll, end)
+	if err != nil {
+		beego.Error(err)
+	}
+	var calendars []*models.AdminCalendar
+	// _, role := checkprodRole(c.Ctx)
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+	if role == "1" {
+		calendars, err = models.GetAdminCalendar(startdate, enddate, false)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		calendars, err = models.GetAdminCalendar(startdate, enddate, true)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	c.Data["json"] = calendars
+	c.ServeJSON()
+	// c.TplName = "admin_category.tpl"
+}
+
+//修改
+func (c *AdminController) UpdateCalendar() {
+	cid := c.Input().Get("cid")
+	//pid转成64为
+	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	title := c.Input().Get("title")
+	content := c.Input().Get("content")
+	start := c.Input().Get("start")
+	end := c.Input().Get("end")
+	color := c.Input().Get("color")
+	allday1 := c.Input().Get("allday")
+	var allday bool
+	if allday1 == "true" {
+		allday = true
+	} else {
+		allday = false
+	}
+	public1 := c.Input().Get("public")
+	var public bool
+	if public1 == "true" {
+		public = true
+	} else {
+		public = false
+	}
+	const lll = "2006-01-02 15:04"
+	var starttime, endtime time.Time
+	if start != "" {
+		starttime, err = time.Parse(lll, start)
+		// beego.Info(start)
+		// beego.Info(starttime)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		starttime = time.Now()
+	}
+	if end != "" {
+		endtime, err = time.Parse(lll, end)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		endtime = starttime
+	}
+	err = models.UpdateAdminCalendar(cidNum, title, content, color, allday, public, starttime, endtime)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = title
+		c.ServeJSON()
+	}
+	// pid := c.Ctx.Input.Param(":id")
+	//
+	// title := c.Input().Get("title")
+	// code := c.Input().Get("code")
+	// grade := c.Input().Get("grade")
+	// //pid转成64为
+	// cidNum, err := strconv.ParseInt(cid, 10, 64)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// gradeNum, err := strconv.Atoi(grade)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// err = models.UpdateAdminCategory(cidNum, title, code, gradeNum)
+	// if err != nil {
+	// 	beego.Error(err)
+	// } else {
+	// 	c.Data["json"] = "ok"
+	// 	c.ServeJSON()
+	// }
+}
+
+//拖曳
+func (c *AdminController) DropCalendar() {
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	delta := c.Input().Get("delta")
+	daltaint, err := strconv.Atoi(delta)
+	if err != nil {
+		beego.Error(err)
+	}
+	calendar, err := models.GetAdminCalendarbyid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	t1 := calendar.Starttime.AddDate(0, 0, daltaint)
+	t2 := calendar.Endtime.AddDate(0, 0, daltaint)
+	err = models.DropAdminCalendar(idNum, t1, t2)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = calendar.Title
+		c.ServeJSON()
+	}
+}
+
+//resize
+func (c *AdminController) ResizeCalendar() {
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	delta := c.Input().Get("delta")
+	delta = delta + "h"
+	deltahour, err := time.ParseDuration(delta)
+	if err != nil {
+		beego.Error(err)
+	}
+	// starttime.Add(-time.Duration(hours) * time.Hour)
+	calendar, err := models.GetAdminCalendarbyid(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	// t1 := calendar.Starttime.Add(deltahour)
+	t2 := calendar.Endtime.Add(deltahour)
+	err = models.ResizeAdminCalendar(idNum, t2)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = calendar.Title
+		c.ServeJSON()
+	}
+}
+
+//删除，如果有下级，一起删除
+func (c *AdminController) DeleteCalendar() {
+	cid := c.Input().Get("cid")
+	//pid转成64为
+	cidNum, err := strconv.ParseInt(cid, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	err = models.DeleteAdminCalendar(cidNum)
+	if err != nil {
+		beego.Error(err)
+	} else {
+		c.Data["json"] = "ok"
+		c.ServeJSON()
+	}
+}
+
+func (c *AdminController) SearchCalendar() {
+	title := c.Input().Get("title")
+	const lll = "2006-01-02"
+
+	var calendars []*models.AdminCalendar
+	var err error
+	// _, role := checkprodRole(c.Ctx)
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+	if role == "1" {
+		calendars, err = models.SearchAdminCalendar(title, false)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		calendars, err = models.SearchAdminCalendar(title, true)
+		if err != nil {
+			beego.Error(err)
+		}
+	}
+	c.Data["json"] = calendars
+	c.ServeJSON()
+}
+
 //******编辑项目同步ip**********
 //根据项目id查询ip
 func (c *AdminController) SynchIp() {
@@ -1337,10 +1466,132 @@ func (c *AdminController) DeletesynchIp() {
 	}
 }
 
+//******后台部门结构********
+//根据数字id或空查询分类，如果有pid，则查询下级，如果pid为空，则查询类别
+// func (c *AdminController) Department() {
+// 	id := c.Ctx.Input.Param(":id")
+// 	c.Data["Id"] = id
+// 	c.Data["Ip"] = c.Ctx.Input.IP()
+// 	// var categories []*models.AdminDepartment
+// 	var err error
+// 	if id == "" { //如果id为空，则查询类别
+// 		id = "0"
+// 	}
+// 	//pid转成64为
+// 	idNum, err := strconv.ParseInt(id, 10, 64)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	categories, err := models.GetAdminDepart(idNum)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+
+// 	c.Data["json"] = categories
+// 	c.ServeJSON()
+// 	// c.TplName = "admin_category.tpl"
+// }
+
+//根据名称title查询分级表
+// func (c *AdminController) DepartmentTitle() {
+// 	// title := c.Ctx.Input.Param(":id")
+// 	title := c.Input().Get("title")
+// 	// beego.Info(title)
+// 	categories, err := models.GetAdminDepartTitle(title)
+// 	// beego.Info(categories)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+// 	c.Data["json"] = categories
+// 	c.ServeJSON()
+// 	// c.TplName = "admin_category.tpl"
+// }
+
+//添加
+// func (c *AdminController) AddDepartment() {
+// 	// pid := c.Ctx.Input.Param(":id")
+// 	pid := c.Input().Get("pid")
+// 	title := c.Input().Get("title")
+// 	code := c.Input().Get("code")
+// 	//pid转成64为
+// 	var pidNum int64
+// 	var err error
+// 	if pid != "" {
+// 		pidNum, err = strconv.ParseInt(pid, 10, 64)
+// 		if err != nil {
+// 			beego.Error(err)
+// 		}
+// 	} else {
+// 		pidNum = 0
+// 	}
+// 	_, err = models.AddAdminDepart(pidNum, title, code)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	} else {
+// 		c.Data["json"] = "ok"
+// 		c.ServeJSON()
+// 	}
+// }
+
+//修改
+// func (c *AdminController) UpdateDepartment() {
+// 	// pid := c.Ctx.Input.Param(":id")
+// 	cid := c.Input().Get("cid")
+// 	title := c.Input().Get("title")
+// 	code := c.Input().Get("code")
+// 	//pid转成64为
+// 	cidNum, err := strconv.ParseInt(cid, 10, 64)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	}
+
+// 	err = models.UpdateAdminDepart(cidNum, title, code)
+// 	if err != nil {
+// 		beego.Error(err)
+// 	} else {
+// 		c.Data["json"] = "ok"
+// 		c.ServeJSON()
+// 	}
+// }
+
+//删除，如果有下级，一起删除
+// func (c *AdminController) DeleteDepartment() {
+// 	ids := c.GetString("ids")
+// 	array := strings.Split(ids, ",")
+// 	for _, v := range array {
+// 		// pid = strconv.FormatInt(v1, 10)
+// 		//id转成64位
+// 		idNum, err := strconv.ParseInt(v, 10, 64)
+// 		if err != nil {
+// 			beego.Error(err)
+// 		}
+// 		//查询下级，即分级
+// 		categories, err := models.GetAdminDepart(idNum)
+// 		if err != nil {
+// 			beego.Error(err)
+// 		} else {
+// 			for _, v1 := range categories {
+// 				err = models.DeleteAdminDepart(v1.Id)
+// 				if err != nil {
+// 					beego.Error(err)
+// 				}
+// 			}
+// 		}
+// 		err = models.DeleteAdminDepart(idNum)
+// 		if err != nil {
+// 			beego.Error(err)
+// 		} else {
+// 			c.Data["json"] = "ok"
+// 			c.ServeJSON()
+// 		}
+// 	}
+// }
+
 //批量上传首页轮播图片
 func (c *AdminController) AddCarousel() {
-	_, role := checkprodRole(c.Ctx)
-	if role == 1 {
+	// _, role := checkprodRole(c.Ctx)
+	_, role, _, _, _ := checkprodRole(c.Ctx)
+	if role == "1" {
 		//获取上传的文件
 		_, h, err := c.GetFile("file")
 		if err != nil {

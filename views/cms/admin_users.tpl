@@ -1,9 +1,9 @@
-<!-- iframe里用户列表-->
+<!-- iframe里用户-角色列表-->
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>EngineerCMS</title>
+  <title>用户-角色</title>
   <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
@@ -37,10 +37,8 @@
         <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
         </button>
-  </div>
-  <!-- data-url="/admin/user"
-   -->
-  <table id="table0"
+    </div>
+    <table id="table0"
         data-search="true"
         data-show-refresh="true"
         data-show-toggle="true"
@@ -59,27 +57,9 @@
         data-click-to-select="true"
         data-show-export="true"
         >
-    <!-- <thead>        
-      <tr>       
-        radiobox data-checkbox="true"
-        <th data-width="10" data-radio="true"></th>
-        <th data-formatter="index1">#</th>
-        <th data-field="Username">用户名</th>
-        <th data-field="Nickname">昵称</th>
-        <th data-field="Password">密码</th>
-        <th data-field="Email">邮箱</th>
-        <th data-field="Department">部门</th>
-        <th data-field="Secoffice">科室</th>
-        <th data-field="Ip">IP</th>
-        <th data-field="Status">状态</th>
-        <th data-field="Lastlogintime" data-formatter="localDateFormatter">最后登陆</th>
-        <th data-field="Createtime" data-formatter="localDateFormatter">建立</th>
-        <th data-field="Role">权限</th>
-      </tr>
-    </thead> -->
-  </table>
+    </table>
 
-<script type="text/javascript">
+  <script type="text/javascript">
         /*数据json*/
         var json =  [{"Id":"1","UserName":"水利","UserNickname":"SL","Lastlogintime":"2016-01-05"},
                      {"Id":"2","UserName":"电力","UserNickname":"DL"},
@@ -94,7 +74,7 @@
         //         data:json,
         //     });
         // });
-  $(document).ready(function() {
+    $(document).ready(function() {
     $("#addButton").click(function() {
         $('#modalTable').modal({
         show:true,
@@ -109,158 +89,96 @@
         backdrop:'static'
         });
     })
-    //用表格在线编辑比较好
-    // $("#editorButton").click(function() {
-    //   var selectRow=$('#table0').bootstrapTable('getSelections');
-    //   if (selectRow.length<1){
-    //     alert("请先勾选类别！");
-    //     return;
-    //   }
-    //   if (selectRow.length>1){
-    //   alert("请不要勾选一个以上类别！");
-    //   return;
-    //   }
-    //   $("input#cid").remove();
-    //   var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
-    //   $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-    //   $("#Username1").val(selectRow[0].Username);
-    //   $("#Nickname1").val(selectRow[0].Nickname);
-    //   $("#Password1").val(selectRow[0].Password);
-    //   $("#Repassword1").val(selectRow[0].Repassword);
-    //   $("#Email1").val(selectRow[0].Email);
-    //   $("#Department1").val(selectRow[0].Department);
-    //   $("#Secoffice1").val(selectRow[0].Secoffice);
-    //   $("#Ip1").val(selectRow[0].Ip);
-    //   $("#Status1").val(selectRow[0].Status);
-    //   $("#Role1").val(selectRow[0].Role);
-    //     $('#modalTable1').modal({
-    //     show:true,
-    //     backdrop:'static'
-    //     });
-    // })
+    })
+  </script>
 
-    // $("#deleteButton").click(function() {
-    //   var selectRow=$('#table0').bootstrapTable('getSelections');
-    //   if (selectRow.length<=0) {
-    //     alert("请先勾选类别！");
-    //     return false;
-    //   }
-    //   var title=$.map(selectRow,function(row){
-    //     return row.Title;
-    //   })
-    //   var ids="";
-    //   for(var i=0;i<selectRow.length;i++){
-    //     if(i==0){
-    //       ids=selectRow[i].Id;
-    //     }else{
-    //       ids=ids+","+selectRow[i].Id;
-    //     }  
-    //   }
-    //   $.ajax({
-    //     type:"post",
-    //     url:"/admin/category/deletecategory",
-    //     data: {ids:ids},
-    //     success:function(data,status){
-    //       alert("删除“"+data+"”成功！(status:"+status+".)");
-    //       //删除已选数据
-    //       $('#table0').bootstrapTable('remove',{
-    //         field:'Title',
-    //         values:title
-    //       });
-    //     }
-    //   });  
-    // })
-  })
-
-</script>
-
-<!-- 添加用户 -->
-<div class="container">
-  <form class="form-horizontal">
-    <div class="modal fade" id="modalTable">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
+  <!-- 添加用户 -->
+  <div class="container">
+    <form class="form-horizontal">
+      <div class="modal fade" id="modalTable">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
             <h3 class="modal-title">添加用户</h3>
-          </div>
-          <div class="modal-body">
-            <div class="modal-body-content">        
-              <div class="form-group must">
+            </div>
+            <div class="modal-body">
+              <div class="modal-body-content">        
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">用户名</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Username"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">昵称</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Nickname"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">密码</label>
                 <div class="col-sm-7">
-                  <input type="password" class="form-control" id="password" maxlength="32" placeholder="至多32个字符"></div>
-              </div>
-              <div class="form-group must">
+                  <input type="password" class="form-control" id="Password" maxlength="32" placeholder="至多32个字符"></div>
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">确认密码</label>
                 <div class="col-sm-7">
                   <input type="password" class="form-control equalto" name="password2" maxlength="32" placeholder="至多32个字符" data-rule-equalto="#password" data-msg-equalto="密码不一致"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">邮箱</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Email"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">部门</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Department"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">科室</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Secoffice"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">IP</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Ip"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">CMS端口Port</label>
                 <div class="col-sm-7">
                   <input type="text" class="form-control" id="Port"></div>
-              </div>
-              <div class="form-group must">
+                </div>
+                <div class="form-group must">
                 <label class="col-sm-3 control-label">状态</label>
                 <div class="col-sm-7">
-                  <select id="Status" class="form-control">
+                  <select id="Statusadd" class="form-control">
                     <option value="1" >显示</option>
                     <option value="2" >隐藏</option>
                     <option value="0" >禁用</option>
                   </select>
                 </div>
-              </div>
-              <div class="form-group">
+                </div>
+                <div class="form-group">
                 <label class="col-sm-3 control-label">权限</label>
                 <div class="col-sm-7">
                 <input type="number" class="form-control digits" id="Role" maxlength="20" placeholder="至多20个字符"></div>
+                </div>
               </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-primary" onclick="save()">保存</button>
+            </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="button" class="btn btn-primary" onclick="save()">保存</button>
-        </div>
       </div>
-    </div>
+    </form>
   </div>
-</form>
-</div>
-<!-- 导入用户数据 -->
-<div class="container form-horizontal">
+  <!-- 导入用户数据 -->
+  <div class="container form-horizontal">
     <div class="modal fade" id="importusers">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -283,17 +201,19 @@
                 </form>
               </div>
             </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-          <button type="submit" class="btn btn-primary" onclick="return importusers();">导入</button>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" onclick="return importusers();">导入</button>
           <!-- <button type="submit" class="btn btn-primary" onclick="return import_xls_catalog();">提交</button> -->
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<script type="text/javascript">
+
+  <!-- 用户表 -->
+  <script type="text/javascript">
     function save(){
       // var radio =$("input[type='radio']:checked").val();        
       var Username   = $('#Username').val();
@@ -306,7 +226,7 @@
       var Ip         = $('#Ip').val();
       var Port         = $('#Port').val();
       // var Status     = $('#Status option:selected').text();
-      var Status     = $('#Status option:selected').val();
+      var Status     = $('#Statusadd option:selected').val();
       var Role       = $('#Role').val();
       if (Username)
         {  
@@ -327,7 +247,46 @@
           // "/category/modifyfrm?cid="+cid
           // window.location.reload();//刷新页面
     }
-      //导入用户数据表
+
+    //删除用户
+    $("#deleteButton").click(function() {
+        var selectRow=$('#table0').bootstrapTable('getSelections');
+        if (selectRow.length<=0) {
+          alert("请先勾选！");
+          return false;
+        }
+        if(confirm("确定删除吗？一旦删除将无法恢复！")){
+          var names=$.map(selectRow,function(row){
+            // alert(row.Id);
+            // return row.Id;
+            // alert(row.Title);
+            return row.name;
+          })
+          var ids="";
+          for(var i=0;i<selectRow.length;i++){
+            if(i==0){
+              ids=selectRow[i].Id;
+            }else{
+              ids=ids+","+selectRow[i].Id;
+            }  
+          }
+          $.ajax({
+            type:"post",
+            url:"/admin/user/deleteuser",
+            data: {ids:ids},
+            success:function(data,status){
+              alert("删除“"+data+"”成功！(status:"+status+".)");
+              //删除已选数据
+              $('#table0').bootstrapTable('remove',{
+                field:'name',
+                values:names
+              });
+            }
+          });
+        } 
+    })
+
+    //导入用户数据表
     function importusers(){
         var file=$("#usersexcel").val();
         if(file!=""){  
@@ -348,8 +307,8 @@
         }
     }
 
-  $(function () {
-    $('#table0').bootstrapTable({
+    $(function () {
+      $('#table0').bootstrapTable({
         idField: 'Id',
         url: '/admin/user',
         // striped: "true",
@@ -365,7 +324,7 @@
             return index+1
             }
           },{
-            field: 'Username',
+            field: 'name',//Username
             title: '用户名',
             sortable:'true',
             editable: {
@@ -477,7 +436,7 @@
             title: '建立',
             formatter:localDateFormatter,
           },{
-            field: 'Role',
+            field: 'role',//'Role'
             visible: false,
             title: '权限',
             editable: {
@@ -507,23 +466,23 @@
             events:'actionEvents',
           }
         ]
+      });
     });
-  });
 
-  function index1(value,row,index){
-    return index+1
-  }
+    function index1(value,row,index){
+      return index+1
+    }
 
-  function localDateFormatter(value) {
-    return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
-  }
+    function localDateFormatter(value) {
+      return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    }
     // 点击行显示角色
-  $(function(){
+    $(function(){
      // $("#table").bootstrapTable('destroy').bootstrapTable({
      //     columns:columns,
      //     data:json
      // });
-     $("#table0").on("click-row.bs.table",function(e,row,ele){
+      $("#table0").on("click-row.bs.table",function(e,row,ele){
          $(".info").removeClass("info");
          $(ele).addClass("info");
          userid=row.Id;//全局变量
@@ -531,55 +490,26 @@
          $("#rowtitle").html("用户角色-"+rowtitle);
          $("#details").show();
          $('#table1').bootstrapTable('refresh', {url:'/admin/role/get/'+row.Id});
-     });
-  });
-    //下面这个用在线表格编辑代替
-    // function update(){
-    // var radio =$("input[type='radio']:checked").val();
-      // var Username   = $('#Username1').val();
-      // var Nickname   = $('#Nickname1').val();
-      // var Password   = $('#Password1').val();
-      // var Repassword = $('#Repassword1').val();
-      // var Email      = $('#Email1').val();
-      // var Department = $('#Department1').val();
-      // var Secoffice  = $('#Secoffice1').val();
-      // var Ip         = $('#Ip').val();
-      // var Status     = $('#Status1 option:selected').text();
-      // var Role       = $('#Role1').val();
-      // var cid = $('#cid').val();
-    // $('#myModal').on('hide.bs.modal', function () {  
-    //   if (projcatename1)
-    //     {  
-    //       $.ajax({
-    //           type:"post",
-    //           url:"/admin/user/updateuser",
-    //           data: {cid:cid,username:Username,nickname:Nickname,password:Password,repassword:Repassword,email:Email,department:Department,secoffice:Secoffice,ip:Ip,statusStatus,role:Role},
-    //           success:function(data,status){
-    //             alert("添加“"+data+"”成功！(status:"+status+".)");
-    //            }
-    //       });  
-    //     } 
-    //     $('#modalTable1').modal('hide');
-    //     $('#table0').bootstrapTable('refresh', {url:'/admin/user'});
-    // }
-</script>
+      });
+    });
+  </script>
 
 <!-- onClickRow  click-row.bs.table  row, $element 当用户点击某一行的时候触发，参数包括：
 row：点击行的数据，
 $element：tr 元素，
 field：点击列的 field 名称 -->
 <!-- <script type="text/javascript">
-function format_status(status,row,index) {
-  if(status == 1){
-    return '显示'
-  }else if(status == 2){
-    return  '隐藏'
-  }else if(status == 0){
-    return  '禁止'
+  function format_status(status,row,index) {
+    if(status == 1){
+      return '显示'
+    }else if(status == 2){
+      return  '隐藏'
+    }else if(status == 0){
+      return  '禁止'
+    }
   }
-}
 
-$(document).ready(function() {
+  $(document).ready(function() {
   //添加分级
   $("#addButton1").click(function() {
         $("input#pid").remove();
@@ -687,8 +617,7 @@ $(document).ready(function() {
       }
     });  
   })
-})
-
+  })
 </script> -->
 
 <!-- 用户详情表 -->
@@ -738,10 +667,17 @@ $(document).ready(function() {
 </div> -->
   <!-- 显示用户角色表 -->
   <div id="details" style="display:none">
-  <div class="row">
-    <div id="h-role-info" class="col-sm-6 col-md-6 col-lg-6">
+    <div class="row">
+      <div id="h-role-info" class="col-sm-6 col-md-6 col-lg-6">
       <h3 id="rowtitle">角色表</h3>
       <div id="toolbar1" class="btn-group">
+        <button type="button" data-name="addButton" id="addButtonrole" class="btn btn btn-info btn-sm"> <i class="fa fa-plus">添加</i>
+        </button>
+        <button type="button" data-name="editorButton" id="editorButtonrole" class="btn btn btn-primary btn-sm"> <i class="fa fa-edit">编辑</i>
+        </button>
+        <button type="button" data-name="deleteButton" id="deleteButtonrole" class="btn btn btn-danger btn-sm">
+        <i class="fa fa-trash">删除</i>
+        </button>
         <button type="button" id="editorButton" class="btn btn btn-primary btn-sm"> <i class="fa fa-edit">保存修改</i>
         </button>
         <!-- <button type="button" data-name="editorButton" id="editorButton" class="btn btn btn-primary btn-sm"> <i class="fa fa-edit">编辑</i>
@@ -784,8 +720,98 @@ $(document).ready(function() {
             </tr>
             </thead>
         </table>
+      </div>
     </div>
   </div>
+  <!-- 添加角色 -->
+  <div class="container">
+    <form class="form-horizontal">
+    <div class="modal fade" id="modalTable1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">添加角色</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">        
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">角色名</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="Rolename"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">角色编号</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="Rolenumber"></div>
+              </div>
+
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">状态</label>
+                <div class="col-sm-7">
+                  <select id="Status" class="form-control">
+                    <option value="0">正常</option>
+                    <option value="1">失效</option>
+                  </select>
+                </div>
+              </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+          <button type="button" class="btn btn-primary" onclick="saverole()">保存</button>
+        </div>
+      </div>
+    </div>
+      </div>
+    </form>
+  </div>
+  <!-- 修改角色 -->
+  <div class="container">
+    <form class="form-horizontal">
+      <div class="modal fade" id="modalTable2">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="modal-title">修改角色</h3>
+            </div>
+            <div class="modal-body">
+              <div class="modal-body-content">
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">角色名</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control" id="Rolename1"></div>
+                </div>
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">角色编号</label>
+                  <div class="col-sm-7">
+                    <input type="text" class="form-control" id="Rolenumber1"></div>
+                </div>
+                <div class="form-group must">
+                  <label class="col-sm-3 control-label">状态</label>
+                  <div class="col-sm-7">
+                    <select id="Status1" class="form-control">
+                      <option value="0">正常</option>
+                      <option value="1">失效</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="button" class="btn btn-primary" onclick="updaterole()">修改</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
 
   <br/>
@@ -810,17 +836,145 @@ $(document).ready(function() {
         }
       }
 
-    // 保存修改
+    $(document).ready(function() {
+      //添加角色
+      $("#addButtonrole").click(function() {
+        $('#modalTable1').modal({
+        show:true,
+        backdrop:'static'
+        });
+      })
+
+      //删除角色
+      $("#deleteButtonrole").click(function() {
+        var selectRow=$('#table1').bootstrapTable('getSelections');
+        if (selectRow.length<=0) {
+          alert("请先勾选！");
+          return false;
+        }
+        if(confirm("确定删除吗？一旦删除将无法恢复！")){
+          var titles=$.map(selectRow,function(row){
+            // alert(row.Id);
+            // return row.Id;
+            // alert(row.Title);
+            return row.Title;
+          })
+          var ids="";
+          for(var i=0;i<selectRow.length;i++){
+            if(i==0){
+              ids=selectRow[i].Id;
+            }else{
+              ids=ids+","+selectRow[i].Id;
+            }  
+          }
+          $.ajax({
+            type:"post",
+            url:"/admin/role/delete",
+            data: {ids:ids},
+            success:function(data,status){
+              alert("删除“"+data+"”成功！(status:"+status+".)");
+              //删除已选数据
+              $('#table1').bootstrapTable('remove',{
+                field:'Title',
+                values:titles
+              });
+            }
+          });
+        } 
+      })
+
+      //编辑角色模态框
+      $("#editorButtonrole").click(function() {
+        var selectRow=$('#table1').bootstrapTable('getSelections');
+        if (selectRow.length<1){
+          alert("请先勾选角色！");
+          return;
+        }
+        if (selectRow.length>1){
+          alert("请不要勾选一个以上角色！");
+          return;
+        }
+        $("input#cid").remove();
+        var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
+        $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+        $("#Rolename1").val(selectRow[0].Rolename);
+        $("#Rolenumber1").val(selectRow[0].Rolenumber);
+        $("#Status1").val(selectRow[0].Status);
+        // alert(JSON.stringify(selectRow));
+        // alert(selectRow[0].Id);
+        // var title = $('#'+id).attr("value");
+        // var title = $('#'+id).attr("href");
+        // var categoryid = $('#categoryid').val();
+        $('#modalTable2').modal({
+        show:true,
+        backdrop:'static'
+        });
+      })
+    })
+
+    //新建角色
+    function saverole(){
+      // var radio =$("input[type='radio']:checked").val();        
+      var Rolename = $('#Rolename').val();
+      var Rolenumber = $('#Rolenumber').val();
+      // var Status     = $('#Status option:selected').text();
+      var Status = $('#Status option:selected').val();
+
+      if (Rolename){  
+        $.ajax({
+                type:"post",
+                url:"/admin/role/post",
+                data: {rolename:Rolename,rolenumber:Rolenumber,status:Status},
+                success:function(data,status){
+                  alert("添加“"+data+"”成功！(status:"+status+".)");
+                 }
+        });  
+      } else{
+        alert("角色名等不能为空！");
+      }
+      // $(function(){$('#myModal').modal('hide')}); 
+      $('#modalTable1').modal('hide');
+      $('#table1').bootstrapTable('refresh', {url:'/admin/role/get'});
+      // "/category/modifyfrm?cid="+cid
+      // window.location.reload();//刷新页面
+    }
+
+    //更新角色
+    function updaterole(){
+      // var radio =$("input[type='radio']:checked").val();
+      var roleid1 = $('#cid').val();
+      var rolename1 = $('#Rolename1').val();
+      var rolenumber1 = $('#Rolenumber1').val();
+      var status1 = $('#Status1').val();
+      // $('#myModal').on('hide.bs.modal', function () {  
+      if (rolename1){  
+          $.ajax({
+              type:"put",
+              url:"/admin/role/update",
+              data: {roleid:roleid1,rolename:rolename1,rolenumber:rolenumber1,status:status1},
+              success:function(data,status){
+                alert("修改“"+data+"”成功！(status:"+status+".)");
+               }
+          });  
+      } 
+      // $(function(){$('#myModal').modal('hide')});
+      $('#modalTable1').modal('hide');
+      $('#table').bootstrapTable('refresh', {url:'/admin/role/get/'});
+      // "/category/modifyfrm?cid="+cid
+      // window.location.reload();//刷新页面
+    }
+
+    // 保存用户-角色的修改
     $("#editorButton").click(function() {
       // if ({{.role}}!=1){
       //   alert("权限不够！");
       //   return;
       // }
       var selectRow=$('#table1').bootstrapTable('getSelections');
-      if (selectRow.length<=0) {
-        alert("请先勾选！");
-        return false;
-      }
+      // if (selectRow.length<=0) {
+      //   alert("请先勾选！");
+      //   return false;
+      // }
       // if(confirm("确定删除吗？一旦删除将无法恢复！")){
         var title=$.map(selectRow,function(row){
           return row.Title;
@@ -843,6 +997,7 @@ $(document).ready(function() {
           }
         });  
     })
+
 
     function actionFormatter(value, row, index) {
       return '<button type="button" data-name="addButton" id="addButton" class="btn btn-info btn-xs"> <i class="fa fa-user">角色</i></button>';

@@ -1,236 +1,172 @@
 package models
 
 import (
-	"errors"
-	"log"
-
+	// "crypto/md5"
+	// "encoding/hex"
+	// "errors"
+	// "strconv"
+	// "fmt"
+	// "log"
+	"time"
 	// "github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"github.com/astaxie/beego/validation"
+	// "github.com/astaxie/beego/validation"
+	// . "github.com/beego/admin/src/lib"
+	// "github.com/casbin/beego-orm-adapter"
+	// "github.com/casbin/casbin"
 )
 
 //角色表
 type Role struct {
-	Id     int64
-	Title  string `orm:"size(100)" form:"Title"  valid:"Required"`
-	Name   string `orm:"size(100)" form:"Name"  valid:"Required"`
-	Remark string `orm:"null;size(200)" form:"Remark" valid:"MaxSize(200)"`
-	Status int    `orm:"default(2)" form:"Status" valid:"Range(1,2)"`
-	// Users  []*User `orm:"reverse(many)"`
-	// Node   []*Node `orm:"reverse(many)"`
+	Id         int64  `PK`
+	Rolename   string `json:"name",orm:"unique"` //这个拼音的简写
+	Rolenumber string
+	Status     string    `json:"role",orm:"default('0');size(2)"` //,form:"Status",valid:"Range('0','1','2','3','4')"`
+	Createtime time.Time `orm:"type(datetime);auto_now_add" `
+	Updated    time.Time `orm:"type(datetime);auto_now_add" `
+}
+
+type UserRole struct {
+	Id     int64 `PK`
+	UserId int64
+	RoleId int64
 }
 
 func init() {
-	orm.RegisterModel(new(Role)) //, new(Article)
-	// orm.RegisterDriver("sqlite", orm.DRSqlite)
-	// orm.RegisterDataBase("default", "sqlite3", "database/orm_test.db", 10)
+	orm.RegisterModel(new(Role), new(UserRole))
 }
 
-// func (r *Role) TableName() string {
-// 	return beego.AppConfig.String("rbac_role_table")
-// }
+//添加权限
+func SaveRole(role Role) (rid int64, err error) {
+	o := orm.NewOrm()
+	var role1 Role
+	//判断是否有重名
+	err = o.QueryTable("role").Filter("rolename", role.Rolename).One(&role1, "Id")
+	if err == orm.ErrNoRows { //Filter("tnumber", tnumber).One(topic, "Id")==nil则无法建立
+		// 没有找到记录
+		rid, err = o.Insert(&role)
+		if err != nil {
+			return rid, err
+		}
+	} //else { //应该进行更新操作
+	// user1 := &User{Id: user1.Id}
+	// 	user1.Username = user.Username
+	// 	user1.Nickname = user.Nickname
+	// 	user1.Password = user.Password
+	// 	user1.Repassword = user.Repassword
+	// 	user1.Email = user.Email
+	// 	user1.Department = user.Department
+	// 	user1.Secoffice = user.Secoffice
+	// 	// user1.Remark = user.Remark
+	// 	user1.Ip = user.Ip
+	// 	user1.Status = user.Status
+	// 	user1.Lastlogintime = user.Lastlogintime
+	// 	user1.Createtime = time.Now()
+	// 	user1.Role = user.Role
+	// 	_, err = o.Update(&user1)
+	// 	if err != nil {
+	// 		return 0, err
+	// 	}
+	// 	uid = user1.Id
+	// }
+	return rid, err
+}
 
-// func init() {
-// 	orm.RegisterModel(new(Role))
-// }
+//取出所有角色
+func GetRoles() (roles []*Role, err error) {
+	o := orm.NewOrm()
+	role := new(Role)
+	qs := o.QueryTable(role)
+	// var offset int64
+	// if page <= 1 {
+	// 	offset = 0
+	// } else {
+	// 	offset = (page - 1) * page_size
+	// }
+	_, err = qs.All(&roles)
+	if err != nil {
+		return nil, err
+	}
+	// count, _ = qs.Count()
+	return roles, err
+}
 
-func checkRole(g *Role) (err error) {
-	valid := validation.Validation{}
-	b, _ := valid.Valid(&g)
-	if !b {
-		for _, err := range valid.Errors {
-			log.Println(err.Key, err.Message)
-			return errors.New(err.Message)
+//取到一个角色数据，不是数组，所以table无法显示
+func GetRoleByRoleId(roleid int64) (role Role) {
+	role = Role{Id: roleid}
+	o := orm.NewOrm()
+	o.Read(&role) //这里是默认主键查询。=(&user,"Id")
+	return role
+}
+
+//由用户id取得所拥有的角色
+func GetRoleByUserId(id int64) (roles []*UserRole, err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable("UserRole")
+	_, err = qs.Filter("UserId", id).All(&roles)
+	if err != nil {
+		return nil, err
+	}
+	return roles, err
+}
+
+func UpdateRole(role Role) (err error) {
+	o := orm.NewOrm()
+	role1 := &Role{Id: role.Id}
+	if o.Read(role1) == nil {
+		role1.Rolename = role.Rolename
+		role1.Rolenumber = role.Rolenumber
+		role1.Status = role.Status
+		role1.Updated = time.Now()
+		_, err := o.Update(role1)
+		if err != nil {
+			return err
 		}
 	}
 	return nil
 }
 
-//get role list
-func GetRolelist(page int64, page_size int64, sort string) (roles []orm.Params, count int64) {
-	o := orm.NewOrm()
-	role := new(Role)
-	qs := o.QueryTable(role)
-	var offset int64
-	if page <= 1 {
-		offset = 0
-	} else {
-		offset = (page - 1) * page_size
-	}
-	qs.Limit(page_size, offset).OrderBy(sort).Values(&roles)
-	count, _ = qs.Count()
-	return roles, count
-}
-
-func AddRole(r *Role) (int64, error) {
-	if err := checkRole(r); err != nil {
-		return 0, err
-	}
-	o := orm.NewOrm()
-	role := new(Role)
-	role.Title = r.Title
-	role.Name = r.Name
-	role.Remark = r.Remark
-	role.Status = r.Status
-
-	id, err := o.Insert(role)
-	return id, err
-}
-
-func UpdateRole(r *Role) (int64, error) {
-	if err := checkRole(r); err != nil {
-		return 0, err
-	}
-	o := orm.NewOrm()
-	role := make(orm.Params)
-	if len(r.Title) > 0 {
-		role["Title"] = r.Title
-	}
-	if len(r.Name) > 0 {
-		role["Name"] = r.Name
-	}
-	if len(r.Remark) > 0 {
-		role["Remark"] = r.Remark
-	}
-	if r.Status != 0 {
-		role["Status"] = r.Status
-	}
-	if len(role) == 0 {
-		return 0, errors.New("update field is empty")
-	}
-	var table Role
-	num, err := o.QueryTable(table).Filter("Id", r.Id).Update(role)
-	return num, err
-}
-
-func DelRoleById(Id int64) (int64, error) {
+func DeleteRole(Id int64) (int64, error) {
 	o := orm.NewOrm()
 	status, err := o.Delete(&Role{Id: Id})
 	return status, err
 }
 
-// func GetNodelistByRoleId(Id int64) (nodes []orm.Params, count int64) {
-// 	o := orm.NewOrm()
-// 	node := new(Node)
-// 	count, _ = o.QueryTable(node).Filter("Role__Role__Id", Id).Values(&nodes)
-// 	return nodes, count
-// }
-
-// func DelGroupNode(roleid int64, groupid int64) error {
-// 	var nodes []*Node
-// 	var node Node
-// 	role := Role{Id: roleid}
-// 	o := orm.NewOrm()
-// 	num, err := o.QueryTable(node).Filter("Group", groupid).RelatedSel().All(&nodes)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	if num < 1 {
-// 		return nil
-// 	}
-// 	for _, n := range nodes {
-// 		m2m := o.QueryM2M(n, "Role")
-// 		_, err1 := m2m.Remove(&role)
-// 		if err1 != nil {
-// 			return err1
-// 		}
-// 	}
-// 	return nil
-// }
-// func AddRoleNode(roleid int64, nodeid int64) (int64, error) {
-// 	o := orm.NewOrm()
-// 	role := Role{Id: roleid}
-// 	node := Node{Id: nodeid}
-// 	m2m := o.QueryM2M(&node, "Role")
-// 	num, err := m2m.Add(&role)
-// 	return num, err
-// }
-
-func DelUserRole(roleid int64) error {
+//将userid和roleid存入对应数据库
+//如果存在，
+func AddUserRole(uid, rid int64) error {
+	//重复性检查
 	o := orm.NewOrm()
-	_, err := o.QueryTable("user_roles").Filter("role_id", roleid).Delete()
+	userrole := &UserRole{
+		UserId: uid,
+		RoleId: rid,
+	}
+	_, err := o.Insert(userrole)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func DeleteUserRole(uid, rid int64) error {
+	o := orm.NewOrm()
+	var role UserRole
+	qs := o.QueryTable("UserRole")
+	_, err := qs.Filter("UserId", uid).Filter("RoleId", rid).All(&role)
+	if err != nil {
+		return err
+	}
+	// if o.Read(&merit) == nil {
+	_, err = o.Delete(&role) //删除用户角色
+	if err != nil {
+		return err
+	}
+	// }
 	return err
 }
 
-func AddRoleUser(roleid, userid int64) (num int64, err error) {
-	//要判断是否已经存在，如果存在，则update
-	o := orm.NewOrm()
-	user := User{Id: userid}
-	// var role1 Role
-	// err = o.QueryTable("user_roles").Filter("user_id", userid).One(&role1)
-	m2m := o.QueryM2M(&user, "Roles")
-	if m2m.Exist(&User{Id: userid}) {
-		// 	// fmt.Println("Tag Exist")
-		num, err = m2m.Remove(&User{Id: userid})
-		role := Role{Id: roleid}
-		// 	user := User{Id: userid}
-		num, err = m2m.Add(&role)
-	} else {
-		role := Role{Id: roleid}
-		// 	user := User{Id: userid}
-		num, err = m2m.Add(&role)
-	}
-
-	// user1 := new(User)
-	// _, err := o.QueryTable("user_roles").Filter("user_id", userid).All(&user1)
-	// if err == orm.ErrNoRows {
-	// o := orm.NewOrm()
-	// role := Role{Id: roleid}
-	// user := User{Id: userid}
-	// m2m := o.QueryM2M(&user, "Roles")
-	// num, err := m2m.Add(&role)
-	return num, err
-	// } else {
-	// }
-}
-
-func UpdateRoleUser(roleid1, roleid2, userid int64) (int64, error) {
-	o := orm.NewOrm()
-	role := Role{Id: roleid1}
-	user := User{Id: userid}
-	m2m := o.QueryM2M(&user, "Roles")
-	num, err := m2m.Remove(&role)
-	role2 := Role{Id: roleid2}
-	_, err = m2m.Add(&role2)
-	return num, err
-}
-
-func GetUserByRoleId(roleid int64) (users []orm.Params, count int64) {
-	o := orm.NewOrm()
-	user := new(User)
-	count, _ = o.QueryTable(user).Filter("Role__Role__Id", roleid).Values(&users)
-	return users, count
-}
-
-//根据role等级取得roleid
-func GetRoleIdbyTitle(roletitle string) (roleid int64, err error) {
-	o := orm.NewOrm()
-	var role Role
-	err = o.QueryTable("role").Filter("title", roletitle).One(&role, "Id")
-	if err != nil { //如果不存在这个权限
-		return 0, err
-	}
-	return role.Id, nil
-}
-
-// var user User
-// err := o.QueryTable("user").Filter("name", "slene").One(&user)
-// if err == orm.ErrMultiRows {
-//     // 多条的时候报错
-//     fmt.Printf("Returned Multi Rows Not One")
-// }
-// if err == orm.ErrNoRows {
-//     // 没有找到记录
-//     fmt.Printf("Not row found")
-// }
-// 可以指定返回的字段：
-
-// // 只返回 Id 和 Title
-// var post Post
-// o.QueryTable("post").Filter("Content__istartswith", "prefix string").One(&post, "Id", "Title")
-
-// func AccessList(uid int64) (list []orm.Params, err error) {
-// 	var roles []orm.Params
+//由角色id、action和项目id，取得所有的路径
+// func GetPermissions(roleid, projectid, action) (paths []*CasbinRule, err error) {
 // 	o := orm.NewOrm()
 // 	role := new(Role)
 // 	_, err = o.QueryTable(role).Filter("User__User__Id", uid).Values(&roles)

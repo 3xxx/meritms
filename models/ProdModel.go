@@ -3,7 +3,7 @@ package models
 import (
 	// "github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	_ "github.com/mattn/go-sqlite3"
+	// _ "github.com/mattn/go-sqlite3"
 	"strconv"
 	// "strings"
 	"time"
@@ -67,7 +67,7 @@ func DeleteProduct(cid int64) error {
 //添加成果到项目侧栏某个id下
 //如果这个侧栏id下的这个成果编号已经存在，则返回id
 ////应该用ReadOrCreate尝试从数据库读取，不存在的话就创建一个
-func AddProduct(code, title, label, principal, content string, Projectid int64) (id int64, err error) {
+func AddProduct(code, title, label, principal, content string, uid, Projectid int64) (id int64, err error) {
 	o := orm.NewOrm()
 	// err := o.QueryTable("user").Filter("name", "slene").One(&user)
 	// if err == orm.ErrMultiRows {
@@ -85,6 +85,7 @@ func AddProduct(code, title, label, principal, content string, Projectid int64) 
 			Code:      code,
 			Title:     title,
 			Label:     label,
+			Uid:       uid,
 			Principal: principal,
 			ProjectId: Projectid,
 			Content:   content,
@@ -109,11 +110,11 @@ func AddProduct(code, title, label, principal, content string, Projectid int64) 
 	return id, err
 }
 
-//根据侧栏id查出所有成果
+//根据侧栏id查出所有成果——按编号排序
 func GetProducts(id int64) (products []*Product, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
-	_, err = qs.Filter("ProjectId", id).OrderBy("-created").All(&products)
+	_, err = qs.Filter("ProjectId", id).OrderBy("-code").All(&products)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +127,7 @@ func GetProjProducts(id int64) (products []*Product, err error) {
 	projects := make([]*Project, 0)
 
 	cond := orm.NewCondition()
-	cond1 := cond.Or("Id", id).Or("ParentIdPath__contains", idstring)
+	cond1 := cond.Or("Id", id).Or("ParentIdPath__contains", idstring+"-").Or("ParentId", id)
 	o := orm.NewOrm()
 	//先查出所有项目parent id path中包含id的数据
 	qs := o.QueryTable("Project")

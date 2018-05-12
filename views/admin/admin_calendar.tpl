@@ -670,8 +670,7 @@ $(document).ready(function() {
 		maxView: 1,
 		forceParse: 0
     });
-</script>
-<script>
+
   var currColor = "#3c8dbc"; //Red by default
   $(function () {
     /* ADDING EVENTS */
