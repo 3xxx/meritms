@@ -49,9 +49,14 @@
           <input type="hidden" id="secid" name="secid" value="{{.Secid}}"/>
           <input type="hidden" id="level" name="level" value="{{.Level}}"/>
           <input type="hidden" id="key" name="key" value="modify"/>
-          <div class="form-group">
+          
             <label for="taskNote">统计周期：</label>
+          <div class="form-group">  
             <input type="text" class="form-control" name="datefilter" id="datefilter" value="" placeholder="选择时间段(默认最近一个月)"/>
+          </div>
+          <div class="form-group">
+            <button id="button1" class="btn btn-default">提交</button>
+            <label class="control-label"> tips:(StartDay < DateRange <= EndDay)</label>
           </div>
           <script type="text/javascript">
             $(function() {
@@ -77,10 +82,6 @@
               });
             });
           </script>
-          <!-- <button type="submit" class="btn btn-primary">提交</button>
-        -->
-          <button id="button1" class="btn btn-default">提交</button>
-          <label class="control-label"> tips:(StartDay < DateRange <= EndDay)</label>
         </div>
       </div>
       <br>

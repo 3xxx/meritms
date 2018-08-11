@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html style="height: 100%;">
 	<head>
-	  <title>fei-OnlyOffice</title>
+	  <title>{{.Doc.FileName}}</title>
 
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -142,28 +142,25 @@
               {
                 "permissions": "Deny Access",
                 "user": "Albet Tlanp"
-              },
-               
+              }, 
             ]
           },
           "permissions": {
-          	"comment": true,
-          	"download": true,
+          	"comment": {{.Comment}},//true,
+          	"download": {{.Download}},//true,
           	"edit": {{.Edit}},
-          	"print": true,
+          	"print": {{.Print}},//true,
           	"review": {{.Review}}//true
         	},
         },
         "documentType": "{{.documentType}}",
         "editorConfig": {
           "callbackUrl": "http://192.168.99.1/url-to-callback?id={{.Doc.Id}}",
-          
         	"createUrl": "https://example.com/url-to-create-document/",
           "user": {
             "id": {{.Uid}},
             "name": "{{.Username}}"
           },
-
 					"customization": {
             "chat": true,
             "commentAuthorOnly": false,
@@ -171,7 +168,7 @@
             "customer": {
               "address": "116# Tianshou Road,Guangzhou China",
               "info": "QQ504284",
-              "logo": "http://192.168.99.1/static/test/user.jpg",//logo-big.png
+              "logo": "http://192.168.99.1/static/img/user.jpg",//logo-big.png
               "mail": "xc-qin@163.com",
               "name": "Qin Xiao Chuan",
               "www": "github.com/3xxx"
@@ -186,8 +183,8 @@
               "url": "http://192.168.99.1/onlyoffice"
             },
             "logo": {
-              "image": "http://192.168.99.1/static/test/user.jpg",//logo.png
-              "imageEmbedded": "http://192.168.99.1/static/test/user.jpg",//logo_em.png
+              "image": "http://192.168.99.1/static/img/oo.png",//logo.png
+              "imageEmbedded": "http://192.168.99.1/static/img/oo.png",//logo_em.png
               "url": "http://192.168.99.1/onlyoffice"
             },
             "showReviewChanges": false,
@@ -200,11 +197,8 @@
             "shareUrl": "https://example.com/view?doc=exampledocument1.docx",
             "toolbarDocked": "top"
         	},
-
           "lang": "zh-CN",//"en-US",
-
 					"mode": {{.Mode}},//"view",//edit
-
 					"recent": [
             {
               "folder": "Example Files",
@@ -218,13 +212,11 @@
             }
         	]
         },
-
         "height": "100%",
         // "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.t-IDcSemACt8x4iTMCda8Yhe3iZaWbvV5XKSTbuAn0M",
-    		"type": {{.Type}},//"desktop",//desktop//embedded//mobile访问文档的平台类型 网页嵌入
+    		"type": {{.Type}},//"desktop",embedded,mobile访问文档的平台类型 网页嵌入
         "width": "100%"
       });
-
    	</script>
 	</body>
 </html>

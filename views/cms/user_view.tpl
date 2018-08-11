@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>EngineerCMS</title>
-  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
@@ -183,7 +183,7 @@
             return index+1
             }
           },{
-            field: 'Username',
+            field: 'name',//这里用user数据库json字段，不能是username
             title: '用户名',
             sortable:'true',
             editable: {

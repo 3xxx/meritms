@@ -92,6 +92,7 @@ func (c *LoginController) Loginerr() {
 	c.TplName = "loginerr.tpl"
 }
 
+//输入用户名和密码后登陆提交
 func (c *LoginController) Post() {
 	// uname := c.Input().Get("uname")
 	// url := c.Input().Get("returnUrl")
@@ -99,10 +100,12 @@ func (c *LoginController) Post() {
 	url2 := c.Input().Get("level")
 	url3 := c.Input().Get("key")
 	var url string
-	if url2 == "" {
+	if url2 == "" && url1 != "" {
 		url = url1
-	} else {
+	} else if url2 != "" {
 		url = url1 + "&level=" + url2 + "&key=" + url3
+	} else {
+		url = c.Input().Get("referrer")
 	}
 	// beego.Info(url)
 	//（4）获取当前的请求会话，并返回当前请求会话的对象
@@ -156,11 +159,25 @@ func (c *LoginController) Post() {
 		c.SetSession("pwd", user.Password)
 		// beego.Info(sess.Get("uname"))
 		// c.Ctx.SetCookie("pwd", user.Password, maxAge, "/")
-
-		//更新user表的lastlogintime
-		models.UpdateUserlastlogintime(user.Username)
+		User, err := models.GetUserByUsername(user.Username)
+		if err != nil {
+			beego.Error(err)
+		}
+		if User.Ip == "" {
+			err = models.UpdateUser(User.Id, "Ip", c.Ctx.Input.IP())
+			if err != nil {
+				beego.Error(err)
+			}
+		} else {
+			//更新user表的lastlogintime
+			err = models.UpdateUserlastlogintime(user.Username)
+			if err != nil {
+				beego.Error(err)
+			}
+		}
 		if url != "" {
-			c.Redirect(url, 301)
+			// c.Redirect(url, 301)
+			c.Redirect("/onlyoffice", 301)
 			// beego.Info(url)
 		} else {
 			c.Redirect("/", 301)
@@ -173,7 +190,6 @@ func (c *LoginController) Post() {
 		c.Redirect("/loginerr?url="+url, 302)
 	}
 	return
-
 	// sess := index.StartSession()
 	// var user models.User
 	// inputs := index.Input()
@@ -267,12 +283,17 @@ func checkRole(ctx *context.Context) (role string, err error) { //这里返回�
 	// }
 }
 
+// type Session struct {
+// 	Session int
+// }
+// type Login struct {
+// 	UserName string
+// 	Password string
+// }
+
 //用户登录，则role是1则是admin，其余没有意义
 //ip区段，casbin中表示，比如9楼ip区段作为用户，赋予了角色，这个角色具有访问项目目录权限
 func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
-	// var uname string
-	// sess, _ := globalSessions.SessionStart(ctx.ResponseWriter, ctx.Request)
-	// defer sess.SessionRelease(ctx.ResponseWriter)
 	v := ctx.Input.CruSession.Get("uname")
 	var userrole string
 	var user models.User

@@ -2,13 +2,16 @@
 <!DOCTYPE html>
 <head>
   <title>fei-ONLYOFFICE</title>
-
+  <meta name="renderer" content="webkit">
+  <!-- 加上这句，360等浏览器就会默认使用google内核，而不是IE内核 。 -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- 加上这一句，如果被用户强行使用IE浏览器，就会使用IE的最高版本渲染内核 -->
   <!-- <link type='text/css' href='/static/oo/files-3TmaoIbj3PAed78NYLoa7w2.css' rel='stylesheet' />
     <link type='text/css' href='/static/oo/common-HLDWebQ4QDcrVRYNq4-rWA2.css' rel='stylesheet' />
     <link type='text/css' href='/static/oo/files-CUBYqoHsKUGuN7k-PidXtQ2.css' rel='stylesheet' /> -->
 
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
-  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
@@ -77,10 +80,11 @@
   <h3>文档列表</h3>
 
   <div id="toolbar1" class="btn-group">
+        <button type="button" data-name="createButton" id="createButton" class="btn btn-default" title="新建"> <i class="fa fa-plus">新建</i>
+        </button>
         <!-- 多文件批量上传 -->
         <button type="button" data-name="addButton" id="addButton" class="btn btn-default" title="批量上传模式"> <i class="fa fa-plus">添加</i>
         </button>
-
         <button type="button" data-name="editorProdButton" id="editorProdButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果信息">编辑</i>
         </button>
         <button type="button" data-name="editorAttachButton" id="editorAttachButton" class="btn btn-default"> <i class="fa fa-edit" title="修改成果附件">编辑</i>
@@ -126,8 +130,10 @@
         <th data-formatter="index1" data-align="center">#</th>
         <th data-field="Code" data-halign="center">编号</th>
         <th data-field="Title" data-halign="center">名称</th>
+        <th data-field="Title"  data-formatter="setDocTitle" data-halign="center">名称</th>
         <th data-field="Label" data-formatter="setLable" data-halign="center" data-align="center">关键字</th>
         <th data-field="Principal" data-halign="center" data-align="center">负责人</th>
+        <th data-field="Uname" data-halign="center" data-align="center">上传者</th>
         <th data-field="Docxlink" data-formatter="setDocx" data-events="actionEvents" data-halign="center" data-align="center">协作</th>
         <th data-field="Docxlink" data-formatter="setPermission" data-events="actionEvents" data-halign="center" data-align="center">权限</th>
         <!-- <th data-field="Xlsxlink" data-formatter="setXlsx" data-events="actionEvents" data-halign="center" data-align="center">XLSX</th> -->
@@ -152,6 +158,16 @@
     return "<a href='/attachment/onlyoffice/"+value+"'>" + value + "</a>";
   }
 
+  // 连接文档编号和文档名称
+  function setDocTitle(value,row,index){
+    if (value){
+      if (row.Code==row.Title) {
+        return row.Title;
+      }else{
+        return row.Code+row.Title;
+      }
+    }
+  } 
   function setLable(value,row,index){
     // alert(value);
     if (value){//注意这里如果value未定义则出错，一定要加这个判断。
@@ -364,7 +380,7 @@
       var uploader=WebUploader.create({
         // 不压缩image
         resize: false,
-        fileSingleSizeLimit: 10*1024*1024,//限制大小10M，单文件
+        fileSingleSizeLimit: 60*1024*1024,//限制大小10M，单文件
         fileSizeLimit: allMaxSize*1024*1024,//限制大小10M，所有被选文件，超出选择不上
         // swf文件路径
         swf: '/static/js/Uploader.swf',
@@ -376,7 +392,7 @@
         // 只允许选择规定文件类型。
         accept: {
             title: 'Images',
-            extensions: 'doc,docx,xls,xlsx,ppt,pptx,txt,pdf',
+            extensions: 'doc,docx,wps,xls,xlsx,et,csv,ppt,pptx,dps,txt,pdf',
             mimeTypes: '*/*'
         }
       });
@@ -577,18 +593,18 @@
         alert("请不要勾选一个以上成果！");
         return;
       }
-      // window.location.href="/attachment/onlyoffice/"+selectRow[0].Id;
-      // window.open("https://codeload.github.com/douban/douban-client/legacy.zip/master");
-      var $eleForm = $("<form method='get'></form>");
-      $eleForm.attr("action","/onlyoffice/download/"+selectRow[0].Id);
-      $(document.body).append($eleForm);
-      //提交表单，实现下载
-      $eleForm.submit();
-      
-      // }else{
-      //   alert("权限不够！"+selectRow[0].Uid);
-      //   return;
-      // }
+      if (selectRow[0].Docxlink[0].Permission=="1"){
+        // window.location.href="/attachment/onlyoffice/"+selectRow[0].Id;
+        // window.open("https://codeload.github.com/douban/douban-client/legacy.zip/master");
+        var $eleForm = $("<form method='get'></form>");
+        $eleForm.attr("action","/onlyoffice/download/"+selectRow[0].Id);
+        $(document.body).append($eleForm);
+        //提交表单，实现下载
+        $eleForm.submit();
+      }else{
+        alert("权限不够！"+selectRow[0].Docxlink[0].Permission);
+        return;
+      }
   })
 
   // 构造表单下载

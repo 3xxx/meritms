@@ -396,8 +396,8 @@ func (c *AttachController) AddAttachment() {
 	// 	beego.Error(err)
 	// }
 	// var news string
-	var cid int64
-	var attachment string
+	var cid, topprojectid int64
+	var attachment, parentidpath, parentidpath1 string
 	var filepath, DiskDirectory, Url string
 	var catalog models.Catalog
 	// if role == 1 {
@@ -416,6 +416,7 @@ func (c *AttachController) AddAttachment() {
 		beego.Error(err)
 	}
 	filesize = filesize / 1000.0
+	//根据pid查出项目id
 	proj, err := models.GetProj(pidNum)
 	if err != nil {
 		beego.Error(err)
@@ -427,7 +428,14 @@ func (c *AttachController) AddAttachment() {
 	// 	beego.Error(err)
 	// }
 	if proj.ParentIdPath != "" { //如果不是根目录
-		patharray := strings.Split(proj.ParentIdPath, "-")
+		parentidpath = strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
+		parentidpath1 = strings.Replace(parentidpath, "#", "", -1)
+		patharray := strings.Split(parentidpath1, "-")
+		topprojectid, err = strconv.ParseInt(patharray[0], 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+		// patharray := strings.Split(proj.ParentIdPath1, "-")
 		//pid转成64位
 		meritNum, err := strconv.ParseInt(patharray[0], 10, 64)
 		if err != nil {
@@ -516,7 +524,7 @@ func (c *AttachController) AddAttachment() {
 		//存入成果数据库
 		//如果编号重复，则不写入，只返回Id值。
 		//根据id添加成果code, title, label, principal, content string, projectid int64
-		prodId, err := models.AddProduct(code, title, prodlabel, prodprincipal, "", uid, pidNum)
+		prodId, err := models.AddProduct(code, title, prodlabel, prodprincipal, uid, pidNum, topprojectid)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -531,6 +539,7 @@ func (c *AttachController) AddAttachment() {
 		catalog.Count = 1
 		catalog.Drawn = user.Nickname
 		catalog.Designd = user.Nickname
+		catalog.Author = user.Username
 		catalog.Drawnratio = 0.4
 		catalog.Designdratio = 0.4
 
@@ -631,6 +640,18 @@ func (c *AttachController) AddAttachment2() {
 	if err != nil {
 		beego.Error(err)
 	}
+	//根据pid查出项目id
+	proj, err := models.GetProj(pidNum)
+	if err != nil {
+		beego.Error(err)
+	}
+	parentidpath := strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
+	parentidpath1 := strings.Replace(parentidpath, "#", "", -1)
+	patharray := strings.Split(parentidpath1, "-")
+	topprojectid, err := strconv.ParseInt(patharray[0], 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
 	prodcode := c.Input().Get("prodcode") //和上面那个区别仅仅在此处而已
 	prodname := c.Input().Get("prodname")
 	prodlabel := c.Input().Get("prodlabel")
@@ -674,7 +695,7 @@ func (c *AttachController) AddAttachment2() {
 		//存入成果数据库
 		//如果编号重复，则不写入，值返回Id值。
 		//根据id添加成果code, title, label, principal, content string, projectid int64
-		prodId, err := models.AddProduct(prodcode, prodname, prodlabel, prodprincipal, "", uid, pidNum)
+		prodId, err := models.AddProduct(prodcode, prodname, prodlabel, prodprincipal, uid, pidNum, topprojectid)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -948,19 +969,37 @@ func (c *AttachController) Attachment() {
 	if proj.ParentIdPath == "" {
 		projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/"
 	} else {
-		projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10) + "/"
+		// projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10) + "/"
+		projurl = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10) + "/"
 	}
-
 	//由proj id取得url
 	fileurl, _, err := GetUrlPath(product.ProjectId)
 	if err != nil {
 		beego.Error(err)
 	}
-
 	fileext := path.Ext(attachment.FileName)
 	switch fileext {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+	case ".dwg", ".DWG":
+		// if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
+		dwglink, err := url.ParseRequestURI(c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
+		if err != nil {
+			beego.Error(err)
+		}
+		// beego.Info(dwglink)
+		c.Data["DwgLink"] = dwglink
+		c.TplName = "dwg.tpl"
+		// } else {
+		// 	route := c.Ctx.Request.URL.String()
+		// 	c.Data["Url"] = route
+		// 	c.Redirect("/roleerr?url="+route, 302)
+		// 	// c.Redirect("/roleerr", 302)
+		// 	return
+		// }
+	// case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
+	// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+	//这里缺少权限设置！！！！！！！！！！！
 	default:
 		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
 			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
@@ -1070,6 +1109,14 @@ func (c *AttachController) DownloadAttachment() {
 	switch fileext {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	case ".dwg", ".DWG":
+		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
+		// beego.Info("ok")
+		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+		// beego.Info(filePath)
+		// beego.Info(useridstring)
+	//这里缺少权限设置！！！！！！！！！！！
 	default:
 		if e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext) || isadmin {
 			http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath) //这样写下载的文件名称不对
@@ -1127,6 +1174,7 @@ func FileSize(file string) (int64, error) {
 
 //根据侧栏id返回附件url和文件夹路径
 func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
+	var parentidpath, parentidpath1 string
 	proj, err := models.GetProj(id)
 	if err != nil {
 		beego.Error(err)
@@ -1135,7 +1183,10 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 		//根据proj的parentIdpath
 		var path string
 		if proj.ParentIdPath != "" { //如果不是根目录
-			patharray := strings.Split(proj.ParentIdPath, "-")
+			// patharray := strings.Split(proj.ParentIdPath, "-")
+			parentidpath = strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
+			parentidpath1 = strings.Replace(parentidpath, "#", "", -1)
+			patharray := strings.Split(parentidpath1, "-")
 			for _, v := range patharray {
 				//pid转成64为
 				idNum, err := strconv.ParseInt(v, 10, 64)
@@ -1167,6 +1218,7 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 
 //根据id返回项目编号，项目名称，项目阶段，项目专业
 func GetProjTitleNumber(id int64) (ProjectNumber, ProjectName, DesignStage, Section string, err error) {
+	var parentidpath, parentidpath1 string
 	proj, err := models.GetProj(id)
 	if err != nil {
 		beego.Error(err)
@@ -1174,7 +1226,10 @@ func GetProjTitleNumber(id int64) (ProjectNumber, ProjectName, DesignStage, Sect
 	} else {
 		//根据proj的parentIdpath
 		if proj.ParentIdPath != "" { //如果不是根目录
-			patharray := strings.Split(proj.ParentIdPath, "-")
+			parentidpath = strings.Replace(strings.Replace(proj.ParentIdPath, "#$", "-", -1), "$", "", -1)
+			parentidpath1 = strings.Replace(parentidpath, "#", "", -1)
+			patharray := strings.Split(parentidpath1, "-")
+			// patharray := strings.Split(proj.ParentIdPath, "-")
 			//pid转成64位
 			meritNum, err := strconv.ParseInt(patharray[0], 10, 64)
 			if err != nil {
@@ -1219,3 +1274,38 @@ func GetProjTitleNumber(id int64) (ProjectNumber, ProjectName, DesignStage, Sect
 		return ProjectNumber, ProjectName, DesignStage, Section, err
 	}
 }
+
+//编码转换
+// l3, err3 := url.Parse(c.Ctx.Request.RequestURI[1:])
+// 	if err3 != nil {
+// 		beego.Error(err3)
+// 	}
+// 	beego.Info(l3.Query())
+// 	beego.Info(l3.Query().Encode())
+// 	beego.Info(url.QueryEscape("初步设计"))
+// 	dec := mahonia.NewDecoder("utf8") //定义转换乱码
+// 	//保留	fmt.Println(dec.ConvertString(j))   //转成utf-8
+// 	beego.Info(dec.ConvertString(url.QueryEscape("初步设计")))
+// 	// rd := dec.NewReader(resp.Body)
+// 	// doc, err := goquery.NewDocumentFromReader(rd)
+// 	// if err != nil {
+// 	// 	log.Fatal(err)
+// 	// }
+
+// 	bn := []byte("\xbf\xc6\xd1\xa7\xC3\xF1\xD6\xF7\xCF\xDC\xD5\xFE")
+// 	beego.Info(bn)
+// 	sn := string(bn)
+// 	beego.Info(sn)
+// 	cbn, err1, _, _ := ConvertGB2312(bn)
+// 	if err1 != nil {
+// 		beego.Error(err1)
+// 	}
+// 	beego.Info(cbn)
+// 	csn, err2, _, _ := ConvertGB2312String(c.Ctx.Request.RequestURI[1:])
+// 	if err2 != nil {
+// 		beego.Error(err2)
+// 	}
+// 	beego.Info(csn)
+// 	//根据路由path.Dir——再转成数组strings.Split——查出项目id——加上名称——查出下级id
+// 	beego.Info(path.Dir(filePath))
+// 	beego.Info(c.Ctx.Request.RequestURI[1:])

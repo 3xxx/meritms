@@ -33,19 +33,6 @@ type AdminController struct {
 // }
 
 func (c *AdminController) Get() {
-	// username, role := checkprodRole(c.Ctx)
-	// if role == 1 {
-	// 	c.Data["IsAdmin"] = true
-	// } else if role > 1 && role < 5 {
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// }
-	// c.Data["Username"] = username
-	// c.Data["IsProjects"] = true
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = role
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -53,10 +40,7 @@ func (c *AdminController) Get() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-	// roleint, err := strconv.Atoi(role)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
+
 	if !isadmin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
@@ -69,19 +53,6 @@ func (c *AdminController) Get() {
 }
 
 func (c *AdminController) Admin() {
-	// username, role := checkprodRole(c.Ctx)
-	// if role == 1 {
-	// 	c.Data["IsAdmin"] = true
-	// } else if role > 1 && role < 5 {
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// }
-	// c.Data["Username"] = username
-	// c.Data["IsProjects"] = true
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = role
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -89,76 +60,63 @@ func (c *AdminController) Admin() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-	// roleint, err := strconv.Atoi(role)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
 	if isadmin {
 		id := c.Ctx.Input.Param(":id")
 		c.Data["Id"] = id
-		// c.Data["IsLogin"] = checkAccount(c.Ctx)
-		// //1.首先判断是否注册
-		// if !checkAccount(c.Ctx) {
-		// 	route := c.Ctx.Request.URL.String()
-		// 	c.Data["Url"] = route
-		// 	c.Redirect("/login?url="+route, 302)
-		// 	return
-		// }
-		// //4.取得客户端用户名
-		// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-		// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-		// v := sess.Get("uname")
-		// if v != nil {
-		// 	c.Data["Uname"] = v.(string)
-		// }
-		// //4.取出用户的权限等级
-		// role, err := checkRole(c.Ctx) //login里的
-		// if err != nil {
-		// 	beego.Error(err)
-		// } else {
-		// 	//5.进行逻辑分析：
-		// 	if role > 2 { //
-		// 		route := c.Ctx.Request.URL.String()
-		// 		c.Data["Url"] = route
-		// 		c.Redirect("/roleerr?url="+route, 302)
-		// 		return
-		// 	}
-		// }
+
 		switch id {
+		//基本设置-项目分级目录
 		case "010": //日历事件
 			c.TplName = "admin/admin_calendar.tpl"
 		case "011": //基本设置
 			c.TplName = "admin/admin_base.tpl"
-		case "012": //组织
-			c.TplName = "admin/admin_department.tpl"
-		case "013": //分级目录
+		case "012": //分级目录
 			c.TplName = "admin/admin_category.tpl"
-		case "014": //搜索引擎
+		case "013": //搜索引擎
 			c.TplName = "admin/admin_spiderip.tpl"
-		case "021": //项目编辑
+		case "014": //升级数据库
+			c.TplName = "admin/admin_updatedatabase.tpl"
+
+			//组织架构-用户-角色
+		case "021": //组织结构
+			c.TplName = "admin/admin_department.tpl"
+		case "022": //用户-组织结构
+			c.TplName = "admin/admin_users.tpl"
+		case "023": //角色-用户
+			c.TplName = "admin/admin_users.tpl"
+
+		//项目设置
+		case "031": //分级目录
+			c.TplName = "admin/admin_category.tpl"
+		case "032": //角色权限分配
+			c.TplName = "admin/admin_role.tpl"
+		case "033": //项目编辑
 			c.TplName = "admin/admin_projectstree.tpl"
-		case "022": //同步IP async
-			c.TplName = "admin/admin_projectsynch.tpl"
-		case "023": //项目权限
-			c.TplName = "admin/admin_projectsrole.tpl"
-		case "024": //项目目录快捷编辑
+		case "034": //项目目录快捷编辑
 			c.TplName = "admin/admin_projectseditor.tpl"
-		case "031": //成果类型
-			c.TplName = "admin/admin_achievcategory.tpl"
-		case "032": //科室成果类型
-			c.TplName = "admin/admin_departachievcate.tpl"
-		case "033": //本周成果编辑
-			c.TplName = "admin/admin_achievementseditor.tpl"
-		case "034": //本月成果编辑
+		case "035": //同步IP async
 			c.TplName = "admin/admin_projectsynch.tpl"
-		case "035": //上月成果编辑
+		case "036": //IP地址段
+			c.TplName = "admin_ipsegment.tpl"
+
+			//成果设置
+		case "041": //成果类型
+			c.TplName = "admin/admin_achievcategory.tpl"
+		case "042": //科室成果类型
+			c.TplName = "admin/admin_departachievcate.tpl"
+		case "043": //本周成果编辑
+			c.TplName = "admin/admin_achievementseditor.tpl"
+		case "044": //本月成果编辑
+			c.TplName = "admin/admin_projectsynch.tpl"
+		case "045": //上月成果编辑
 			c.TplName = "admin/admin_projectcaterole.tpl"
-		case "036": //当年成果编辑
+		case "046": //当年成果编辑
 			c.TplName = "admin/admin_projectcaterole.tpl"
 
-		case "041": //定义价值
+			//价值设置
+		case "051": //定义价值
 			c.TplName = "admin/admin_merit.tpl"
-		case "042": //科室价值
+		case "052": //科室价值
 			achsecoffice := make([]AchSecoffice, 0)
 			achdepart := make([]AchDepart, 0)
 			category1, err := models.GetAdminDepart(0) //得到多个分院
@@ -238,16 +196,6 @@ func (c *AdminController) Admin() {
 			}
 			c.Data["json"] = achdepart
 			c.TplName = "admin/admin_secofficemerit.tpl"
-		case "051": //用户
-			c.TplName = "admin/admin_users.tpl"
-		case "052": //IP地址段
-			c.TplName = "admin/admin_ipsegment.tpl"
-		case "053": //用户组
-			c.TplName = "admin/admin/admin_usergroup.tpl"
-		case "061": //系统权限
-			c.TplName = "admin/admin_systemrole.tpl"
-		case "062": //项目权限
-			c.TplName = "admin/admin_projectrole.tpl"
 
 		default:
 			c.TplName = "admin/admin_calendar.tpl"

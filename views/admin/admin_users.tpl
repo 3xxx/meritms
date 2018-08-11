@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>用户-角色</title>
-  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
@@ -702,7 +702,7 @@ $(document).ready(function() {
                 <th data-width="10" data-checkbox="true" data-formatter="stateFormatter"></th>
                 <th data-formatter="index1">#</th>
                 <th data-field="Rolenumber">角色编码</th>
-                <th data-field="Rolename">角色名称</th>
+                <th data-field="name">角色名称</th>
                 <th data-align="center" data-formatter="StatusFormatter">状态</th>
                 <!-- <th data-field="domain_desc">所属域</th> -->
                 <!-- <th data-align="center"
@@ -828,7 +828,7 @@ $(document).ready(function() {
 
       function StatusFormatter(value, row, index) {
         // alert(row.Status);
-        if (row.Status == "0") {
+        if (row.role == "0") {
             return '正常';
         }else{
           return '失效';
@@ -896,9 +896,9 @@ $(document).ready(function() {
         $("input#cid").remove();
         var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
         $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-        $("#Rolename1").val(selectRow[0].Rolename);
+        $("#Rolename1").val(selectRow[0].name);
         $("#Rolenumber1").val(selectRow[0].Rolenumber);
-        $("#Status1").val(selectRow[0].Status);
+        $("#Status1").val(selectRow[0].role);
         // alert(JSON.stringify(selectRow));
         // alert(selectRow[0].Id);
         // var title = $('#'+id).attr("value");
@@ -958,7 +958,7 @@ $(document).ready(function() {
       } 
       // $(function(){$('#myModal').modal('hide')});
       $('#modalTable1').modal('hide');
-      $('#table').bootstrapTable('refresh', {url:'/admin/role/get/'});
+      $('#table1').bootstrapTable('refresh', {url:'/admin/role/get'});
       // "/category/modifyfrm?cid="+cid
       // window.location.reload();//刷新页面
     }
@@ -1039,6 +1039,29 @@ $(document).ready(function() {
         }
       },
     };
+
+    //删除按钮与修改按钮的出现与消失
+    //只勾选一项，可以修改删除 
+    //勾选多项只能删除
+    $('.bootstrap-table').change(function(){
+      var dataArr=$('#mytab .selected');
+      if(dataArr.length==1){
+        $('#btn_edit').css('display','block').removeClass('fadeOutRight').addClass('animated fadeInRight');
+      }else{
+        $('#btn_edit').addClass('fadeOutRight');
+        setTimeout(function(){
+          $('#btn_edit').css('display','none');
+        },400); 
+      }
+      if(dataArr.length>=1){
+        $('#btn_delete').css('display','block').removeClass('fadeOutRight').addClass('animated fadeInRight');
+      }else{
+        $('#btn_delete').addClass('fadeOutRight');
+        setTimeout(function(){
+          $('#btn_delete').css('display','none');
+        },400); 
+      }
+    });
   </script>
 </div>
 

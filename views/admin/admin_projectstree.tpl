@@ -1,7 +1,7 @@
 <!-- 采用bootstrap treeview编辑目录、设置同步ip、设置公开私有 -->
 <!DOCTYPE html>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
-  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-treeview.css"/>
   <script src="/static/js/bootstrap-treeview.js"></script>
@@ -30,39 +30,7 @@
         </button>
 </div>
 
-<table id="table0"
-        data-toggle="table"  
-        data-url="/project/getprojects"
-        data-search="true"
-        data-show-refresh="true"
-        data-show-toggle="true"
-        data-show-columns="true"
-        data-toolbar="#toolbar1"
-        data-query-params="queryParams"
-        data-sort-name="ProjectName"
-        data-sort-order="desc"
-        data-page-size="5"
-        data-page-list="[5,20, 50, 100, All]"
-        data-unique-id="id"
-        data-pagination="true"
-        data-side-pagination="client"
-        data-single-select="true"
-        data-click-to-select="true"
-        >
-    <thead>        
-      <tr>
-        <!-- radiobox data-checkbox="true"-->
-        <th data-width="10" data-radio="true"></th>
-        <th data-formatter="index1">#</th>
-        <th data-field="Code">编号</th>
-        <th data-field="Title">名称</th>
-        <th data-field="Label">标签</th>
-        <th data-field="Principal">负责人</th>
-        <th data-field="Product">成果数量</th>
-        <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
-      </tr>
-    </thead>
-</table>
+<table id="table0"></table>
 
 <script type="text/javascript">
   function index1(value,row,index){
@@ -72,6 +40,127 @@
   function localDateFormatter(value) {
      return moment(value, 'YYYY-MM-DD').format('YYYY-MM-DD');
   }
+
+  $(function () {
+    // 初始化【未接受】工作流表格
+    $("#table0").bootstrapTable({
+        url : '/project/getprojects',
+        method: 'get',
+        search:'true',
+        showRefresh:'true',
+        showToggle:'true',
+        showColumns:'true',
+        // toolbar:'#toolbar1',
+        pagination: 'true',
+        sidePagination: "server",
+        queryParamsType:'',
+        //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+        // limit, offset, search, sort, order 否则, 需要包含: 
+        // pageSize, pageNumber, searchText, sortName, sortOrder. 
+        // 返回false将会终止请求。
+        pageSize: 5,
+        pageNumber: 1,
+        pageList: [15,20, 50, 100],
+        singleSelect:"true",
+        clickToSelect:"true",
+        queryParams:function queryParams(params) {   //设置查询参数
+          var param = {
+              limit: params.pageSize,   //每页多少条数据
+              pageNo: params.pageNumber, // 页码
+              searchText:$(".search .form-control").val()
+          };
+          //搜索框功能
+        //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
+        // if (null != searchText) {
+        //   try {
+        //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
+        //   } catch (Exception e) {
+        //     e.printStackTrace();
+        //   }
+        // }
+            return param;
+        },
+        columns: [
+          {
+            title: '选择',
+            radio: 'true',
+            width: '10',
+            align:"center",
+            valign:"middle"
+          },
+          {
+            // field: 'Number',
+            title: '序号',
+            formatter:function(value,row,index){
+              return index+1
+            },
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Code',
+            title: '编号',
+            // formatter:setCode,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Title',
+            title: '名称',
+            // formatter:setTitle,
+            align:"center",
+            valign:"middle"
+          },
+          // {
+          //   field: 'Label',
+          //   title: '标签',
+          //   formatter:setLable,
+          //   align:"center",
+          //   valign:"middle"
+          // },
+          {
+            field: 'Principal',
+            title: '负责人',
+            align:"center",
+            valign:"middle"
+          },
+          // {
+          //   field: 'Number',
+          //   title: '成果数量',
+          //   formatter:setCode,
+          //   align:"center",
+          //   valign:"middle"
+          // },
+          // {
+          //   field: 'action',
+          //   title: '时间轴',
+          //   formatter:actionFormatter,
+          //   events:actionEvents,
+          //   align:"center",
+          //   valign:"middle"
+          // },
+          {
+            field: 'Created',
+            title: '建立时间',
+            formatter:localDateFormatter,
+            align:"center",
+            valign:"middle"
+          }
+            // {
+            //     field: 'dContMainEntity.createTime',
+            //     title: '发起时间',
+            //     formatter: function (value, row, index) {
+            //         return new Date(value).toLocaleString().substring(0,9);
+            //     }
+            // },
+            // {
+            //     field: 'dContMainEntity.operate',
+            //     title: '操作',
+            //     formatter: operateFormatter
+            // }
+        ]
+    });
+  });
   // 改变点击行颜色
   $(function(){
      $("#table0").on("click-row.bs.table",function(e,row,ele){
@@ -119,62 +208,11 @@
   });
 
   $(document).ready(function() {
-    // $("#editorcateButton").click(function() {
-    //   var selectRow=$('#table0').bootstrapTable('getSelections');
-    //   if (selectRow.length<1){
-    //     alert("请先勾选！");
-    //     return;
-    //   }
-    //   if (selectRow.length>1){
-    //   alert("请不要勾选一个以上！");
-    //   return;
-    //   }
-    //   $("input#cid").remove();
-    //   var th1="<input id='cid' type='hidden' name='cid' value='" +selectRow[0].Id+"'/>"
-    //   $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-    //   //初始化树   
-    //     $.ajax({  //JQuery的Ajax  
-    //         type: 'POST',    
-    //         dataType : "json",//返回数据类型  
-    //         async:false,  
-    //         url: "/admin/project/getprojectcate/"+selectRow[0].Id,//请求的action路径  
-    //         // data: {"flag":true},  //同步请求将锁住浏览器，用户其它操作必须等待请求完成才可以执行  
-    //         error: function () {//请求失败处理函数    
-    //             alert('请求失败');    
-    //         },  
-    //         success:function(data){ //请求成功后处理函数。取到Json对象data
-    //           // alert(data);
-    //           $('#tree').treeview({
-    //             showCheckbox: true,
-    //             data: [data], // data is not optional
-    //             // levels: 2,
-    //             enableLinks: true,
-    //             // hierarchicalCheck:false,
-    //             // propagateCheckEvent:false,
-    //             state: {
-    //               checked: true,
-    //               disabled: true,
-    //               expanded: true,
-    //               selected: true
-    //             }
-    //           });
-    //           $('#tree').treeview('expandAll'); 
-    //         }
-    //     });
-    //     $('#modalTable').modal({
-    //     show:true,
-    //     backdrop:'static'
-    //     });
-    //   })
-
       //模态框中添加节点
       $("#addcateButton").click(function() {
         //得到选择的节点
         var arr = new Array();
         arr=$('#tree').treeview('getChecked');
-        // arr=$('#tree').treeview('getSelected',0);
-        // alert(arr[0].nodeId);//节点顺序号0.0.0.1这样的
-        // alert(arr[0].id);
         if (arr.length==0){
           alert("请先勾选！");
           return;
@@ -184,14 +222,6 @@
           alert("请不要勾选一个以上！");
           return;
         }  
-        // var nodeData = $tree.treeview('getSelected');
-        //模态框填入节点名称和代码
-        // $("input#pid").remove();
-        // $("input#nid").remove();
-        // var th1="<input id='pid' type='hidden' name='pid' value='" +arr[0].id+"'/>"
-        // var th2="<input id='nid' type='hidden' name='nid' value='" +arr[0].nodeId+"'/>"
-        // $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-        // $(".modal-body").append(th2);
         $('#modalTable2').modal({
         show:true,
         backdrop:'static'
@@ -203,14 +233,10 @@
         //得到选择的节点
         var arr = new Array();
         arr=$('#tree').treeview('getChecked');
-        // arr=$('#tree').treeview('getSelected',0);
-        // alert(arr[0].nodeId);//节点顺序号0.0.0.1这样的
-        // alert(arr[0].code);
         if (arr.length==0){
           alert("请先勾选！");
           return;
         }
-
         if (arr.length>=2){
           alert("请不要勾选一个以上！");
           return;
@@ -236,13 +262,7 @@
       //获取数据，添加到树中
         var projcatename2 = $('#projcatename2').val();
         var projcatecode2 = $('#projcatecode2').val();
-        // var parentid = $('#pid').val();
         arr=$('#tree').treeview('getChecked');
-        // var nid = $('#nid').val();//节点顺序号nodeId
-        // alert(projcatename2);
-        // alert(nid);
-        // $.getJSON("treeAddData.json", function (data) {
-        // }); 
       if (projcatename2)
         {  
             $.ajax({
@@ -261,19 +281,12 @@
                  }
             });  
         } 
-        // $(function(){$('#myModal').modal('hide')});  
     }
     //编辑节点
     function updatecate(){
         var projcatename3 = $('#projcatename3').val();
         var projcatecode3 = $('#projcatecode3').val();
-        // var parentid = $('#pid').val();
         arr=$('#tree').treeview('getChecked');
-        // var nid = $('#nid').val();//节点顺序号nodeId
-        // alert(projcatename2);
-        // alert(nid);
-        // $.getJSON("treeAddData.json", function (data) {
-        // }); 
       if (projcatename3)
         {
           $.ajax({
@@ -296,38 +309,7 @@
     }
 
 </script>
-<!-- 编辑项目目录 -->
-  <!-- <div class="form-horizontal">
-    <div class="modal fade" id="modalTable">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h3 class="modal-title">编辑项目目录</h3>
-          </div>
-          <div class="modal-body">
-            <div class="modal-body-content">
-              <div  class="col-lg-3" class="btn-group">
-                <button type="button" data-name="addcateButton" id="addcateButton" class="btn btn-default"> <i class="fa fa-edit">添加下级</i>
-                </button>
-                <button type="button" data-name="updateButton" id="updateButton" class="btn btn-default"> <i class="fa fa-edit">修改名称</i>
-                </button>
-                <button type="button" data-name="removeButton" id="removeButton" class="btn btn-default">
-                <i class="fa fa-edit">删除</i>
-                </button>
-              </div>
-              <div class="col-lg-3">
-                <div id="tree"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div> -->
-<!-- data-query-params="queryParams" data-content-type="application/json"-->
+
 <!-- 编辑项目目录 -->
 <div id="details" style="display:none">
 <h3 id="rowtitle"></h3>
@@ -337,22 +319,8 @@
     <button type="button" data-name="removeButton" id="removeButton" class="btn btn-default" data-target="default"><i class="fa fa-trash" aria-hidden="true"> </i>删除</button>
   </div>
           <div class="modal-body">
-            <!-- <div class="modal-body-content"> -->
-              <!-- <div  class="col-lg-3" class="btn-group">
-                <button type="button" data-name="addcateButton" id="addcateButton" class="btn btn-default"> <i class="fa fa-edit">添加下级</i>
-                </button>
-                <button type="button" data-name="updateButton" id="updateButton" class="btn btn-default"> <i class="fa fa-edit">修改名称</i>
-                </button>
-                <button type="button" data-name="removeButton" id="removeButton" class="btn btn-default">
-                <i class="fa fa-edit">删除</i>
-                </button>
-              </div> -->
-              <!-- <div class="col-lg-3"> -->
                 <div id="tree"></div>
-              <!-- </div> -->
-            <!-- </div> -->
           </div>
-        <!-- </div> -->
 </div>
 <!-- 添加项目目录 -->
 <div class="container form-horizontal">
@@ -431,10 +399,6 @@
           alert("请先勾选！");
           return;
         }
-        // if (arr.length>=2){
-        //   alert("请不要勾选一个以上！");
-        //   return;
-        // }
       var ids="";
       for(var i=0;i<arr.length;i++){
         if(i==0){
@@ -443,9 +407,6 @@
           ids=ids+","+arr[i].id;
         }  
       }
-    // var obj = JSON.stringify(arr);
-    // alert(ids);
-    // alert(obj);
       if(confirm("确定删除吗？第一次提示！")){
       }else{
         return false;

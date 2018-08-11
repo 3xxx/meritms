@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- <title>MeritMS</title> -->
-  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
@@ -25,7 +25,7 @@
   <!-- <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> -->
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
   
-  <!-- <link rel="stylesheet" type="text/css" href="/static/css/select2.css"/> -->
+  <!-- <link rel="stylesheet" type="text/css" href="/static/css/select2.min.css"/> -->
   <!-- <script type="text/javascript" src="/static/js/select2.js"></script> -->
   
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
@@ -184,19 +184,22 @@
           ids=ids+","+selectRow[i].Id;
         }  
       }
-      $.ajax({
-        type:"post",
-        url:"/admin/ipsegment/deleteipsegment",
-        data: {ids:ids},
-        success:function(data,status){
-          alert("删除“"+data+"”成功！(status:"+status+".)");
-          //删除已选数据
-          $('#table0').bootstrapTable('remove',{
-            field:'Title',
-            values:title
-          });
-        }
-      });  
+
+      if(confirm("确定删除吗？一旦删除将无法恢复！")){
+        $.ajax({
+          type:"post",
+          url:"/admin/ipsegment/deleteipsegment",
+          data: {ids:ids},
+          success:function(data,status){
+            alert("删除“"+data+"”成功！(status:"+status+".)");
+            //删除已选数据
+            $('#table0').bootstrapTable('remove',{
+              field:'Title',
+              values:title
+            });
+          }
+        }); 
+      } 
     })
 
   })
@@ -284,7 +287,7 @@
     var Iprole1 = $('#Iprole1').val();
     var cid = $('#cid').val();
     // $('#myModal').on('hide.bs.modal', function () {  
-    if (Iptitle1)
+    if (StartIp1)
       {  
           $.ajax({
               type:"post",
@@ -295,7 +298,7 @@
                }
           });  
       }else{
-        alert("名称不能为空");
+        alert("开始IP不能为空");
       } 
       // $(function(){$('#myModal').modal('hide')});
         $('#modalTable1').modal('hide');

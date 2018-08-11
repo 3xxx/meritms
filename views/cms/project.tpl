@@ -38,7 +38,7 @@
             [
               {
                 text: "系统设置",
-                icon: "fa fa-tachometer icon",
+                // icon: "fa fa-tachometer icon",
                 // selectedIcon: "glyphicon glyphicon-stop",
                 href: "#node-1",
                 selectable: true,
@@ -54,47 +54,57 @@
                 nodes: 
                 [
                   { 
-                    icon: "fa fa-cog",
+                    // icon: "fa fa-cog",
                     text: "目录设置",
-                    id: '01',
-                    nodeId: '01'
+                    id: '160929',
+                    lazyLoad:true,
                   }, 
                   { 
-                    icon: "fa fa-bug",
+                    // icon: "fa fa-bug",
                     text: "爬虫设置",
-                    id: '02'
+                    id: '02',
+                    lazyLoad:true,
                   }, 
                   { 
-                    icon: "fa fa-th-list",
+                    // icon: "fa fa-th-list",
                     text: "项目权限",
                     id: '03'
                   }, 
                   { 
-                    icon: "fa fa-user",
+                    // icon: "fa fa-user",
                     text: "账号管理",
                     id: '04',
                     selectable: false,
-                    nodes: 
-                    [
-                      { icon: "fa fa-users",
-                        text: '用户组',
-                        id: '05'
-                      },
-                      { icon: "fa fa-user",
-                        text: 'IP权限',
-                        id: '06'
-                      }
-                    ]
+                    // nodes: 
+                    // [
+                    //   { icon: "fa fa-users",
+                    //     text: '用户组',
+                    //     id: '05'
+                    //   },
+                    //   { icon: "fa fa-user",
+                    //     text: 'IP权限',
+                    //     id: '06'
+                    //   }
+                    // ]
                   }
                 ]
               }
             ]
             // return data;
-
           $('#tree').treeview({
             // data: data,         // data is not optional
             data:[{{.json}}],
             levels: 2,
+            showTags:true,
+            loadingIcon:"fa fa-hourglass",
+            lazyLoad:loaddata,
+              // var $Tree = $('#tv').treeview({
+              // data: defaultData,
+              // lazyLoad: function (node, display) {
+              //     data = defaultData2;
+              //     display(data);
+              // }
+              // });
             // enableLinks: true,
             // multiSelect: true
           });  
@@ -110,7 +120,6 @@
           // collapseIcon:"glyphicon glyphicon-chevron-up",
           // expandIcon:"glyphicon glyphicon-chevron-down",
         // });
-
         $('#tree').on('nodeSelected', function(event, data) {
             // alert("名称："+data.text);
             // alert("节点id："+data.nodeId);
@@ -120,7 +129,6 @@
             // $("#regis").css("color","black");
             //点击任何一级，都是显示这一级下的成果
           document.getElementById("iframepage").src="/project/{{.Id}}/"+data.id;
-          
           // $("#iframepage").contents().find("#table0").bootstrapTable('refresh', {url:'/project/products/'+data.id});
           // $('#table0').bootstrapTable('refresh', {url:'/project/products/'+data.id});
           //?secid="+data.Id+"&level="+data.Level;
@@ -133,29 +141,92 @@
             success:function(data,status){
               // $.each(data,function(i,d){
                 $(".breadcrumb #nav").remove();
-                for (i=0;i<data.length;i++)
-                  {
-                // $(".breadcrumb").append('<li><a href="javascript:void(0)"><i class="fa fa-home">项目编号：' + {{.Category.Code}}+ '</a></li>');
-                    $(".breadcrumb").append('<li id="nav"><a href="javascript:void(0)">' + data[i].Title + '</a></li>');
-                  }
+                for (i=0;i<data.length;i++){
+                    // $(".breadcrumb").append('<li><a href="javascript:void(0)"><i class="fa fa-home">项目编号：' + {{.Category.Code}}+ '</a></li>');onclick="SomeJavaScriptCode"
+                    $(".breadcrumb").append('<li id="nav"><a href="javascript:gototree('+data[i].Id+')">' + data[i].Title + '</a></li>');
+                }
               // });
             }
           });
         }); 
-
-
-        var obj = {};
-        obj.text = "123";
-        
-
+        // var obj = {};
+        // obj.text = "123";
         $("#btn").click(function (e) {
             var arr = $('#tree').treeview('getSelected');
             for (var key in arr) {
                 c.innerHTML = c.innerHTML + "," + arr[key].id;
             }
-        })
-    }) 
+        });
+    })
 
+    function loaddata(node,func){//这个技巧真高，即能返回参数，又能把参数通过函数发回去
+      // alert(node.id);
+      // alert(func);
+      $.ajax({
+        type:"get",
+        url:"/project/getprojcate",
+        data: {id:node.id},
+        success:function(data,status){
+          if (data){
+            func(data);
+          }
+        }
+      });
+      // var singleNode = {
+      //   text: "projcatename2",
+      //   id:"08",
+      // };
+      //var _this = this;
+      // this._options.lazyLoad(node, function (nodes) {
+        // Adding the node will expand its parent automatically
+        // _this.addNode(nodes, node);
+      // });
+      // func(singleNode);//这样明显优雅很多
+      // $("#tree").treeview("addNode", [singleNode,node]);这一句和上面一句等同
+      // if (projcatename2)
+      //   {  
+      //       $.ajax({
+      //           type:"post",
+      //           url:"/admin/project/addprojectcate",
+      //           data: {id:arr[0].id,name:projcatename2,code:projcatecode2},
+      //           success:function(data,status){
+      //             alert("添加“"+data+"”成功！(status:"+status+".)");
+      //             var singleNode = {
+      //               text: projcatename2,
+      //               id:data,
+      //               code:projcatecode2
+      //             };
+      //             $("#tree").treeview("addNode", [singleNode,arr]);
+      //             $('#modalTable2').modal('hide');
+      //            }
+      //       });  
+      //   } 
+    }
+
+    function gototree(e){
+      document.getElementById("iframepage").src="/project/{{.Id}}/"+e;
+      var findCheckableNodess = function() {
+        return $('#tree').treeview('findNodes', [e, 'id']);
+      }; 
+      var checkableNodes = findCheckableNodess();
+        $('#tree').treeview('toggleNodeSelected', [ checkableNodes, { silent: true } ]);
+        $('#tree').treeview('toggleNodeExpanded', [ checkableNodes, { silent: true } ]);
+        $('#tree').treeview('revealNode', [ checkableNodes, { silent: true } ]);
+    }
+        // Select/unselect/toggle nodes
+        // $('#input-select-node').on('keyup', function (e) {
+        //   selectableNodes = findSelectableNodes();
+        //   $('.select-node').prop('disabled', !(selectableNodes.length >= 1));
+        // });
+        // $('#btn-select-node.select-node').on('click', function (e) {
+        //   $selectableTree.treeview('selectNode', [ selectableNodes, { silent: $('#chk-select-silent').is(':checked') }]);
+        // });
+        // $('#btn-unselect-node.select-node').on('click', function (e) {
+        //   $selectableTree.treeview('unselectNode', [ selectableNodes, { silent: $('#chk-select-silent').is(':checked') }]);
+        // });
+        // $('#btn-toggle-selected.select-node').on('click', function (e) {
+        //   $selectableTree.treeview('toggleNodeSelected', [ selectableNodes, { silent: $('#chk-select-silent').is(':checked') }]);
+        // });
     function index1(value,row,index){
     // alert( "Data Loaded: " + index );
       return index+1
@@ -167,7 +238,7 @@
   <div class="breadcrumbs">
     <ol class="breadcrumb" split="&gt;">
       <li>
-        <a href="javascript:void(0)"> <i class="fa fa-home" aria-hidden="true"></i>
+        <a href="javascript:gototree({{.Category.Id}})"> <i class="fa fa-home" aria-hidden="true"></i>
           项目编号：{{.Category.Code}}
         </a>
       </li>

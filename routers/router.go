@@ -11,7 +11,15 @@ import (
 
 func init() {
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
+	//升级数据库
+	// beego.Router("/updatedatabase", &controllers.MainController{}, "*:UpdateDatabase")
+	//删除数据表和字段测试
+	// beego.Router("/modifydatabase", &controllers.MainController{}, "*:ModifyDatabase")
+
 	beego.Router("/url-to-callback", &controllers.OnlyController{}, "*:UrltoCallback")
+	//cms中预览office回调
+	beego.Router("/officeviewcallback", &controllers.OnlyController{}, "*:OfficeViewCallback")
+
 	// beego.Router("/onlyoffice/post", &controllers.OnlyController{}, "post:PostOnlyoffice")
 	beego.Router("/onlyoffice", &controllers.OnlyController{}, "get:Get")
 	//table获取所有数据给上面界面使用
@@ -20,6 +28,9 @@ func init() {
 	beego.Router("/onlyoffice/addattachment", &controllers.OnlyController{}, "post:AddOnlyAttachment")
 	//在onlyoffice中打开文档协作
 	beego.Router("/onlyoffice/:id:string", &controllers.OnlyController{}, "*:OnlyOffice")
+	//cms中预览office
+	beego.Router("/officeview/:id:string", &controllers.OnlyController{}, "*:OfficeView")
+
 	//删除
 	beego.Router("/onlyoffice/deletedoc", &controllers.OnlyController{}, "*:DeleteDoc")
 	//修改
@@ -401,6 +412,9 @@ func init() {
 	beego.Router("/project", &controllers.ProjController{}, "*:Get")
 	//table获取所有项目数据给上面界面使用_后续扩展按标签获取
 	beego.Router("/project/getprojects", &controllers.ProjController{}, "*:GetProjects")
+
+	//侧栏懒加载下级
+	beego.Router("/project/getprojcate", &controllers.ProjController{}, "*:GetProjCate")
 	//添加项目，应该是project/addproj,delproj,updateproj
 	beego.Router("/project/addproject", &controllers.ProjController{}, "*:AddProject")
 	//修改项目
@@ -537,6 +551,12 @@ func init() {
 
 	//ue富文本编辑器
 	beego.Router("/controller", &controllers.UeditorController{}, "*:ControllerUE")
+	//添加文章——froala上传插入的图片
+	beego.Router("/uploadimg", &controllers.FroalaController{}, "*:UploadImg")
+	//添加wiki——froala上传插入的图片
+	beego.Router("/uploadwikiimg", &controllers.FroalaController{}, "*:UploadWikiImg")
+	//添加文章——froala上传插入的视频
+	beego.Router("/uploadvideo", &controllers.FroalaController{}, "*:UploadVideo")
 
 	//添加日历
 	beego.Router("/index/carcalendar/addcalendar", &controllers.IndexController{}, "*:AddCarCalendar")

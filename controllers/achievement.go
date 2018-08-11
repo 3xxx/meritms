@@ -181,10 +181,12 @@ func (c *Achievement) GetAchievement() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
+
 	roleint, err := strconv.Atoi(role)
 	if err != nil {
 		beego.Error(err)
 	}
+	beego.Info(roleint)
 	//1.首先判断是否登录
 	// if !checkAccount(c.Ctx) {
 	// 	route := c.Ctx.Request.URL.String()

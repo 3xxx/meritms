@@ -48,8 +48,8 @@
         </button>
 </div>
 
-<table id="table0"  
-        data-url="/project/getprojects"
+<table id="table0"></table>
+        <!-- data-url="/project/getprojects"
         data-search="true"
         data-show-refresh="true"
         data-show-toggle="true"
@@ -62,13 +62,11 @@
         data-page-list="[15,20, 50, 100, All]"
         data-unique-id="id"
         data-pagination="true"
-        data-side-pagination="client"
+        data-side-pagination="server"
         data-single-select="true"
-        data-click-to-select="true"
-        >
-    <thead>        
+        data-click-to-select="true" -->
+    <!-- <thead>        
       <tr>
-        <!-- radiobox data-checkbox="true"-->
         <th data-width="10" data-radio="true" data-align="center" data-valign="middle"></th>
         <th data-formatter="index1" data-align="center" data-valign="middle">#</th>
         <th data-field="Code" data-formatter="setCode" data-align="center" data-valign="middle">编号</th>
@@ -83,8 +81,7 @@
         <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents" data-align="center" data-valign="middle">时间轴</th>
         <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
       </tr>
-    </thead>
-</table>
+    </thead> -->
 
 <!-- <div class="gridview2"></div> -->
 
@@ -97,17 +94,137 @@
       {"Id":"4","Code":"SL0004","Title":"***建筑工程","Label":"写字楼,高层","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
       {"Id":"5","Code":"SL0005","Title":"***交通工程","Label":"进场路,一级","Principal":"秦晓川","Product":"8","Created":"2016-11-26"},
       {"Id":"6","Code":"SL0006","Title":"***境外工程","Label":"水电站,枢纽","Principal":"秦晓川","Product":"8","Created":"2016-11-26"}];
-        /*初始化table数据*/
-        $(function(){
-            $("#table0").bootstrapTable({
-                data:json
-                // onClickRow: function (row, $element) {
-                  // alert( "选择了行Id为: " + row.Id );
-                  // rowid=row.Id//全局变量
-                  // $('#table1').bootstrapTable('refresh', {url:'/admincategory?pid='+row.Id});
-                // }
-            });
-        });
+  /*初始化table数据*/
+  // $(function(){
+  //     $("#table0").bootstrapTable({
+  //         data:json
+  //         // onClickRow: function (row, $element) {
+  //           // alert( "选择了行Id为: " + row.Id );
+  //           // rowid=row.Id//全局变量
+  //           // $('#table1').bootstrapTable('refresh', {url:'/admincategory?pid='+row.Id});
+  //         // }
+  //     });
+  // });
+  $(function () {
+    // 初始化【未接受】工作流表格
+    $("#table0").bootstrapTable({
+        url : '/project/getprojects',
+        method: 'get',
+        search:'true',
+        showRefresh:'true',
+        showToggle:'true',
+        showColumns:'true',
+        toolbar:'#toolbar1',
+        pagination: 'true',
+        sidePagination: "server",
+        queryParamsType:'',
+        //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+        // limit, offset, search, sort, order 否则, 需要包含: 
+        // pageSize, pageNumber, searchText, sortName, sortOrder. 
+        // 返回false将会终止请求。
+        pageSize: 15,
+        pageNumber: 1,
+        pageList: [15,20, 50, 100],
+        singleSelect:"true",
+        clickToSelect:"true",
+        queryParams:function queryParams(params) {   //设置查询参数
+          var param = {
+              limit: params.pageSize,   //每页多少条数据
+              pageNo: params.pageNumber, // 页码
+              searchText:$(".search .form-control").val()
+          };
+          //搜索框功能
+        //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
+        // if (null != searchText) {
+        //   try {
+        //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
+        //   } catch (Exception e) {
+        //     e.printStackTrace();
+        //   }
+        // }
+            return param;
+        },
+        columns: [
+          {
+            title: '选择',
+            radio: 'true',
+            width: '10',
+            align:"center",
+            valign:"middle"
+          },
+          {
+            // field: 'Number',
+            title: '序号',
+            formatter:function(value,row,index){
+              return index+1
+            },
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Code',
+            title: '编号',
+            formatter:setCode,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Title',
+            title: '名称',
+            formatter:setTitle,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Label',
+            title: '标签',
+            formatter:setLable,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Principal',
+            title: '负责人',
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Number',
+            title: '成果数量',
+            formatter:setCode,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'action',
+            title: '时间轴',
+            formatter:actionFormatter,
+            events:actionEvents,
+            align:"center",
+            valign:"middle"
+          },
+          {
+            field: 'Created',
+            title: '建立时间',
+            formatter:localDateFormatter,
+            align:"center",
+            valign:"middle"
+          }
+            // {
+            //     field: 'dContMainEntity.createTime',
+            //     title: '发起时间',
+            //     formatter: function (value, row, index) {
+            //         return new Date(value).toLocaleString().substring(0,9);
+            //     }
+            // },
+            // {
+            //     field: 'dContMainEntity.operate',
+            //     title: '操作',
+            //     formatter: operateFormatter
+            // }
+        ]
+    });
+  });
   function index1(value,row,index){
   // alert( "Data Loaded: " + index );
     return index+1

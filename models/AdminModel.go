@@ -120,7 +120,7 @@ type AdminCarousel struct {
 //   `color` varchar(20) DEFAULT NULL,
 
 func init() {
-	orm.RegisterModel(new(AdminCategory), new(AdminIpsegment), new(AdminDepartment), new(AdminMerit), new(AdminDepartMerit), new(AdminSynchIp), new(AdminCarousel)) //, new(Article)
+	orm.RegisterModel(new(AdminCategory), new(AdminIpsegment), new(AdminDepartment), new(AdminMerit), new(AdminDepartMerit), new(AdminSynchIp), new(AdminCarousel), new(AdminCalendar)) //, new(Article)
 	// orm.RegisterModel(new(AdminIpsegment))
 	orm.RegisterDriver("sqlite", orm.DRSqlite)
 	orm.RegisterDataBase("default", "sqlite3", "database/meritms.db", 10)

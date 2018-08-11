@@ -1,6 +1,7 @@
                        Merit revision history
-3, Merit 0.92 (Feb 2, 2017)
-	+) Add 
+		       
+3, Merit 1.00 (Aug 11, 2018)
+	+) Add EngineerCMS
 	+) Add 
 	+) Add 
 	*) Fixed bug of 

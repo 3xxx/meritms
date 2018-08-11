@@ -4,7 +4,7 @@
 <head>
  <meta charset="UTF-8">
   <title>EngineerCMS</title>
-<script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
  <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
@@ -18,17 +18,19 @@
         登录
       </h3>
     <form method="POST" action="/login">
-        <span style="color: #ff0000;"><input type="hidden" name="url" value="{{.Url}}"/></span>
+        <span style="color: #ff0000;">
+          <input type="hidden" name="url" value="{{.Url}}"/></span>
+          <input id="referrer" type="text" name="referrer" class="form-control" style="display:none;">
       <div class="form-group">
         <label class="control-label" for="LoginForm-UserName">用户名 或 邮箱</label>
-        <input id="uname" name="uname" type="text" value="" class="form-control" placeholder="Enter account" list="cars"></div>
+        <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars"></div>
         <div id='datalistDiv'>
           <datalist id="cars" name="cars">
           </datalist>
         </div>
       <div class="form-group">
         <label class="control-label" for="LoginForm-Password">密码</label>
-        <input id="pwd" name="pwd" type="password" value="" class="form-control" placeholder="Password"></div>
+        <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password"></div>
 
       <div class="checkbox">
         <label>
@@ -64,6 +66,9 @@
 </div>
 
 <script type="text/javascript">
+
+  $('#referrer').val(document.referrer);
+
 function checkInput(){
   var uname=document.getElementById("uname");
   if (uname.value.length==0){

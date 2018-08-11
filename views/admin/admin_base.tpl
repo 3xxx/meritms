@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- <title>MeritMS</title> -->
-  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
@@ -19,8 +19,8 @@
   <!-- <script type="text/javascript" src="/static/js/bootstrap-editable.js"></script> -->
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
 
-  <link rel="stylesheet" type="text/css" href="/static/fex-team-webuploader/css/webuploader.css">
-  <script type="text/javascript" src="/static/fex-team-webuploader/dist/webuploader.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/webuploader.css">
+  <script type="text/javascript" src="/static/js/webuploader.min.js"></script>
 
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
@@ -101,13 +101,14 @@
 
 <script type="text/javascript">
         /*数据json*/
-        var json =  [{"Id":"1","Title":"首页轮播图片","Content":"添加宽幅图片","Tips":"最新的10张"},
-                      {"Id":"2","Title":"网站昵称","Content":"平行世界","Tips":"网站昵称"},
-                      {"Id":"3","Title":"管理员昵称","Content":"无影","Tips":"昵称"},
-                      {"Id":"4","Title":"管理员头像","Content":"怪物","Tips":"图像"},
-                      {"Id":"5","Title":"导航条定制","Content":"wiki","Tips":"选择导航条"},
-                      {"Id":"6","Title":"网站简介","Content":"来自虫洞","Tips":"介绍"},
-                      {"Id":"7","Title":"远程访问","Content":"允许","Tips":"vpn或nat123"}];
+        var json =  [{"Id":"1","Title":"首页轮播图片","Content":"添加宽幅图片","Tips":"最新的10张"}];
+        // ,
+        //               {"Id":"2","Title":"网站昵称","Content":"平行世界","Tips":"网站昵称"},
+        //               {"Id":"3","Title":"管理员昵称","Content":"无影","Tips":"昵称"},
+        //               {"Id":"4","Title":"管理员头像","Content":"怪物","Tips":"图像"},
+        //               {"Id":"5","Title":"导航条定制","Content":"wiki","Tips":"选择导航条"},
+        //               {"Id":"6","Title":"网站简介","Content":"来自虫洞","Tips":"介绍"},
+        //               {"Id":"7","Title":"远程访问","Content":"允许","Tips":"vpn或nat123"}
         /*初始化table数据*/
         $(function(){
             $("#table0").bootstrapTable({
@@ -383,7 +384,7 @@ $(document).ready(function() {
         // 不压缩image
         resize: false,
         // swf文件路径
-        swf: '/static/fex-team-webuploader/dist/Uploader.swf',
+        swf: '/static/js/Uploader.swf',
         // 文件接收服务端。
         server: '/admin/base/addcarousel',
         // 选择文件的按钮。可选。

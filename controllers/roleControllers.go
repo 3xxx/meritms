@@ -31,9 +31,9 @@ type RoleController struct {
 
 type Userrole struct {
 	Id         int64
-	Rolename   string
+	Rolename   string `json:"name"`
 	Rolenumber string
-	Status     string
+	Status     string `json:"role"`
 	Level      string
 }
 
@@ -63,12 +63,13 @@ type Tree struct {
 var e *casbin.Enforcer
 var a *beegoormadapter.Adapter
 
+//记得database换成meritms.db
 func init() {
 	// Initialize a Beego ORM adapter and use it in a Casbin enforcer:
 	// The adapter will use the MySQL database named "casbin".
 	// If it doesn't exist, the adapter will create it automatically.
 	// a := beegoormadapter.NewAdapter("mysql", "mysql_username:mysql_password@tcp(127.0.0.1:3306)/") // Your driver and data source.
-	a = beegoormadapter.NewAdapter("sqlite3", "database/engineer.db", true) // Your driver and data source.
+	a = beegoormadapter.NewAdapter("sqlite3", "database/meritms.db", true) // Your driver and data source.
 	// Or you can use an existing DB "abc" like this:
 	// The adapter will use the table named "casbin_rule".
 	// If it doesn't exist, the adapter will create it automatically.
@@ -257,9 +258,10 @@ func (c *RoleController) Get() {
 		}
 		c.Data["json"] = userrole //用户所具有的角色，勾选
 		c.ServeJSON()
+	} else {
+		c.Data["json"] = roles //角色列表
+		c.ServeJSON()
 	}
-	c.Data["json"] = roles //角色列表
-	c.ServeJSON()
 }
 
 // swagger:operation POST /v1/auth/role/post RoleController RoleController
@@ -285,6 +287,7 @@ func (c *RoleController) Get() {
 //   '200':
 //     description: success
 
+//添加角色
 func (c *RoleController) Post() {
 	// u := m.Role{}
 	// if err := c.ParseForm(&u); err != nil {
@@ -294,13 +297,12 @@ func (c *RoleController) Post() {
 	var role m.Role
 	role.Rolename = c.Input().Get("rolename")
 	role.Rolenumber = c.Input().Get("rolenumber")
-
 	// statusint, err := strconv.Atoi(c.Input().Get("status"))
 	// if err != nil {
 	// 	beego.Error(err)
 	// }
 	role.Status = c.Input().Get("status")
-
+	// role.Createtime = time.Now()
 	id, err := m.SaveRole(role)
 	if err == nil && id > 0 {
 		// c.Rsp(true, "Success")
@@ -397,7 +399,7 @@ func (c *RoleController) UserRole() {
 	//要支持批量分配角色，循环用户id
 	uid := c.GetString("uid") //secofficeid
 	//先删除用户的权限
-	e.DeleteRolesForUser(uid) //数据库没有删掉！
+	// e.DeleteRolesForUser(uid) //数据库没有删掉！
 	//删除数据库中角色中的用户
 	// o := orm.NewOrm()
 	// qs := o.QueryTable("casbin_rule")
@@ -562,7 +564,8 @@ func (c *RoleController) RolePermission() {
 					if proj.ParentIdPath == "" {
 						projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/*"
 					} else {
-						projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + treearray[nodeidint] + "/*"
+						// projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + treearray[nodeidint] + "/*"
+						projurl = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10) + "/*"
 					}
 					// beego.Info(v1)
 					// beego.Info(projurl)
