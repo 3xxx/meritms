@@ -219,10 +219,15 @@ func init() {
 	beego.Router("/admin/role/get/?:id:string", &controllers.RoleController{}, "get:Get")
 	//添加用户角色
 	beego.Router("/admin/role/userrole", &controllers.RoleController{}, "post:UserRole")
-	//添加角色权限
+	//添加角色对项目目录文件操作权限
 	beego.Router("/admin/role/permission", &controllers.RoleController{}, "post:RolePermission")
-	//查询角色权限
+	//查询角色对项目目录文件操作的权限
 	beego.Router("/admin/role/getpermission", &controllers.RoleController{}, "get:GetRolePermission")
+
+	//角色——成果统计、价值统计查看权限
+	beego.Router("/admin/role/roleachieve", &controllers.RoleController{}, "post:RoleAchieve")
+	//查询角色具有的科室成果、科室价值查看权限
+	beego.Router("/admin/role/getroleachieve", &controllers.RoleController{}, "get:GetRoleAchieve")
 
 	//meritbasic表格数据填充
 	// beego.Router("/admin/merit/meritbasic", &controllers.AdminController{}, "*:MeritBasic")

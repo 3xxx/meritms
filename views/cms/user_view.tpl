@@ -20,8 +20,8 @@
   <script src="/static/js/tableExport.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
   <!-- <script src="/static/js/jquery.form.js"></script> -->
-  <link rel="stylesheet" type="text/css" href="/static/css/select2.min.css"/>
-  <script type="text/javascript" src="/static/js/select2.js"></script>
+  <!-- <link rel="stylesheet" type="text/css" href="/static/css/select2.min.css"/> -->
+  <!-- <script type="text/javascript" src="/static/js/select2.js"></script> -->
 </head>
 
   <!-- <div class="navbar navba-default navbar-fixed-top"> -->
@@ -30,7 +30,7 @@
   <!-- </div> -->
 <body>
   <div class="col-lg-12">
-  <h3>用户表-{{.User}}</h3>
+  <h3>用户表-{{.Username}}</h3>
     <div id="toolbar1" class="btn-group">
         <button type="button" data-name="addButton" id="addButton" class="btn btn-default"> <i class="fa fa-plus">添加</i>
         </button>

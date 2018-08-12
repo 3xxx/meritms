@@ -413,7 +413,7 @@ func (c *ArticleController) AddArticle() {
 	catalog.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
 
 	catalog.Complex = 1
-	catalog.State = 0
+	catalog.State = 1
 	//生成merit清单结束*******************
 
 	//将文章添加到成果id下
@@ -501,7 +501,7 @@ func (c *ArticleController) ModifyArticle() {
 	c.Data["product"] = prod
 	c.Data["article"] = Article
 	c.Data["IsLogin"] = checkAccount(c.Ctx)
-	c.TplName = "article_modify.tpl"
+	c.TplName = "cms/article_modify.tpl"
 }
 
 //编辑 成果id

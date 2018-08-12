@@ -9,17 +9,18 @@
  <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
 <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 </head>
-<body>
 
+  <div class="container-fill">{{template "tpl/T.navbar.tpl" .}}</div>
+
+<body>
 <div id="content" class="col-md-8 col-md-offset-2">
     <div class="col-md-6 auth-page">
       <h3 class="title">
         <span class="glyphicon glyphicon-user"></span>
-        登录
+        注册成功！！请登录……
       </h3>
     <form method="POST" action="/login">
         <input type="hidden" name="url" value="{{.Url}}"/>
-        <input id="referrer" type="text" name="referrer" class="form-control" style="display:none;">
       <div class="form-group">
         <label class="control-label" for="LoginForm-UserName">用户名 或 邮箱</label>
         <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars"></div>
@@ -30,7 +31,6 @@
       <div class="form-group">
         <label class="control-label" for="LoginForm-Password">密码</label>
         <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password"></div>
-
       <div class="checkbox">
         <label>
           <input type="checkbox">自动登陆</label>
@@ -43,7 +43,6 @@
         忘记密码
       </a>
       <button class="btn btn-default" onclick="return backToHome();">返回&nbsp;&nbsp; <span class="glyphicon glyphicon-circle-arrow-left"></span></button>
-
   </form>
 </div>
 
@@ -65,7 +64,7 @@
 </div>
 
 <script type="text/javascript">
-  $('#referrer').val(document.referrer);
+
   function checkInput(){
     var uname=document.getElementById("uname");
     if (uname.value.length==0){

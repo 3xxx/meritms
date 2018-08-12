@@ -858,7 +858,7 @@ func (c *OnlyController) OfficeView() {
 		// c.TplName = "onlyoffice/onlyoffice.tpl"
 		c.Data["Type"] = "desktop"
 	}
-	c.TplName = "onlyoffice/officeview.tpl"
+	c.TplName = "cms/onlyoffice/officeview.tpl"
 }
 
 //协作页面的保存和回调

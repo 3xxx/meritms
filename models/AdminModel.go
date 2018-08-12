@@ -56,7 +56,7 @@ type AdminSynchIp struct {
 
 //科室结构
 type AdminDepartment struct {
-	Id       int64     `form:"-"`
+	Id       int64     `json:"id",form:"-"`
 	ParentId int64     `orm:"null"`
 	Title    string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
 	Code     string    `orm:"null"`
@@ -77,7 +77,7 @@ type AdminMerit struct {
 }
 
 type AdminDepartMerit struct {
-	Id          int64 `form:"-"`
+	Id          int64 `json:"id",form:"-"`
 	SecofficeId int64 `orm:"null"`
 	MeritId     int64 `orm:"null"`
 }

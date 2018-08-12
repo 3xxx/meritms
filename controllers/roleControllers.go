@@ -592,6 +592,81 @@ func (c *RoleController) RolePermission() {
 	c.ServeJSON()
 }
 
+//给角色赋查看科室成果、科室价值的权限——根据权限显示侧栏菜单
+//先删除角色对于这个组织架构的所有权限
+func (c *RoleController) RoleAchieve() {
+	var success bool
+	var nodeidint int
+
+	var err error
+	roleids := c.GetString("roleids")
+	rolearray := strings.Split(roleids, ",")
+
+	treeids := c.GetString("treeids") //项目目录id，25001,25002
+	treearray := strings.Split(treeids, ",")
+	// beego.Info(treearray)
+	treenodeids := c.GetString("treenodeids") //项目目录的nodeid 0.0.0-0.0.1-0.1.0-0.1.0
+	treenodearray := strings.Split(treenodeids, ",")
+	// beego.Info(treenodearray)
+	//取出项目目录的顶级
+	var nodesid, nodesids []string
+	if len(treenodearray) > 1 {
+		nodesids, err = highest(treenodearray, nodesid, 0)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else {
+		nodesids = []string{"0"} //append(nodesids, "0")
+	}
+	// beego.Info(nodesids)
+
+	//删除这些角色的全部查看成果权限
+	for _, v1 := range rolearray { //其实只有一个值
+		// o := orm.NewOrm()
+		// qs := o.QueryTable("casbin_rule")
+		// _, err := qs.Filter("PType", "p").Filter("v0", "role_"+v1).Filter("v1__contains", "secoffice_").Delete()
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
+		e.RemoveFilteredPolicy(0, "role_"+v1, "secoffice")
+	}
+	// e.LoadPolicy() //重载权限
+	if treeids != "" {
+		for _, v1 := range rolearray {
+			for _, v3 := range nodesids {
+				// beego.Info(v3)
+				nodeidint, err = strconv.Atoi(v3)
+				if err != nil {
+					beego.Error(err)
+				}
+				//id转成64位
+				// pidNum, err := strconv.ParseInt(treearray[nodeidint], 10, 64)
+				// if err != nil {
+				// 	beego.Error(err)
+				// }
+				//根据projid取出路径
+				// proj, err := m.GetProj(pidNum)
+				// if err != nil {
+				// 	beego.Error(err)
+				// }
+				// success = e.AddPolicy("role_"+v1, "secoffice_"+treearray[nodeidint]) //来自casbin\management_api.go
+				//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
+				success = e.AddPermissionForUser("role_"+v1, "secoffice", "secoffice_"+treearray[nodeidint])
+			}
+		}
+	} else {
+		success = true
+	}
+	// e.LoadPolicy() //重载权限
+
+	if success == true {
+		c.Data["json"] = "ok"
+	} else {
+		c.Data["json"] = "wrong"
+	}
+	c.ServeJSON()
+}
+
 //迭代查出最高级的树状目录
 //nodesid是数组的序号
 //nodeid是节点号：0.0.1   0.0.1.0
@@ -678,6 +753,30 @@ func (c *RoleController) GetRolePermission() {
 	}
 	// beego.Info(projids)
 	c.Data["json"] = projids
+	c.ServeJSON()
+}
+
+//查询角色所具有的查询科室成果、科室价值的权限
+func (c *RoleController) GetRoleAchieve() {
+	roleid := c.GetString("roleid") //角色id
+	// beego.Info(roleid)
+	// var paths []beegoormadapter.CasbinRule
+	// o := orm.NewOrm()
+	// qs := o.QueryTable("casbin_rule")
+	// _, err := qs.Filter("PType", "p").Filter("v0", "role_"+roleid).Filter("v1__contains", "secoffice_").All(&paths)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+
+	//GetPermissionsForUser只能过滤一个字段，所以不行
+	paths := e.GetFilteredPolicy(0, "role_"+roleid, "secoffice")
+	var secids []string
+	for _, v1 := range paths {
+		secid := strings.Replace(v1[2], "secoffice_", "", -1)
+		secids = append(secids, secid)
+	}
+	// beego.Info(secids)
+	c.Data["json"] = secids
 	c.ServeJSON()
 }
 

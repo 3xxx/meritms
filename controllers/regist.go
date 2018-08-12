@@ -3,8 +3,6 @@ package controllers
 import (
 	"crypto/md5"
 	"encoding/hex"
-	// "encoding/json"
-	"fmt"
 	"github.com/astaxie/beego"
 	// "github.com/bitly/go-simplejson"
 	"github.com/3xxx/meritms/models"
@@ -44,11 +42,14 @@ func (this *RegistController) CheckUname() {
 	// return
 }
 
+//提交注册名称
 func (this *RegistController) Post() {
 	var user models.User //这里修改
 	inputs := this.Input()
-	//fmt.Println(inputs)
+	beego.Info(inputs)
 	user.Username = inputs.Get("uname")
+	user.Email = inputs.Get("email")
+	user.Nickname = inputs.Get("nickname")
 	Pwd1 := inputs.Get("pwd")
 
 	md5Ctx := md5.New()
@@ -59,13 +60,14 @@ func (this *RegistController) Post() {
 	// fmt.Print(hex.EncodeToString(cipherStr))
 	user.Password = hex.EncodeToString(cipherStr)
 	user.Lastlogintime = time.Now()
+	user.Status = 1
 	_, err := models.SaveUser(user) //这里修改
 
 	// _, err = models.AddRoleUser(4, uid)
 	if err == nil {
 		this.TplName = "success.tpl"
 	} else {
-		fmt.Println(err)
+		// fmt.Println(err)
 		this.TplName = "registerr.tpl"
 	}
 }
@@ -106,9 +108,7 @@ func (this *RegistController) GetUname1() {
 	if err != nil {
 		beego.Error(err)
 	}
-
 	slice1 := make([]Userselect, 0)
-
 	for _, v := range uname1 {
 		aa := make([]Userselect, 1)
 		aa[0].Id = v.Id //这里用for i1,v1,然后用v1.Id一样的意思
@@ -122,9 +122,8 @@ func (this *RegistController) GetUname1() {
 	if err != nil {
 		beego.Error(err)
 	}
-	beego.Info(uname1) //[0xc08214b880 0xc08214b960 0xc08214ba40
-
-	beego.Info(slice1) //[{1471  admin} {1475  cai.wc} {1476  zeng.cw}
+	// beego.Info(uname1) //[0xc08214b880 0xc08214b960 0xc08214ba40
+	// beego.Info(slice1) //[{1471  admin} {1475  cai.wc} {1476  zeng.cw}
 	// this.Data["Userselect"] = slice1
 	this.Data["json"] = slice1 //string(b)
 	this.ServeJSON()
@@ -133,7 +132,6 @@ func (this *RegistController) GetUname1() {
 	// 	// return uname1[0].Username
 	// }
 	// return uname1[0].Username
-
 	//结果如下：
 	// [
 	//  {

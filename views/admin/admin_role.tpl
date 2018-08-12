@@ -870,7 +870,6 @@
           });
         }
       });
-
     });
     // onClickRow  click-row.bs.table  row, $element 当用户点击某一行的时候触发，参数包括：
     // row：点击行的数据，

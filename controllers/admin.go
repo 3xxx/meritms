@@ -82,9 +82,52 @@ func (c *AdminController) Admin() {
 			c.TplName = "admin/admin_department.tpl"
 		case "022": //用户-组织结构
 			c.TplName = "admin/admin_users.tpl"
-		case "023": //角色-用户
+		case "023": //用户-角色
 			c.TplName = "admin/admin_users.tpl"
-
+		case "024": //角色-成果价值
+			achsecoffice := make([]AchSecoffice, 0)
+			achdepart := make([]AchDepart, 0)
+			category1, err := models.GetAdminDepart(0) //得到多个分院
+			if err != nil {
+				beego.Error(err)
+			}
+			for i1, _ := range category1 {
+				aa := make([]AchDepart, 1)
+				aa[0].Id = category1[i1].Id
+				aa[0].Level = "1"
+				// aa[0].Pid = category[0].Id
+				aa[0].Title = category1[i1].Title //分院名称
+				// beego.Info(category1[i1].Title)
+				category2, err := models.GetAdminDepart(category1[i1].Id) //得到多个科室
+				if err != nil {
+					beego.Error(err)
+				}
+				//如果返回科室为空，则直接取得员工
+				//这个逻辑判断不完美，如果一个部门即有科室，又有人没有科室属性怎么办，直接挂在部门下的呢？
+				//应该是反过来找出所有没有科室字段的人员，把他放在部门下
+				if len(category2) > 0 {
+					for i2, _ := range category2 {
+						bb := make([]AchSecoffice, 1)
+						bb[0].Id = category2[i2].Id
+						bb[0].Level = "2"
+						bb[0].Pid = category1[i1].Id
+						bb[0].Title = category2[i2].Title //科室名称
+						//根据分院和科室查所有员工
+						bb[0].Selectable = true
+						// achemployee = make([]AchEmployee, 0) //再把slice置0
+						achsecoffice = append(achsecoffice, bb...)
+						// depcount = depcount + count //部门人员数=科室人员数相加
+					}
+				}
+				//查出所有有这个部门但科室名为空的人员
+				//根据分院查所有员工
+				aa[0].Secoffice = achsecoffice
+				aa[0].Selectable = true                //默认是false点击展开
+				achsecoffice = make([]AchSecoffice, 0) //再把slice置0
+				achdepart = append(achdepart, aa...)
+			}
+			c.Data["json"] = achdepart
+			c.TplName = "admin/admin_roleachieve.tpl"
 		//项目设置
 		case "031": //分级目录
 			c.TplName = "admin/admin_category.tpl"

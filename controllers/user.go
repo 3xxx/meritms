@@ -96,7 +96,6 @@ func (c *UserController) Index() {
 		return
 	}
 	// }
-
 	// c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//2.取得客户端用户名
 	// ck, err := c.Ctx.Request.Cookie("uname")
@@ -105,7 +104,6 @@ func (c *UserController) Index() {
 	// } else {
 	// 	c.Data["Uname"] = ck.Value
 	// }
-
 	users, count := m.Getuserlist(1, 2000, "Id")
 	if c.IsAjax() {
 		c.Data["json"] = &map[string]interface{}{"total": count, "rows": &users}
@@ -115,7 +113,7 @@ func (c *UserController) Index() {
 		// tree := c.GetTree()
 		// c.Data["tree"] = &tree
 		c.Data["Users"] = &users
-		c.TplName = "user.tpl"
+		c.TplName = "cms/user.tpl"
 		// if c.GetTemplatetype() != "easyui" {
 		// c.Layout = c.GetTemplatetype() + "/public/layout.tpl"
 		// }
@@ -170,33 +168,8 @@ func (c *UserController) User() {
 	// }
 }
 
-//用户登录查看自己的资料
+//用户登录查看自己的资料_不是这个，是GetUserByUsername
 func (c *UserController) View() {
-	// c.Data["IsCategory"] = true
-	// c.TplName = "category.tpl"
-	// c.Data["IsLogin"] = checkAccount(c.Ctx)
-	//2.取得客户端用户名
-	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	// v := c.GetSession("uname")
-	// if v != nil {
-	// 	c.Data["Username"] = v.(string)
-	// }
-
-	// // _, role := checkprodRole(c.Ctx)
-	// _, role, _, _, _ := checkprodRole(c.Ctx)
-	// roleint, err := strconv.Atoi(role)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	// if role == "1" {
-	// 	c.Data["IsAdmin"] = true
-	// } else if roleint > 1 && roleint < 5 {
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// }
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -204,32 +177,14 @@ func (c *UserController) View() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-	// c.Data["Username"] = username
-
-	// ck, err := c.Ctx.Request.Cookie("uname")
-	// if err != nil {
-	// 	beego.Error(err)
-	// } else {
-	// 	c.Data["Uname"] = ck.Value
-	// }
-	// userid, _ := c.GetInt64("Id")
-	// id := c.Ctx.Input.Param("0")这里为何无效？？？？这个需要routers中设置AutoRouter
-	// beego.Info(id)
-	// userid, _ := strconv.ParseInt(id, 10, 64)
-
 	userid, _ := strconv.ParseInt(c.Input().Get("useid"), 10, 64)
 	user := m.GetUserByUserId(userid)
 	c.Data["User"] = user
-	c.TplName = "admin_user_view.tpl"
+	c.TplName = "admin/admin_user_view.tpl"
 }
 
 //添加用户
 func (c *UserController) AddUser() {
-	// u := m.User{}
-	// if err := c.ParseForm(&u); err != nil {
-	// 	beego.Error(err.Error)
-	// 	return
-	// }
 	var user m.User
 	user.Username = c.Input().Get("username")
 	user.Nickname = c.Input().Get("nickname")
@@ -239,13 +194,6 @@ func (c *UserController) AddUser() {
 	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
 	user.Password = hex.EncodeToString(cipherStr)
-	// user.Repassword = c.Input().Get("repassword")
-	// Pwd1=c.Input().Get("password")
-	// 				md5Ctx := md5.New()
-	// 				md5Ctx.Write([]byte(Pwd1))
-	// 				cipherStr := md5Ctx.Sum(nil)
-	// 				user.Password = hex.EncodeToString(cipherStr)
-
 	user.Email = c.Input().Get("email")
 	user.Department = c.Input().Get("department")
 	user.Secoffice = c.Input().Get("secoffice")
@@ -373,25 +321,6 @@ func (c *UserController) DeleteUser() {
 
 //用户查看自己，修改密码等
 func (c *UserController) GetUserByUsername() {
-	// _, role := checkprodRole(c.Ctx)
-	// roleint, err := strconv.Atoi(role)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	// if role == "1" {
-	// 	c.Data["IsAdmin"] = true
-	// } else if roleint > 1 && roleint < 5 {
-	// 	// beego.Info(role)
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// 	// beego.Info(role)
-	// }
-
-	// c.Data["IsProject"] = true
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = role
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -399,53 +328,14 @@ func (c *UserController) GetUserByUsername() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-	// 	c.Data["IsCategory"] = true
-	// c.TplName = "category.tpl"
-	// c.Data["IsLogin"] = checkAccount(c.Ctx)
-	//4.取得客户端用户名
-	// var uname string
-	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	// v := c.GetSession("uname")
-	// if v != nil {
-	// 	uname = v.(string)
-	// 	c.Data["Username"] = v.(string)
-	// }
+
 	if islogin != true {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
-		// c.Redirect("/roleerr", 302)
 		return
 	}
-	// 	username, role := checkprodRole(c.Ctx)
-	// if role == 1 {
-	// 	c.Data["IsAdmin"] = true
-	// } else if role > 1 && role < 5 {
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// }
-	// c.Data["Username"] = username
-	// uname := v.(string) //ck.Value
-	// 4.取出用户的权限等级
-	// role, _ := checkRole(c.Ctx) //login里的
-	// 5.进行逻辑分析：
-	// rolename, err := strconv.ParseInt(role, 10, 64)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	// username := c.Input().Get("username")
-	// user, err := m.GetUserByUsername(uname)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	// beego.Info(user)
-	// list, _, _ := m.GetRoleByUsername(uname)
-	// c.Data["User"] = uname
-	// c.Data["Role"] = list
-	c.TplName = "user_view.tpl"
+	c.TplName = "cms/user_view.tpl"
 }
 
 //用户个人数据，填充table，以便编辑

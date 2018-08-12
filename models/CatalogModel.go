@@ -839,14 +839,11 @@ func GetcatalogMyself(id string, t1, t2 time.Time) (catalogs []*Catalog, err err
 	o := orm.NewOrm()
 	qs := o.QueryTable("catalog")
 	qs = qs.SetCond(cond1)
-
 	// 	cond := NewCondition()
 	// 	cond1 := cond.And("profile__isnull", false).AndNot("status__in", 1).Or("profile__age__gt", 2000)
-
 	// 	qs := orm.QueryTable("user")
 	// 	qs = qs.SetCond(cond1)
 	// 	// WHERE ... AND ... AND NOT ... OR ...
-
 	// 	cond2 := cond.AndCond(cond1).OrCond(cond.And("name", "slene"))
 	// 	qs = qs.SetCond(cond2).Count()
 	// 	// WHERE (... AND ... AND NOT ... OR ...) OR ( ... )
@@ -987,25 +984,20 @@ func GetcatalogCompleted(id string, t1, t2 time.Time) (catalogs []*Catalog, err 
 	o := orm.NewOrm()
 	qs := o.QueryTable("catalog")
 	qs = qs.SetCond(cond2)
-
 	// 	cond := NewCondition()
 	// 	cond1 := cond.And("profile__isnull", false).AndNot("status__in", 1).Or("profile__age__gt", 2000)
-
 	// 	qs := orm.QueryTable("user")
 	// 	qs = qs.SetCond(cond1)
 	// 	// WHERE ... AND ... AND NOT ... OR ...
-
 	// 	cond2 := cond.AndCond(cond1).OrCond(cond.And("name", "slene"))
 	// 	qs = qs.SetCond(cond2).Count()
 	// 	// WHERE (... AND ... AND NOT ... OR ...) OR ( ... )
 	// qs.Distinct()
-
 	_, err = qs.Distinct().All(&aa) //qs.Filter("Drawn", user.Nickname).All(&aa)
 	if err != nil {
 		return nil, err
 	}
 	// catalogs = append(catalogs, aa...)
-
 	// cond2 := cond.And("Date__gte", t1).And("Date__lt", t2).And("Designd", user.Nickname).And("State", "5")
 	// qs = qs.SetCond(cond2)
 	// _, err = qs.Distinct().All(&bb) //qs.Filter("Drawn", user.Nickname).All(&aa)
@@ -1013,7 +1005,6 @@ func GetcatalogCompleted(id string, t1, t2 time.Time) (catalogs []*Catalog, err 
 	// 	return nil, err
 	// }
 	// catalogs = append(catalogs, bb...)
-
 	// cond3 := cond.And("Date__gte", t1).And("Date__lt", t2).And("Checked", user.Nickname).And("State", "5")
 	// qs = qs.SetCond(cond3)
 	// _, err = qs.Distinct().All(&cc) //qs.Filter("Drawn", user.Nickname).All(&aa)

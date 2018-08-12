@@ -249,7 +249,7 @@ func (c *IndexController) Calendar() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-	c.TplName = "index_calendar.tpl"
+	c.TplName = "cms/index_calendar.tpl"
 }
 
 //*******汽车
@@ -828,5 +828,5 @@ func (c *IndexController) GetAttendanceCalendar() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-	c.TplName = "attendance_calendar.tpl"
+	c.TplName = "cms/attendance_calendar.tpl"
 }

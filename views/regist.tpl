@@ -1,13 +1,6 @@
-<!-- 用户登录页面 -->
- <!DOCTYPE html>
-<html>
-<head>
- <meta charset="UTF-8">
-  <title>MeritMS</title>
-<script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
- <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
- <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
-<link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
+<!DOCTYPE html>
+{{template "tpl/T.header.tpl"}}
+<title>注册 - MeritMS</title>
 </head>
 <body>
 
@@ -15,35 +8,30 @@
     <div class="col-md-6 auth-page">
       <h3 class="title">
         <span class="glyphicon glyphicon-user"></span>
-        登录
+        注册
       </h3>
-    <form method="POST" action="/login">
-        <input type="hidden" name="url" value="{{.Url}}"/>
-        <input id="referrer" type="text" name="referrer" class="form-control" style="display:none;">
+    <form method="POST" action="/regist">
       <div class="form-group">
-        <label class="control-label" for="LoginForm-UserName">用户名 或 邮箱</label>
-        <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars"></div>
-        <div id='datalistDiv'>
-          <datalist id="cars" name="cars">
-          </datalist>
-        </div>
+        <label class="control-label" for="LoginForm-UserName">*用户名</label>
+        <input id="uname" name="uname" type="text" value="" class="form-control" placeholder="Enter account"></div>
       <div class="form-group">
-        <label class="control-label" for="LoginForm-Password">密码</label>
-        <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password"></div>
-
-      <div class="checkbox">
-        <label>
-          <input type="checkbox">自动登陆</label>
-      </div>
-      <button type="submit" class="btn btn-default" onclick="return checkInput();">
-        登录&nbsp;&nbsp; <span class="glyphicon glyphicon-circle-arrow-right"></span>
+        <label class="control-label" for="LoginForm-UserName">邮箱</label>
+        <input id="email" name="email" type="text" value="" class="form-control" placeholder="Enter Email"></div>
+      <div class="form-group">
+        <label class="control-label" for="LoginForm-UserName">昵称</label>
+        <input id="nickname" name="nickname" type="text" value="" class="form-control" placeholder="Enter NickName"></div>
+      <div class="form-group">
+        <label class="control-label" for="LoginForm-Password">*密码</label>
+        <input id="pwd" name="pwd" type="password" value="" class="form-control" placeholder="Password"></div>
+      <button id="regist" name="regist" type="submit" class="btn btn-default" onclick="return checkInput();">
+        注册&nbsp;&nbsp;
+        <span class="glyphicon glyphicon-circle-arrow-right"></span>
       </button>
       <a href="./forgot" class="pull-right">
         <span class="glyphicon glyphicon-question-sign"></span>
         忘记密码
       </a>
       <button class="btn btn-default" onclick="return backToHome();">返回&nbsp;&nbsp; <span class="glyphicon glyphicon-circle-arrow-left"></span></button>
-
   </form>
 </div>
 
@@ -53,10 +41,10 @@
       <span class="glyphicon glyphicon-question-sign"></span>
       帮助
     </h3>
-    <p class="well">如果您还没有注册帐户的话，请先注册。</p>
+    <p class="well">如果您已经注册的话，请登陆。</p>
     <p>
-      <a href="./regist" class="btn btn-default">
-        立即注册&nbsp;&nbsp; <i class="icon-chevron-sign-right"></i>
+      <a href="/login" class="btn btn-default">
+        立即登陆&nbsp;&nbsp; <i class="icon-chevron-sign-right"></i>
       </a>
     </p>
   </div>
@@ -65,141 +53,83 @@
 </div>
 
 <script type="text/javascript">
-  $('#referrer').val(document.referrer);
-  function checkInput(){
-    var uname=document.getElementById("uname");
-    if (uname.value.length==0){
-      alert("请输入账号");
-      return false;
-    }
-      var pwd=document.getElementById("pwd");
-    if (pwd.value.length==0){
-      alert("请输入密码");
-      return false;
-      }
-      return true
-  }
-  function backToHome(){
-    window.location.href="/";
+
+$(document).ready(function(){
+  $("#uname").blur(function(){
+    $.ajax({
+      type:"post",//这里是否一定要用post？？？
+      url:"/regist/checkuname",
+      // data:$('#form').serialize(),
+      //格式化表单参数或者也可以使用data:{'folder':$('input[name=folder]').val(),'page':$('input[name=page]').val()},
+        // data:{'aid':54,'content':55,'aid':56,'content':57},
+        // data:o,
+        // datetype:'text',
+        data: { uname: $("#uname").val()},
+        // success: function(responseText) {
+        // $("#divResult").html(responseText);
+        // }
+        success:function(data,status){//数据提交成功时返回数据
+          //假设有数字a、b、c。当a大于5与b小于6或者c不等于8与a等于‘3’时，输出1306
+          //var a,b,c;
+          //alert (a > 5 && b < 6 || c != 8 && a == 3 ? 1306 : '');
+            if ( $("#uname").val().length>0 && data=="false") 
+            {
+                $("#regis").html("用户名已存在！");
+                $("#regis").css("color","red");
+            }
+            else if ( $("#uname").val().length>0 && data=="true")
+            {
+                $("#regis").html("用户名可用！");
+                $("#regis").css("color","green");
+            }
+            else if ( $("#uname").val().length==0)
+            {
+                $("#regis").html("用户名");
+                $("#regis").css("color","black");
+            }
+            // else if ( hob == "basketball")
+            // {
+            // alert("我也爱看！")
+            // }
+            // else//既不是JavaScript又不是足球
+            // {
+            // alert("没有评价……");
+            // } 
+            //   alert("Data: " + data + "\nStatus: " + status);
+            //   if (data="false"){
+            //   $("#regis").html("用户名已存在！");
+            //   $("#regis").css("color","red");
+            // } else {
+            //   $("#regis").html("用户名可用！");
+            //   $("#regis").css("color","green");
+            //   // css("background-color","red");
+            // }
+              // alert(data);
+              // alert("导出成功！")
+              // return false; 
+    });
+      // return true;//这里false应该是不刷新页面的意思?
+  });
+});
+
+function checkInput(){
+  var uname=document.getElementById("uname");
+  if (uname.value.length==0){
+    alert("请输入账号");
     return false;
   }
-</script>
-
-<script type="text/javascript">
-//禁用chrome和firefox浏览器自带的自动提示 
-$('#uname').attr("autocomplete","off"); 
-$(document).ready(function(){
-  $("#uname").keyup(function(event){
-    var uname1=document.getElementById("uname");
-    // alert(event.keyCode);
-    if (event.keyCode != 38 && event.keyCode != 40 && uname1.value.length==2){
-      $.ajax({
-        type:"post",//这里是否一定要用post？？？
-        url:"/regist/getuname",
-        data: { uname: $("#uname").val()},
-        dataType:'json',//dataType:JSON,这种是jquerylatest版本的表达方法。不支持新版jquery。
-        success:function(data,status){
-          $(".option").remove();
-          $.each(data,function(i,d){
-            $("#cars").append('<option class="option" value="' + data[i].Username + '">' + data[i].Nickname + '</option>');
-          });
-        }
-      });
+    var pwd=document.getElementById("pwd");
+  if (pwd.value.length==0){
+    alert("请输入密码");
+    return false;
     }
-  });
-});   
-  // $("#uname").focus(function(){
-  // $("#uname").blur(function(){
-  // $("#uname").keydown(function(){用keydown不行，因为当按键放开后才传值
-
-  // $(function(){
-            
-                //控制器中用jsonserver的话就用下面这个形式，不用eval转换，如果用writestring方式，就要用eval转换。
-                      // 方式一：this.Ctx.WriteString(string(b))
-                      //document.write(data);
-                      // [{"Id":533,"Username":"zhong.cq","Password":"2d243e65cb10f17d2a953ea3bb539449","Repassword":"","Nickname":"钟春强","Email":"zhong.cq@gpdiwe.com","Remark":"","Status":0,"Lastlogintime":"2015-08-17T15:18:41.2317219Z","Createtime":"2015-08-17T15:18:41.2327219Z","Roles":null},{"Id":535,"Username":"cai.sq","Password":"f30db3e6af22028c4cf078e6dcc69050","Repassword":"","Nickname":"蔡顺情","Email":"cai.sq@gpdiwe.com","Remark":"","Status":0,"Lastlogintime":"2015-08-17T15:18:42.1157724Z","Createtime":"2015-08-17T15:18:42.1157724Z","Roles":null},
-                  //方式一：
-                          // var obj = eval(data);//将json字符串转换成对象?                  
-                          //  $.each(obj,function(i,d){
-                          //    $("#cars").append('<option value="' + obj[i].Username + '"></option>');
-                          //   }); 
-
-                      
-                      //方式二：
-                      // 控制器里：this.Data["json"] = string(b)
-                      // this.ServeJSON()
-                      // document.write(data);
-                      // "[{\"Id\":533,\"Username\":\"zhong.cq\",\"Password\":\"2d243e65cb10f17d2a953ea3bb539449\",\"Repassword\":\"\",\"Nickname\":\"钟春强\",\"Email\":\"zhong.cq@gpdiwe.com\",\"Remark\":\"\",\"Status\":0,\"Lastlogintime\":\"2015-08-17T15:18:41.2317219Z\",\"Createtime\":\"2015-08-17T15:18:41.2327219Z\",\"Roles\":null},{\"Id\":535,\"Username\":\"cai.sq\",\"Password\":\"f30db3e6af22028c4cf078e6dcc69050\",\"Repassword\":\"\",\"Nickname\":\"蔡顺情\",\"Email\":\"cai.sq@gpdiwe.com\",\"Remark\":\"\",\"Status\":0,\"Lastlogintime\":\"2015-08-17T15:18:42.1157724Z\",\"Createtime\":\"2015-08-17T15:18:42.1157724Z\",\"Roles\":null},
-
-                      // var obj = eval(data);
-                      // document.write(obj);
-                      // [{"Id":533,"Username":"zhong.cq","Password":"2d243e65cb10f17d2a953ea3bb539449","Repassword":"","Nickname":"钟春强","Email":"zhong.cq@gpdiwe.com","Remark":"","Status":0,"Lastlogintime":"2015-08-17T15:18:41.2317219Z","Createtime":"2015-08-17T15:18:41.2327219Z","Roles":null},{"Id":535,"Username":"cai.sq","Password":"f30db3e6af22028c4cf078e6dcc69050","Repassword":"","Nickname":"蔡顺情","Email":"cai.sq@gpdiwe.com","Remark":"","Status":0,"Lastlogintime":"2015-08-17T15:18:42.1157724Z","Createtime":"2015-08-17T15:18:42.1157724Z","Roles":null},
-                      // alert(data);
-                       // var obj = eval(data);//将json字符串转换成对象? 去掉斜杠\                 
-                         // alert(obj); 
-                          // document.write(obj);
-                         // var obj1=eval(obj) //再转成json对象？
-                         // alert(obj1[0].Username);只有firefox支持
-                           
-                           // for (i=0;i<=10;i++){取10个也不行
-                           //  $("#cars").append('<option value="'+obj1[i].Username+'"></option>');
-                           // }
-
-                         // document.getElementById('datalistDiv').innerHTML=obj[i].Username;
-                           // $("ul").append("<li>"+d.Username+"</li>");
-                           // document.write(d.Username)
-                          // var returned = xmlhttp.responseText;
-                          // 接着,你就可以这样访问:
-                          // var person1 = obj[0]; var person2 = obj[1];
-                          // alert(person1.Username);
-                          // alert(person2.Username);
-                          // document.write(data);
-                          // var i=0
-                          // for (i=0;i<=obj.length;i++)
-                          // {
-                            // $("#cars").append('<option value="' + obj[i].Id + '">' + obj[i].Username + '</option>');
-                            // $("ul").append("<li>"+obj[i].Username+"</li>");
-                          // document.write(obj[i].Username)
-                          // document.write("<br />")
-                          // }
-                          // $.each(data.suburbs,function(i,v) 
-                          //   { 
-                          //     $suburbs.append('<option data-value=' + i + ' data-postcode=' + v.id + ' data-state=' + v.Username + '>' + i + '</option>' );
-                          //     });
-                        //   $.each(data.list, function(key, val) {
-                        //     $("#cars").append('<option value="' + val.id + '">' + val.Username + '</option>');
-                        // });
-                 //装载数据
-                     // document.getElementById('datalistDiv').innerHTML=obj[i].Username;
-                    // $("ul").append("<li>"+d.Username+"</li>");
-                    // document.write(d.Username)
-                    //         $.each(data.list, function (i, item) {
-                    //     $("#cars").append("<option value='" + item.id + "'>" + item.Username> +"</option>");
-                    //     document.write(item.Username)
-                    //     // alert(item.id)
-                    // });
-                          // var x
-                          // var mycars = new Array()
-                          // mycars[0] = "Saab"
-                          // mycars[1] = "Volvo"
-                          // mycars[2] = "BMW"
-                          
-                          // for (x in mycars)
-                          // {
-                          // document.write(mycars[x] + "<br />")
-                          // }
-                         // }
-
-// $('input').keydown(function(event){ 
-   // alert(event.keyCode); 
- // });
-// 上面代码中的,event.keyCode就可以帮助我们获取到我们按下了什么按键,他返回的是ascII码,比如说上下左右键,分别是38,40,37,39
-// $(document).keypress(function(e) { 
-      // if (e.ctrlKey && e.which == 13) 
-      // $("form").submit(); 
- // })
+// return true
+}
+function backToHome(){
+  window.location.href="/";
+  return false;
+}
 </script>
-
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAjMUlEQVR42u2dD4xlV13Hz7RAt7TQ
 WSJ0miJ9K4XuarQDKJ0tKlONdqsos8a424jplHWzs8SEKQpsTXC3GtwpojuQyE5jhg6a2KlIuhi0
 0xBkkMAOgukof3YLA50idRf501GhOyW0z9/3nvN7c95997537rt/3z2/T3Lm3PfmvvvO79z7+77z
@@ -359,7 +289,6 @@ bp/D/70dHejzg5UFIgD5M2liEYAc8PnByhIU1/kBDY+1T7sgiD0D0Gd4kRVUt3Za77vkL+cn2gOW
 zTEvwYYqAguAd/ksApA9aBe4zRyP9jjXzv9wu8EtJl5Sgg1KWjwycjLFdThfMf14tWyjykIEIHtE
 APJFBCBDRADypaG2iq6vV+1rBUbBvQR3K48fygQ01JbI2mKLAVPcZbquPGzdd0UEIF8aSgQgTxpK
 BCAVIgCC4DEiAILgMSIAguAxIgCC4DEiAILgMSIAguAxIgCC4DH/D9TfTQ82Of+KAAAAAElFTkSu
-QmCC" width="10%" align ="left"> 
-
+QmCC" width="10%" align ="left">
 </body>
 </html>

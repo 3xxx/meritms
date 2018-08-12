@@ -4,26 +4,24 @@
 <head>
   <meta charset="UTF-8">
   <title>情况汇总</title>
-
-  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
-  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
-  <!-- <script src="/static/js/bootstrap-treeview.js"></script> -->
-  <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
-  <script type="text/javascript" src="/static/js/moment.min.js"></script>
-  <script type="text/javascript" src="/static/js/daterangepicker.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/daterangepicker.css"/>
-
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
+  <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
+  
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
+  <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
+  <script src="/static/js/tableExport.js"></script>
+  <script type="text/javascript" src="/static/js/moment.min.js"></script>
 
+  <script type="text/javascript" src="/static/js/daterangepicker.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/daterangepicker.css"/>
   <script src="/static/js/moment-with-locales.min.js"></script>
   <script type="text/javascript" src="/static/js/echarts.min.js"></script>
-
   <script src="/static/js/bootstrap-table-filter-control.js"></script>
-  <script src="/static/js/bootstrap-table-export.min.js"></script>
-  <script src="/static/js/tableExport.js"></script>
 </head>
 
 <!-- <div class="form-group"> -->
@@ -90,13 +88,13 @@
       <h3>已完成</h3>
       <div id="completed" class="btn-group">
           <button type="button" class="btn btn-default">
-              <i class="glyphicon glyphicon-plus"></i>
+              <i class="fa fa-plus"></i>
           </button>
           <button type="button" class="btn btn-default">
-              <i class="glyphicon glyphicon-heart"></i>
+              <i class="fa fa-heart"></i>
           </button>
           <button type="button" class="btn btn-default">
-              <i class="glyphicon glyphicon-trash"></i>
+              <i class="fa fa-trash"></i>
           </button>
       </div>
       <table id="table"
@@ -108,23 +106,29 @@
              data-show-columns="true"
              data-toolbar="#completed"
              data-query-params="queryParams"
+             data-page-size="15"
+             data-page-list="[10,15, 50, 100, All]"
+             data-unique-id="id"
+            data-pagination="true"
+            data-side-pagination="client"
+            data-show-export="true"
              >
           <thead>        
           <tr>
               <th data-formatter="index1">#</th>
-              <th data-field="ProjectNumber" data-visible='false'>项目编号</th>
-              <th data-field="ProjectName" data-sortable="true">项目名称</th>
-              <th data-field="DesignStage" data-sortable="true">项目阶段</th>
-              <th data-field="Tnumber">成果编号</th>
-              <th data-field="Name">成果名称</th>
-              <th data-field="Category" data-sortable="true">成果类型</th>
+              <th data-field="ProjectNumber" data-halign="center" data-align="center" data-visible='false'>项目编号</th>
+              <th data-field="ProjectName" data-halign="center" data-align="center" data-sortable="true">项目名称</th>
+              <th data-field="DesignStage" data-halign="center" data-align="center" data-sortable="true">项目阶段</th>
+              <th data-field="Tnumber" data-halign="center" data-align="center">成果编号</th>
+              <th data-field="Name" data-halign="center" data-align="left">成果名称</th>
+              <th data-field="Category" data-halign="center" data-align="center" data-sortable="true">成果类型</th>
               <!-- <th data-field="Page">成果计量单位</th> -->
-              <th data-field="Count">成果数量</th>
-              <th data-field="Drawn">编制、绘制</th>
-              <th data-field="Designd">设计</th>
-              <th data-field="Checked">校核</th>
-              <th data-field="Examined">审查</th>
-              <th data-field="Date" data-formatter="localDateFormatter">出版</th>
+              <th data-field="Count" data-halign="center" data-align="center">成果数量</th>
+              <th data-field="Drawn" data-halign="center" data-align="center">编制、绘制</th>
+              <th data-field="Designd" data-halign="center" data-align="center">设计</th>
+              <th data-field="Checked" data-halign="center" data-align="center">校核</th>
+              <th data-field="Examined" data-halign="center" data-align="center">审查</th>
+              <th data-field="Date" data-halign="center"  data-align="center"data-formatter="localDateFormatter">出版</th>
               <!-- <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents">操作</th> -->
             </tr>
           </thead>
@@ -145,13 +149,13 @@
 <h3>已提交</h3>
 <div id="running" class="btn-group">
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-plus"></i>
+        <i class="fa fa-plus"></i>
     </button>
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-heart"></i>
+        <i class="fa fa-heart"></i>
     </button>
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-trash"></i>
+        <i class="fa fa-trash"></i>
     </button>
 </div>
 <table id="table1"
@@ -165,23 +169,29 @@
        data-query-params="queryParams"
        data-sort-name="ProjectName"
        data-sort-order="desc"
+       data-page-size="15"
+        data-page-list="[10,15, 50, 100, All]"
+        data-unique-id="id"
+       data-pagination="true"
+       data-side-pagination="client"
+       data-show-export="true"
        >
     <thead>        
     <tr>
         <th data-formatter="index1">#</th>
-        <th data-field="ProjectNumber" data-visible='false'>项目编号</th>
-        <th data-field="ProjectName" data-sortable="true">项目名称</th>
-        <th data-field="DesignStage" data-sortable="true">项目阶段</th>
-        <th data-field="Tnumber" data-sortable="true">成果编号</th>
-        <th data-field="Name">成果名称</th>
-        <th data-field="Category" data-sortable="true">成果类型</th>
+        <th data-field="ProjectNumber" data-halign="center" data-align="center" data-visible='false'>项目编号</th>
+        <th data-field="ProjectName" data-halign="center" data-align="center" data-sortable="true">项目名称</th>
+        <th data-field="DesignStage" data-halign="center" data-align="center" data-sortable="true">项目阶段</th>
+        <th data-field="Tnumber" data-halign="center" data-align="center" data-sortable="true">成果编号</th>
+        <th data-field="Name" data-halign="center" data-align="left">成果名称</th>
+        <th data-field="Category" data-halign="center" data-align="center" data-sortable="true">成果类型</th>
         <!-- <th data-field="Page">成果计量单位</th> -->
-        <th data-field="Count">成果数量</th>
-        <th data-field="Drawn">编制、绘制</th>
-        <th data-field="Designd">设计</th>
-        <th data-field="Checked">校核</th>
-        <th data-field="Examined">审查</th>
-        <th data-field="Date" data-formatter="localDateFormatter">出版</th>
+        <th data-field="Count" data-halign="center" data-align="center">成果数量</th>
+        <th data-field="Drawn" data-halign="center" data-align="center">编制、绘制</th>
+        <th data-field="Designd" data-halign="center" data-align="center">设计</th>
+        <th data-field="Checked" data-halign="center" data-align="center">校核</th>
+        <th data-field="Examined" data-halign="center" data-align="center">审查</th>
+        <th data-field="Date" data-halign="center" data-align="center" data-formatter="localDateFormatter">出版</th>
       </tr>
     </thead>
 </table>
@@ -224,13 +234,13 @@ $(function () {
 <h3>我发起，待提交</h3>
 <div id="send" class="btn-group">
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-plus"></i>
+        <i class="fa fa-plus"></i>
     </button>
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-heart"></i>
+        <i class="fa fa-heart"></i>
     </button>
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-trash"></i>
+        <i class="fa fa-trash"></i>
     </button>
 </div>
 <table id="table2"
@@ -242,23 +252,29 @@ $(function () {
        data-show-columns="true"
        data-toolbar="#send"
        data-query-params="queryParams"
+       data-page-size="15"
+        data-page-list="[10,15, 50, 100, All]"
+        data-unique-id="id"
+       data-pagination="true"
+       data-side-pagination="client"
+       data-show-export="true"
        >
     <thead>        
     <tr>
         <th data-formatter="index1">#</th>
-        <th data-field="ProjectNumber">项目编号</th>
-        <th data-field="ProjectName">项目名称</th>
-        <th data-field="DesignStage">项目阶段</th>
-        <th data-field="Tnumber">成果编号</th>
-        <th data-field="Name">成果名称</th>
-        <th data-field="Category">成果类型</th>
+        <th data-field="ProjectNumber" data-halign="center" data-align="center">项目编号</th>
+        <th data-field="ProjectName" data-halign="center" data-align="center">项目名称</th>
+        <th data-field="DesignStage" data-halign="center" data-align="center">项目阶段</th>
+        <th data-field="Tnumber" data-halign="center" data-align="center">成果编号</th>
+        <th data-field="Name" data-halign="center" data-align="left">成果名称</th>
+        <th data-field="Category" data-halign="center" data-align="center">成果类型</th>
         <!-- <th data-field="Page">成果计量单位</th> -->
-        <th data-field="Count">成果数量</th>
-        <th data-field="Drawn">编制、绘制</th>
-        <th data-field="Designd">设计</th>
-        <th data-field="Checked">校核</th>
-        <th data-field="Examined">审查</th>
-        <th data-field="Date" data-formatter="localDateFormatter">出版</th>
+        <th data-field="Count" data-halign="center" data-align="center">成果数量</th>
+        <th data-field="Drawn" data-halign="center" data-align="center">编制、绘制</th>
+        <th data-field="Designd" data-halign="center" data-align="center">设计</th>
+        <th data-field="Checked" data-halign="center" data-align="center">校核</th>
+        <th data-field="Examined" data-halign="center" data-align="center">审查</th>
+        <th data-field="Date" data-formatter="localDateFormatter" data-halign="center" data-align="center">出版</th>
       </tr>
     </thead>
 </table>
@@ -266,13 +282,13 @@ $(function () {
 <h3>待我处理设计</h3>
 <div id="designd" class="btn-group">
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-plus"></i>
+        <i class="fa fa-plus"></i>
     </button>
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-heart"></i>
+        <i class="fa fa-heart"></i>
     </button>
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-trash"></i>
+        <i class="fa fa-trash"></i>
     </button>
 </div>
 <table id="table3"
@@ -284,23 +300,29 @@ $(function () {
        data-show-columns="true"
        data-query-params="queryParams"
        data-toolbar="#designd"
+       data-page-size="15"
+        data-page-list="[10,15, 50, 100, All]"
+        data-unique-id="id"
+       data-pagination="true"
+       data-side-pagination="client"
+       data-show-export="true"
        >
     <thead>        
     <tr>
         <th data-formatter="index1">#</th>
-        <th data-field="ProjectNumber">项目编号</th>
-        <th data-field="ProjectName">项目名称</th>
-        <th data-field="DesignStage">项目阶段</th>
-        <th data-field="Tnumber">成果编号</th>
-        <th data-field="Name">成果名称</th>
-        <th data-field="Category">成果类型</th>
+        <th data-field="ProjectNumber" data-halign="center" data-align="center">项目编号</th>
+        <th data-field="ProjectName" data-halign="center" data-align="center">项目名称</th>
+        <th data-field="DesignStage" data-halign="center" data-align="center">项目阶段</th>
+        <th data-field="Tnumber" data-halign="center" data-align="center">成果编号</th>
+        <th data-field="Name" data-halign="center" data-align="left">成果名称</th>
+        <th data-field="Category" data-halign="center" data-align="center">成果类型</th>
         <!-- <th data-field="Page">成果计量单位</th> -->
-        <th data-field="Count">成果数量</th>
-        <th data-field="Drawn">编制、绘制</th>
-        <th data-field="Designd">设计</th>
-        <th data-field="Checked">校核</th>
-        <th data-field="Examined">审查</th>
-        <th data-field="Date" data-formatter="localDateFormatter">出版</th>
+        <th data-field="Count" data-halign="center" data-align="center">成果数量</th>
+        <th data-field="Drawn" data-halign="center" data-align="center">编制、绘制</th>
+        <th data-field="Designd" data-halign="center" data-align="center">设计</th>
+        <th data-field="Checked" data-halign="center" data-align="center">校核</th>
+        <th data-field="Examined" data-halign="center" data-align="center">审查</th>
+        <th data-field="Date" data-formatter="localDateFormatter" data-halign="center" data-align="center">出版</th>
       </tr>
     </thead>
 </table>
@@ -308,13 +330,13 @@ $(function () {
 <h3>待我处理校核</h3>
 <div id="checked" class="btn-group">
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-plus"></i>
+        <i class="fa fa-plus"></i>
     </button>
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-heart"></i>
+        <i class="fa fa-heart"></i>
     </button>
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-trash"></i>
+        <i class="fa fa-trash"></i>
     </button>
 </div>
 <table id="table4"
@@ -325,23 +347,30 @@ $(function () {
        data-show-toggle="true"
        data-show-columns="true"
        data-query-params="queryParams"
-       data-toolbar="#checked">
+       data-toolbar="#checked"
+       data-page-size="15"
+        data-page-list="[10,15, 50, 100, All]"
+        data-unique-id="id"
+       data-pagination="true"
+       data-side-pagination="client"
+       data-show-export="true"
+       >
     <thead>        
     <tr>
         <th data-formatter="index1">#</th>
-        <th data-field="ProjectNumber">项目编号</th>
-        <th data-field="ProjectName">项目名称</th>
-        <th data-field="DesignStage">项目阶段</th>
-        <th data-field="Tnumber">成果编号</th>
-        <th data-field="Name">成果名称</th>
-        <th data-field="Category">成果类型</th>
+        <th data-field="ProjectNumber" data-halign="center" data-align="center">项目编号</th>
+        <th data-field="ProjectName" data-halign="center" data-align="center">项目名称</th>
+        <th data-field="DesignStage" data-halign="center" data-align="center">项目阶段</th>
+        <th data-field="Tnumber" data-halign="center" data-align="center">成果编号</th>
+        <th data-field="Name" data-halign="center" data-align="left">成果名称</th>
+        <th data-field="Category" data-halign="center" data-align="center">成果类型</th>
         <!-- <th data-field="Page">成果计量单位</th> -->
-        <th data-field="Count">成果数量</th>
-        <th data-field="Drawn">编制、绘制</th>
-        <th data-field="Designd">设计</th>
-        <th data-field="Checked">校核</th>
-        <th data-field="Examined">审查</th>
-        <th data-field="Date" data-formatter="localDateFormatter">出版</th>
+        <th data-field="Count" data-halign="center" data-align="center">成果数量</th>
+        <th data-field="Drawn" data-halign="center" data-align="center">编制、绘制</th>
+        <th data-field="Designd" data-halign="center" data-align="center">设计</th>
+        <th data-field="Checked" data-halign="center" data-align="center">校核</th>
+        <th data-field="Examined" data-halign="center" data-align="center">审查</th>
+        <th data-field="Date" data-formatter="localDateFormatter" data-halign="center" data-align="center">出版</th>
       </tr>
     </thead>
 </table>
@@ -349,13 +378,13 @@ $(function () {
 <h3>待我处理审查</h3>
 <div id="examined" class="btn-group">
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-plus"></i>
+        <i class="fa fa-plus"></i>
     </button>
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-heart"></i>
+        <i class="fa fa-heart"></i>
     </button>
     <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-trash"></i>
+        <i class="fa fa-trash"></i>
     </button>
 </div>
 <table id="table5"
@@ -366,23 +395,30 @@ $(function () {
        data-show-toggle="true"
        data-show-columns="true"
        data-query-params="queryParams"
-       data-toolbar="#examined">
+       data-toolbar="#examined"
+       data-page-size="15"
+        data-page-list="[10,15, 50, 100, All]"
+        data-unique-id="id"
+       data-pagination="true"
+       data-side-pagination="client"
+       data-show-export="true"
+       >
     <thead>        
     <tr>
         <th data-formatter="index1">#</th>
-        <th data-field="ProjectNumber">项目编号</th>
-        <th data-field="ProjectName">项目名称</th>
-        <th data-field="DesignStage">项目阶段</th>
-        <th data-field="Tnumber">成果编号</th>
-        <th data-field="Name">成果名称</th>
-        <th data-field="Category">成果类型</th>
+        <th data-field="ProjectNumber" data-halign="center" data-align="center">项目编号</th>
+        <th data-field="ProjectName" data-halign="center" data-align="center">项目名称</th>
+        <th data-field="DesignStage" data-halign="center" data-align="center">项目阶段</th>
+        <th data-field="Tnumber" data-halign="center" data-align="center">成果编号</th>
+        <th data-field="Name" data-halign="center" data-align="left">成果名称</th>
+        <th data-field="Category" data-halign="center" data-align="center">成果类型</th>
         <!-- <th data-field="Page">成果计量单位</th> -->
-        <th data-field="Count">成果数量</th>
-        <th data-field="Drawn">编制、绘制</th>
-        <th data-field="Designd">设计</th>
-        <th data-field="Checked">校核</th>
-        <th data-field="Examined">审查</th>
-        <th data-field="Date" data-formatter="localDateFormatter">出版</th>
+        <th data-field="Count" data-halign="center" data-align="center">成果数量</th>
+        <th data-field="Drawn" data-halign="center" data-align="center">编制、绘制</th>
+        <th data-field="Designd" data-halign="center" data-align="center">设计</th>
+        <th data-field="Checked" data-halign="center" data-align="center">校核</th>
+        <th data-field="Examined" data-halign="center" data-align="center">审查</th>
+        <th data-field="Date" data-formatter="localDateFormatter" data-halign="center" data-align="center">出版</th>
       </tr>
     </thead>
 </table>
@@ -411,13 +447,13 @@ $(function () {
       <h3>我参与的项目</h3>
         <div id="participate" class="btn-group">
           <button type="button" class="btn btn-default">
-             <i class="glyphicon glyphicon-plus"></i>
+             <i class="fa fa-plus"></i>
           </button>
           <button type="button" class="btn btn-default">
-             <i class="glyphicon glyphicon-heart"></i>
+             <i class="fa fa-heart"></i>
           </button>
           <button type="button" class="btn btn-default">
-             <i class="glyphicon glyphicon-trash"></i>
+             <i class="fa fa-trash"></i>
           </button>
         </div>
           <table id="table6"
@@ -431,18 +467,23 @@ $(function () {
           data-query-params="queryParams"
           data-filter-control="true"
           data-filter-show-clear="true"
+          data-page-size="15"
+           data-page-list="[10,15, 50, 100, All]"
+           data-unique-id="id"
+          data-pagination="true"
+          data-side-pagination="client"
           data-show-export="true"
           >
         <thead>        
           <tr>
           <th data-formatter="index1">#</th>
-          <th data-field="ProjectNumber" data-filter-control="select">项目编号</th>
-          <th data-field="ProjectName" data-sortable="true" data-filter-control="select">项目名称</th>
-          <th data-field="DesignStage" data-sortable="true" data-filter-control="select">项目阶段</th>
-          <th data-field="Value" data-sortable="true">成果总分</th>
-          <th data-field="Myvalue" data-sortable="true">我的贡献</th>
-          <th data-field="Percent" data-sortable="true">百分比</th>
-          <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents">详细</th>
+          <th data-field="ProjectNumber" data-filter-control="select" data-halign="center" data-align="center">项目编号</th>
+          <th data-field="ProjectName" data-sortable="true" data-filter-control="select" data-halign="center" data-align="center">项目名称</th>
+          <th data-field="DesignStage" data-sortable="true" data-filter-control="select" data-halign="center" data-align="center">项目阶段</th>
+          <th data-field="Value" data-sortable="true" data-halign="center" data-align="center">成果总分</th>
+          <th data-field="Myvalue" data-sortable="true" data-halign="center" data-align="center">我的贡献</th>
+          <th data-field="Percent" data-sortable="true" data-halign="center" data-align="center">百分比</th>
+          <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents" data-halign="center" data-align="center">详细</th>
           </tr>
         </thead>
       </table>
@@ -459,13 +500,13 @@ $(function () {
                     <div class="modal-body">
                     <div id="projachievement" class="btn-group">
                       <button type="button" class="btn btn-default">
-                         <i class="glyphicon glyphicon-plus"></i>
+                         <i class="fa fa-plus"></i>
                       </button>
                       <button type="button" class="btn btn-default">
-                         <i class="glyphicon glyphicon-heart"></i>
+                         <i class="fa fa-heart"></i>
                       </button>
                       <button type="button" class="btn btn-default">
-                         <i class="glyphicon glyphicon-trash"></i>
+                         <i class="fa fa-trash"></i>
                       </button>
                     </div>
                         <table id="table7"
@@ -478,18 +519,24 @@ $(function () {
                               data-filter-control="true"
                               data-filter-show-clear="true"
                               data-show-export="true"
+                              data-page-size="15"
+                               data-page-list="[10,15, 50, 100, All]"
+                               data-unique-id="id"
+                              data-pagination="true"
+                              data-side-pagination="client"
+                              data-show-export="true"
                               >
                             <thead>
                             <tr>
                                 <th data-formatter="index1">#</th>
-                                <th data-field="Tnumber" data-sortable="true">成果编号</th>
-                                <th data-field="Name">成果名称</th>
-                                <th data-field="Category" data-filter-control="select">成果类型</th>
-                                <th data-field="Count">成果数量</th>
-                                <th data-field="Drawn" data-filter-control="select">编制、绘制</th>
-                                <th data-field="Designd" data-filter-control="select">设计</th>
-                                <th data-field="Checked" data-filter-control="select">校核</th>
-                                <th data-field="Examined" data-filter-control="select">审查</th>
+                                <th data-field="Tnumber" data-sortable="true" data-halign="center" data-align="center">成果编号</th>
+                                <th data-field="Name" data-halign="center" data-align="left">成果名称</th>
+                                <th data-field="Category" data-filter-control="select" data-halign="center" data-align="left">成果类型</th>
+                                <th data-field="Count" data-halign="center" data-align="center">成果数量</th>
+                                <th data-field="Drawn" data-filter-control="select" data-halign="center" data-align="center">编制、绘制</th>
+                                <th data-field="Designd" data-filter-control="select" data-halign="center" data-align="center">设计</th>
+                                <th data-field="Checked" data-filter-control="select" data-halign="center" data-align="center">校核</th>
+                                <th data-field="Examined" data-filter-control="select" data-halign="center" data-align="center">审查</th>
                             </tr>
                             </thead>
                         </table>
@@ -572,13 +619,13 @@ function insertNewRow(){
 function actionFormatter(value, row, index) {
     return [
         '<a class="like" href="javascript:void(0)" title="成果列表">',
-        '<i class="glyphicon glyphicon-list-alt"></i>',
+        '<i class="fa fa-list-alt"></i>',
         '</a>&nbsp;',
         '<a class="edit ml10" href="javascript:void(0)" title="贡献组成">',
-        '<i class="glyphicon glyphicon-user"></i>',
+        '<i class="fa fa-user"></i>',
         '</a>&nbsp;',
         '<a class="remove ml10" href="javascript:void(0)" title="成果类型组成">',
-        '<i class="glyphicon glyphicon-adjust"></i>',//fa-pie-chart
+        '<i class="fa fa-adjust"></i>',//fa-pie-chart
         '</a>'
     ].join('');
 }

@@ -45,7 +45,7 @@ func (c *WikiController) Get() { //这个给爬虫用。而为了配合pagenate�
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 
-	c.TplName = "wiki.tpl"
+	c.TplName = "cms/wiki.tpl"
 	// c.Data["IsLogin"] = checkAccount(c.Ctx)
 
 	wikis, err := models.GetAllWikis(false) //这里传入空字符串
@@ -124,7 +124,7 @@ func (c *WikiController) Viewbyuname() {
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 
-	c.TplName = "wiki_uname.tpl"
+	c.TplName = "cms/wiki_uname.tpl"
 
 	// rolename, _ = strconv.Atoi(role)
 	// c.Data["Uname"] = uname
@@ -176,7 +176,7 @@ func (c *WikiController) Add() { //参考下面的 modify,这个add是wiki/add
 	}
 	// c.Data["IsLogin"] = checkAccount(c.Ctx)
 	// c.Data["IsWiki"] = true
-	c.TplName = "wiki_add.tpl"
+	c.TplName = "cms/wiki_add.tpl"
 }
 
 //这个提交添加wiki的方法
@@ -282,7 +282,7 @@ func (c *WikiController) Wiki_many_addbaidu() { //一对多模式
 		// 	beego.Error(err)
 		// }
 	}
-	c.TplName = "wiki_add.tpl" //不加这句上传出错，虽然可以成功上传
+	c.TplName = "cms/wiki_add.tpl" //不加这句上传出错，虽然可以成功上传
 	// c.Redirect("/wiki", 302)
 }
 
@@ -317,7 +317,7 @@ func (c *WikiController) View() {
 	// uname, _ := checkprodRole(c.Ctx)
 	// rolename, _ = strconv.Atoi(role)
 	// c.Data["Uname"] = uname
-	c.TplName = "wiki_view.tpl"
+	c.TplName = "cms/wiki_view.tpl"
 	wiki, err := models.GetWiki(c.Ctx.Input.Param("0"))
 	if err != nil {
 		beego.Error(err)
@@ -399,7 +399,7 @@ func (c *WikiController) Modify() { //这个也要登陆验证
 	}
 
 	c.Data["IsLogin"] = checkAccount(c.Ctx)
-	c.TplName = "wiki_modify.html"
+	c.TplName = "cms/wiki_modify.html"
 
 	c.Data["Wiki"] = wiki
 	c.Data["Tid"] = tid

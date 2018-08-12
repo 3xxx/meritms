@@ -94,8 +94,6 @@ func (c *LoginController) Loginerr() {
 
 //输入用户名和密码后登陆提交
 func (c *LoginController) Post() {
-	// uname := c.Input().Get("uname")
-	// url := c.Input().Get("returnUrl")
 	url1 := c.Input().Get("url") //这里不支持这样的url，http://192.168.9.13/login?url=/topic/add?id=955&mid=3
 	url2 := c.Input().Get("level")
 	url3 := c.Input().Get("key")
@@ -106,34 +104,8 @@ func (c *LoginController) Post() {
 		url = url1 + "&level=" + url2 + "&key=" + url3
 	} else {
 		url = c.Input().Get("referrer")
+		// beego.Info(url)
 	}
-	// beego.Info(url)
-	//（4）获取当前的请求会话，并返回当前请求会话的对象
-	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	//（5）根据当前请求对象，设置一个session
-	// sess.Set("mySession", "qq504284")
-	// c.Data["Website"] = "广东省水利电力勘测设计研究院■☆●施工预算分院"
-	//（6）从session中读取值
-	// c.Data["Email"] = sess.Get("mySession")
-
-	// beego.Info(url)
-	// pwd := c.Input().Get("pwd")
-	// autoLogin := c.Input().Get("autoLogin") == "on"
-
-	// if beego.AppConfig.String("uname") == uname &&
-	// 	beego.AppConfig.String("pwd") == pwd {
-	// 	maxAge := 0
-	// 	if autoLogin {
-	// 		maxAge = 1<<31 - 1
-	// 	}
-	// 	c.Ctx.SetCookie("uname", uname, maxAge, "/")
-	// 	c.Ctx.SetCookie("pwd", pwd, maxAge, "/")
-	// 	c.Redirect("/", 301)
-	// } else {
-	// 	c.Redirect("/login", 302)
-	// }
-	// return
 	var user models.User
 	user.Username = c.Input().Get("uname")
 	Pwd1 := c.Input().Get("pwd")
@@ -176,17 +148,11 @@ func (c *LoginController) Post() {
 			}
 		}
 		if url != "" {
-			// c.Redirect(url, 301)
-			c.Redirect("/onlyoffice", 301)
-			// beego.Info(url)
+			c.Redirect(url, 301)
 		} else {
 			c.Redirect("/", 301)
 		}
 	} else {
-		// port := strconv.Itoa(c.Ctx.Input.Port())
-		// route := c.Ctx.Input.Site() + ":" + port + c.Ctx.Input.URL()
-		// c.Data["Url"] = route
-		// c.Redirect("/login?url="+route, 302)
 		c.Redirect("/loginerr?url="+url, 302)
 	}
 	return
@@ -216,6 +182,7 @@ func (c *LoginController) Post() {
 	// }
 }
 
+//判断用户是否登录
 func checkAccount(ctx *context.Context) bool {
 	var user models.User
 	//（4）获取当前的请求会话，并返回当前请求会话的对象
@@ -241,19 +208,15 @@ func checkAccount(ctx *context.Context) bool {
 		}
 	}
 	// this.TplName = "index.tpl"
-
 	// ck, err := ctx.Request.Cookie("uname")
 	// if err != nil {
 	// 	return false
 	// }
-
 	//ck.Value
-
 	// ck, err = ctx.Request.Cookie("pwd")
 	// if err != nil {
 	// 	return false
 	// }
-
 	// return beego.AppConfig.String("uname") == uname &&
 	// 	beego.AppConfig.String("pwd") == pwd
 }
@@ -335,6 +298,7 @@ func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin
 			uid = user.Id
 			userrole = user.Role
 			uname = user.Username
+			islogin = true
 		}
 	}
 	// beego.Info(iprole)

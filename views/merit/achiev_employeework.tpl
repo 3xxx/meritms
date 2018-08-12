@@ -205,6 +205,11 @@
       data-clickToSelect="true"
       data-show-export="true"
       data-filter-control="true"
+      data-page-size="15"
+      data-page-list="[10,15, 50, 100, All]"
+      data-unique-id="id"
+      data-pagination="true"
+      data-side-pagination="client"
       >
     </table>
     <!-- 添加成果 -->
@@ -377,12 +382,12 @@
     </script>
     <h3>别人发起，我设计</h3>
     <div id="designd" class="btn-group">
-        <button type="button" class="btn btn-default"> <i class="glyphicon    glyphicon-plus"></i>
+        <button type="button" class="btn btn-default"> <i class="fa fa-plus"></i>
         </button>
-        <button type="button" class="btn btn-default"> <i class="glyphicon        glyphicon-heart"></i>
+        <button type="button" class="btn btn-default"> <i class="fa fa-heart"></i>
         </button>
         <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-trash"></i>
+        <i class="fa fa-trash"></i>
         </button>
     </div>
     <table id="table1" 
@@ -396,17 +401,22 @@
       data-clickToSelect="true"
       data-show-export="true"
       data-filter-control="true"
+      data-page-size="15"
+      data-page-list="[10,15, 50, 100, All]"
+      data-unique-id="id"
+      data-pagination="true"
+      data-side-pagination="client"
        >
     </table>
 
     <h3>别人发起，我校核</h3>
     <div id="checked" class="btn-group">
-        <button type="button" class="btn btn-default"> <i class="glyphicon glyphicon-plus"></i>
+        <button type="button" class="btn btn-default"> <i class="fa fa-plus"></i>
         </button>
-        <button type="button" class="btn btn-default"> <i class="glyphicon glyphicon-heart"></i>
+        <button type="button" class="btn btn-default"> <i class="fa fa-heart"></i>
         </button>
         <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-trash"></i>
+        <i class="fa fa-trash"></i>
         </button>
     </div>
     <table id="table2" 
@@ -420,16 +430,21 @@
       data-clickToSelect="true"
       data-show-export="true"
       data-filter-control="true"
+      data-page-size="15"
+      data-page-list="[10,15, 50, 100, All]"
+      data-unique-id="id"
+      data-pagination="true"
+      data-side-pagination="client"      
        >
     </table>
     <h3>别人发起，我审查</h3>
     <div id="examined" class="btn-group">
-        <button type="button" class="btn btn-default"> <i class="glyphicon glyphicon-plus"></i>
+        <button type="button" class="btn btn-default"> <i class="fa fa-plus"></i>
         </button>
-        <button type="button" class="btn btn-default"> <i class="glyphicon glyphicon-heart"></i>
+        <button type="button" class="btn btn-default"> <i class="fa fa-heart"></i>
         </button>
         <button type="button" class="btn btn-default">
-        <i class="glyphicon glyphicon-trash"></i>
+        <i class="fa fa-trash"></i>
         </button>
     </div>
     <table id="table3" 
@@ -443,6 +458,11 @@
       data-clickToSelect="true"
       data-show-export="true"
       data-filter-control="true"
+      data-page-size="15"
+      data-page-list="[10,15, 50, 100, All]"
+      data-unique-id="id"
+      data-pagination="true"
+      data-side-pagination="client"      
        >
     </table>
     <br/>
@@ -475,7 +495,13 @@
                     data-pagination="true"
                     data-side-pagination="client"
                     data-show-refresh="true"
-                    data-click-to-select="true">
+                    data-click-to-select="true"
+                    data-page-size="15"
+                    data-page-list="[10,15, 50, 100, All]"
+                    data-unique-id="id"
+                    data-pagination="true"
+                    data-side-pagination="client"
+                    >
               </table>
             </div>
           </div>
@@ -512,7 +538,13 @@
                     data-pagination="true"
                     data-side-pagination="client"
                     data-show-refresh="true"
-                    data-click-to-select="true">
+                    data-click-to-select="true"
+                    data-page-size="15"
+                    data-page-list="[10,15, 50, 100, All]"
+                    data-unique-id="id"
+                    data-pagination="true"
+                    data-side-pagination="client"
+                    >
               </table>
             </div>
           </div>
@@ -568,13 +600,13 @@
   function actionFormatter(value, row, index) {
     return [
         '<a class="send" href="javascript:void(0)" title="提交">',
-        '<i class="glyphicon glyphicon-step-forward"></i>',
+        '<i class="fa fa-step-forward"></i>',
         '</a>&nbsp;',
         '<a class="downsend" href="javascript:void(0)" title="退回">',
-        '<i class="glyphicon glyphicon-step-backward"></i>',
+        '<i class="fa fa-step-backward"></i>',
         '</a>&nbsp;',
         '<a class="remove" href="javascript:void(0)" title="删除">',
-        '<i id="delete" class="glyphicon glyphicon-remove"></i>',
+        '<i id="delete" class="fa fa-remove"></i>',
         '</a>'
     ].join('');
   }
@@ -585,7 +617,7 @@
       return attachUrl;
   }
 
-  // '<a class="edit ml10" href="javascript:void(0)" title="退回">','<i class="glyphicon glyphicon-edit"></i>','</a>'
+  // '<a class="edit ml10" href="javascript:void(0)" title="退回">','<i class="fa fa-edit"></i>','</a>'
   window.actionEvents = {
     'click .attachment': function (e, value, row, index) {
         rowcatalogid=row.id;
@@ -823,10 +855,10 @@
   function actionFormatter1(value, row, index) {
     return [
         '<a class="send" href="javascript:void(0)" title="提交">',
-        '<i class="glyphicon glyphicon-step-forward"></i>',
+        '<i class="fa fa-step-forward"></i>',
         '</a>',
         '<a class="downsend" href="javascript:void(0)" title="退回">',
-        '<i class="glyphicon glyphicon-step-backward"></i>',
+        '<i class="fa fa-step-backward"></i>',
         '</a>',
     ].join('');
   }
@@ -1109,14 +1141,19 @@
           },
           {
             // field: 'Number',
-            title: '序号',
+            title: '#',
+            align:"center",
+            valign:"middle",
             formatter:function(value,row,index){
               return index+1
             }
-          },{
+          },
+          {
             field: 'ProjectNumber',
             visible: false,
             title: '项目编号',
+            align:"center",
+            valign:"middle",
             sortable:true,
             editable: {
                 params:function(params) {
@@ -1149,9 +1186,12 @@
                   }
                 }
             }
-          },{
+          },
+          {
             field: 'ProjectName',
             title: '项目名称',
+            align:"center",
+            valign:"middle",
             visible: false,
             editable: {
                 params:function(params) {
@@ -1184,9 +1224,12 @@
                   }
                 }
             }
-          },{
+          },
+          {
             field: 'DesignStage',
             title: '阶段',
+            align:"center",
+            valign:"middle",
             visible: false,
             editable: {
                 params:function(params) {
@@ -1223,6 +1266,8 @@
           },{
             field: 'Tnumber',
             title: '成果编号',
+            align:"center",
+            valign:"middle",
             visible: false,
             sortable:true,
             editable: {
@@ -1259,6 +1304,8 @@
           },{
             field: 'Name',
             title: '成果名称',
+            align:"left",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1293,6 +1340,8 @@
           },{
             field: 'Category',
             title: '成果类型',
+            align:"center",
+            valign:"middle",
             sortable:true,
             editable: {
               params:function(params) {
@@ -1329,6 +1378,8 @@
           },{
             field: 'Count',
             title: '数量',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1363,6 +1414,8 @@
           },{
             field: 'Drawn',
             title: '制图/编制',
+            align:"center",
+            valign:"middle",
             visible: false,
             editable: {
               params:function(params) {
@@ -1414,6 +1467,8 @@
           },{
             field: 'Designd',
             title: '设计',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1454,6 +1509,8 @@
           },{
             field: 'Checked',
             title: '校核',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1494,6 +1551,8 @@
           },{
             field: 'Examined',
             title: '审查',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1534,6 +1593,8 @@
           },{
             field: 'Drawnratio',
             title: '制图比例',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1568,6 +1629,8 @@
           },{
             field: 'Designdratio',
             title: '设计比例',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1602,16 +1665,22 @@
           },{
             field:'Link',
             title: '附件',
+            align:"center",
+            valign:"middle",
             formatter:'setAttachment',
             events:'actionEvents',
           },{
             field:'Content',
             title: '意见',
+            align:"center",
+            valign:"middle",
             formatter:'setContent',
             events:'actionEvents',
           },{
             field: 'Datestring',
             title: '出版(日/月/年)',
+            align:"center",
+            valign:"middle",
             // formatter:localDateFormatter,
             editable: {
               params:function(params) {
@@ -1653,6 +1722,8 @@
           },{
               field:'action',
               title: '操作',
+              align:"center",
+              valign:"middle",
               formatter:'actionFormatter',
               events:'actionEvents',
           }
@@ -1672,48 +1743,70 @@
             width:10
           },{
             // field: 'Number',
-            title: '序号',
+            title: '#',
+            align:"center",
+            valign:"middle",
             formatter:function(value,row,index){
             return index+1
           }
           },{
             field: 'ProjectNumber',
             title: '项目编号',
+            align:"center",
+            valign:"middle",
             visible: false,
             sortable:true,
           },{
             field: 'ProjectName',
             visible: false,
             title: '项目名称',
+            align:"center",
+            valign:"middle",
           },{
             field: 'DesignStage',
             visible: false,
             title: '阶段',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Tnumber',
             title: '成果编号',
+            align:"center",
+            valign:"middle",
             visible: false,
             sortable:true,
           },{
             field: 'Name',
             title: '成果名称',
+            align:"left",
+            valign:"middle",
           },{
             field: 'Category',
             title: '成果类型',
+            align:"center",
+            valign:"middle",
             sortable:true,
           },{
             field: 'Count',
             title: '数量',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Drawn',
             title: '制图/编制',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Designd',
             visible: false,
             title: '设计',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Checked',
             title: '校核',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1754,6 +1847,8 @@
           },{
             field: 'Examined',
             title: '审查',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1794,6 +1889,8 @@
           },{
             field: 'Drawnratio',
             title: '制图比例',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1828,6 +1925,8 @@
           },{
             field: 'Designdratio',
             title: '设计比例',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1862,6 +1961,8 @@
           },{
             field: 'Complex',
             title: '难度系数',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -1896,16 +1997,22 @@
           },{
             field:'Link',
             title: '附件',
+            align:"center",
+            valign:"middle",
             formatter:'setAttachment',
             events:'actionEvents',
           },{
             field:'Content',
             title: '意见',
+            align:"center",
+            valign:"middle",
             formatter:'setContent',
             events:'actionEvents',
           },{
             field: 'Datestring',
             title: '出版',
+            align:"center",
+            valign:"middle",
             // formatter:localDateFormatter,
             editable: {
               params:function(params) {
@@ -1947,6 +2054,8 @@
         },{
             field:'action',
             title: '操作',
+            align:"center",
+            valign:"middle",
             formatter:'actionFormatter1',
             events:'actionEvents1',
         }
@@ -1967,7 +2076,9 @@
             width:10
           },{
             // field: 'Number',
-            title: '序号',
+            title: '#',
+            align:"center",
+            valign:"middle",
             formatter:function(value,row,index){
             return index+1
           }
@@ -1975,44 +2086,66 @@
             field: 'ProjectNumber',
             visible: false,
             title: '项目编号',
+            align:"center",
+            valign:"middle",
             sortable:true,
           },{
             field: 'ProjectName',
             title: '项目名称',
+            align:"center",
+            valign:"middle",
             visible: false,
           },{
             field: 'DesignStage',
             visible: false,
             title: '阶段',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Tnumber',
             title: '成果编号',
+            align:"center",
+            valign:"middle",
             visible: false,
             sortable:'true',
           },{
             field: 'Name',
             title: '成果名称',
+            align:"left",
+            valign:"middle",
           },{
             field: 'Category',
             title: '成果类型',
+            align:"center",
+            valign:"middle",
             sortable:'true',
           },{
             field: 'Count',
             title: '数量',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Catalog.Drawn',
             visible: false,
             title: '制图/编制',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Designd',
             title: '设计',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Checked',
             visible: false,
             title: '校核',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Examined',
             title: '审查',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -2053,6 +2186,8 @@
           },{
             field: 'Designdratio',
             title: '设计比例',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -2087,6 +2222,8 @@
           },{
             field: 'Checkedratio',
             title: '校核比例',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -2121,6 +2258,8 @@
           },{
             field: 'Complex',
             title: '难度系数',
+            align:"center",
+            valign:"middle",
             editable: {
               params:function(params) {
                   //originally params contain pk, name and value
@@ -2155,16 +2294,22 @@
           },{
             field:'Link',
             title: '附件',
+            align:"center",
+            valign:"middle",
             formatter:'setAttachment',
             events:'actionEvents',
           },{
             field:'Content',
             title: '意见',
+            align:"center",
+            valign:"middle",
             formatter:'setContent',
             events:'actionEvents',
           },{
             field: 'Datestring',
             title: '出版',
+            align:"center",
+            valign:"middle",
             // formatter:localDateFormatter,
             editable: {
                 params:function(params) {
@@ -2206,6 +2351,8 @@
         },{
             field:'action',
             title: '操作',
+            align:"center",
+            valign:"middle",
             formatter:'actionFormatter1',
             events:'actionEvents2',
         }
@@ -2226,7 +2373,9 @@
             width:10
           },{
             // field: 'Number',
-            title: '序号',
+            title: '#',
+            align:"center",
+            valign:"middle",
             formatter:function(value,row,index){
             return index+1
           }
@@ -2234,23 +2383,33 @@
             field: 'ProjectNumber',
             visible: false,
             title: '项目编号',
+            align:"center",
+            valign:"middle",
             sortable:true,
           },{
             field: 'ProjectName',
             visible: false,
             title: '项目名称',
+            align:"center",
+            valign:"middle",
           },{
             field: 'DesignStage',
             visible: false,
             title: '阶段',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Tnumber',
             visible: false,
             title: '成果编号',
+            align:"center",
+            valign:"middle",
             sortable:true,
           },{
             field: 'Name',
             title: '成果名称',
+            align:"left",
+            valign:"middle",
           },{
             field: 'Category',
             title: '成果类型',
@@ -2258,24 +2417,36 @@
           },{
             field: 'Count',
             title: '数量',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Drawn',
             visible: false,
             title: '制图/编制',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Designd',
             visible: false,
             title: '设计',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Checked',
             title: '校核',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Examined',
             visible: false,
             title: '审查',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Checkedratio',
             title: '校核比例',
+            align:"center",
+            valign:"middle",
             editable: {
                 params:function(params) {
                   //originally params contain pk, name and value
@@ -2310,6 +2481,8 @@
           },{
             field: 'Examinedratio',
             title: '审查比例',
+            align:"center",
+            valign:"middle",
             editable: {
                 params:function(params) {
                   //originally params contain pk, name and value
@@ -2344,6 +2517,8 @@
           },{
             field: 'Complex',
             title: '难度系数',
+            align:"center",
+            valign:"middle",
             editable: {
                 params:function(params) {
                   //originally params contain pk, name and value
@@ -2378,16 +2553,22 @@
           },{
             field:'Link',
             title: '附件',
+            align:"center",
+            valign:"middle",
             formatter:'setAttachment',
             events:'actionEvents',
           },{
             field:'Content',
             title: '意见',
+            align:"center",
+            valign:"middle",
             formatter:'setContent',
             events:'actionEvents',
           },{
             field: 'Datestring',
             title: '出版',
+            align:"center",
+            valign:"middle",
             // formatter:localDateFormatter,
             editable: {
               params:function(params) {
@@ -2429,6 +2610,8 @@
         },{
             field:'action',
             title: '操作',
+            align:"center",
+            valign:"middle",
             formatter:'actionFormatter1',
             events:'actionEvents3',
         }
@@ -2442,13 +2625,17 @@
         idField: 'Id',
         columns: [
           {
-            title: '序号',
+            title: '#',
+            align:"center",
+            valign:"middle",
             formatter:function(value,row,index){
               return index+1
             }
           },{
             field:'action',
             title: '操作',
+            align:"center",
+            valign:"middle",
             formatter:function(value,row,index){
               return '<a class="deletelink" href="javascript:void(0)" title="删除"> <i id="delete" class="fa fa-trash"></i> </a>';
             },
@@ -2456,6 +2643,8 @@
           },{
             field: 'Url',
             title: '下载',
+            align:"center",
+            valign:"middle",
             formatter:setAttachlink,
           },{
             field: 'Url',
@@ -2491,13 +2680,17 @@
         columns: [
           {
             // field: 'Number',
-            title: '序号',
+            title: '#',
+            align:"center",
+            valign:"middle",
             formatter:function(value,row,index){
               return index+1
             }
           },{
             field: 'Title',
             title: '名称',
+            align:"center",
+            valign:"middle",
           },{
             field: 'Content',
             title: '意见',
@@ -2520,12 +2713,16 @@
           },{
             field: 'Created',
             title: '建立时间',
+            align:"center",
+            valign:"middle",
             // format: 'yyyy-mm-dd',    
             // viewformat: 'dd/mm/yyyy',
             formatter:localDateFormatter,
         },{
             field: 'Updated',
             title: '修改时间',
+            align:"center",
+            valign:"middle",
             // format: 'yyyy-mm-dd',    
             // viewformat: 'dd/mm/yyyy',
             formatter:localDateFormatter,
@@ -2625,7 +2822,7 @@
   });
   // var date={{.Starttime}};
   // function list(value, row, index) {
-  // return '<i class="glyphicon ' + icon + '"></i> ' + value;
+  // return '<i class="fa ' + icon + '"></i> ' + value;
   // return "<select data-index='row'><option>成果类型：</option></select>";
   // }
   function localDateFormatter(value) {

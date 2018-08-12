@@ -686,7 +686,7 @@ func (c *MainController) Pdf() {
 		PdfLink := Url + "/" + Attachments[pNum-1].FileName
 		// beego.Info(PdfLink)
 		c.Data["PdfLink"] = PdfLink
-		c.TplName = "web/viewer.html"
+		c.TplName = "cms/web/viewer.html"
 	}
 	// logs := logs.NewLogger(1000)
 	// logs.SetLogger("file", `{"filename":"log/test.log"}`)

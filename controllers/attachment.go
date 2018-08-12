@@ -723,7 +723,7 @@ func (c *AttachController) AddAttachment2() {
 		catalog.Updated = time.Now() //.Add(+time.Duration(hours) * time.Hour)
 
 		catalog.Complex = 1
-		catalog.State = 0
+		catalog.State = 1
 		//cid, err, news = models.AddPostMerit(catalog)
 		cid, err, news = models.SaveCatalog(catalog)
 		if err != nil {
@@ -989,7 +989,7 @@ func (c *AttachController) Attachment() {
 		}
 		// beego.Info(dwglink)
 		c.Data["DwgLink"] = dwglink
-		c.TplName = "dwg.tpl"
+		c.TplName = "cms/dwg.tpl"
 		// } else {
 		// 	route := c.Ctx.Request.URL.String()
 		// 	c.Data["Url"] = route

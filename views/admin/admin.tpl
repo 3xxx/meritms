@@ -185,7 +185,18 @@
             { icon: "fa fa-users",
               text: '*用户-角色',
               id: '023'
-            }
+            },
+            { 
+              icon: "fa fa-cny",
+              text: "*角色-成果价值",
+              id: '024',
+              state: {
+                  // checked: true,
+                  // disabled: true,
+                  // expanded: true,
+                  // selected: true
+                }
+            },
           ]
         },
         {

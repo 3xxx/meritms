@@ -23,7 +23,7 @@ func (c *SearchController) Get() { //search用的是get方法
 	}
 	c.Data["Pid"] = pid
 	c.Data["Key"] = key
-	c.TplName = "searchs.tpl"
+	c.TplName = "cms/searchs.tpl"
 }
 
 //搜索项目
@@ -263,7 +263,7 @@ func (c *SearchController) SearchWiki() { //search用的是get方法
 		c.Data["IsWiki"] = true
 		// c.Data["IsSearch"] = true
 		c.Data["IsLogin"] = checkAccount(c.Ctx)
-		c.TplName = "searchwiki.tpl"
+		c.TplName = "cms/searchwiki.tpl"
 		Searchs, err := models.SearchWikis(tid, false)
 		if err != nil {
 			beego.Error(err.Error)
@@ -274,6 +274,6 @@ func (c *SearchController) SearchWiki() { //search用的是get方法
 		c.Data["IsWiki"] = true
 		// c.Data["IsSearch"] = true
 		c.Data["IsLogin"] = checkAccount(c.Ctx)
-		c.TplName = "searchwiki.tpl"
+		c.TplName = "cms/searchwiki.tpl"
 	}
 }

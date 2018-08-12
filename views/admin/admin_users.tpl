@@ -677,7 +677,7 @@ $(document).ready(function() {
         <button type="button" data-name="deleteButton" id="deleteButtonrole" class="btn btn btn-danger btn-sm">
         <i class="fa fa-trash">删除</i>
         </button>
-        <button type="button" id="editorButton" class="btn btn btn-primary btn-sm"> <i class="fa fa-edit">保存修改</i>
+        <button type="button" id="editorButton" class="btn btn btn-primary btn-sm"> <i class="fa fa-save">保存修改</i>
         </button>
         <!-- <button type="button" data-name="editorButton" id="editorButton" class="btn btn btn-primary btn-sm"> <i class="fa fa-edit">编辑</i>
         </button>
