@@ -249,6 +249,7 @@ func (c *AdminController) Admin() {
 //根据数字id或空查询分类，如果有pid，则查询下级，如果pid为空，则查询类别
 func (c *AdminController) Department() {
 	id := c.Ctx.Input.Param(":id")
+	beego.Info(id)
 	c.Data["Id"] = id
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	// var categories []*models.AdminDepartment

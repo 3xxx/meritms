@@ -40,11 +40,11 @@
      $("#table0").on("click-row.bs.table",function(e,row,ele){
          $(".info").removeClass("info");
          $(ele).addClass("info");
-         rowid=row.Id;//全局变量
+         rowid=row.id;//全局变量
          rowtitle=row.Title
          $("#rowtitle").html("部门-"+rowtitle);
          $("#details").show();
-         $('#table1').bootstrapTable('refresh', {url:'/admin/department/'+row.Id});
+         $('#table1').bootstrapTable('refresh', {url:'/admin/department/'+row.id});
      });
      // $("#get").click(function(){
      //     alert("商品名称：" + getContent().TuanGouName);

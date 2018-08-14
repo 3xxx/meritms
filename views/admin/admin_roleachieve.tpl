@@ -127,10 +127,10 @@
         var treeids="";
         for(var i=0;i<arr.length;i++){
           if(i==0){
-            treeids=arr[i].Id;
+            treeids=arr[i].id;
             treenodeids=arr[i].nodeId;
           }else{
-            treeids=treeids+","+arr[i].Id;
+            treeids=treeids+","+arr[i].id;
             treenodeids=treenodeids+","+arr[i].nodeId;
           }  
         };
@@ -156,7 +156,8 @@
             type: 'GET',    
             dataType : "json",//返回数据类型  
             // async:false, //同步会出现警告：Synchronous XMLHttpRequest on the main thread is deprecated because of its detrimental effects to the end user's experience 
-            url: "/admin/role/getroleachieve",//请求的action路径  
+            url: "/admin/role/getroleachieve",//请求的action路径 
+
             data: {roleid:row.Id},
              //同步请求将锁住浏览器，用户其它操作必须等待请求完成才可以执行  
             error: function () {//请求失败处理函数    
@@ -164,20 +165,20 @@
             },  
             success:function(data){ //请求成功后处理函数。取到Json对象data
               // var findCheckableNodess = function() {
-              //   return $('#tree').treeview('search', [ data, { ignoreCase: false, exactMatch: true } ]);//忽略大小写——这个只支持名称
+              // return $('#tree').treeview('search', [ data, { ignoreCase: false, exactMatch: true } ]);//忽略大小写——这个只支持名称
               // };
               $('#treeview').treeview('uncheckAll', { silent: true });
               if (data!=null){
                 for(var i=0;i<data.length;i++){
                   // alert(data[i]);
                   var findCheckableNodess = function() {
-                    return $('#treeview').treeview('findNodes', [data[i], 'Id']);
+                    return $('#treeview').treeview('findNodes', [data[i], 'id']);
                   }; 
                   var checkableNodes = findCheckableNodess();
                   // $('#tree').treeview('checkNode', [ checkableNodes, { silent: true } ]);
-                  $('#treeview').treeview('toggleNodeChecked', [ checkableNodes, { silent: true 
-                  } ]);
-                }
+                  $('#treeview').treeview('toggleNodeChecked', [checkableNodes, { silent: true}]);
+                  // alert(checkableNodes[0].id);
+                } 
               }
             }
           });

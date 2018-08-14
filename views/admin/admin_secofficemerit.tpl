@@ -123,14 +123,15 @@
             // alert("部门级别："+data.Level);
           $("#rowtitle").html(data.text+"-价值列表");
           $("#details").show();
-          dataid=data.Id;//全局变量
+          dataid=data.id;//全局变量
+          // alert(dataid);
          //得到选择的节点
         var arr = new Array();
         arr=$('#treeview').treeview('getChecked');
         // arr=$('#tree').treeview('getSelected',0);
         // alert(arr[0].nodeId);//节点顺序号0.0.0.1这样的
         // alert(arr[0].id);
-         $('#table').bootstrapTable('refresh', {url:'/admin/merit/secoffice/'+data.Id});
+         $('#table').bootstrapTable('refresh', {url:'/admin/merit/secoffice/'+dataid});
           // document.getElementById("iframepage").src="/achievement/secofficeshow?secid="+data.Id+"&level="+data.Level;
         });   
     });

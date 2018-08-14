@@ -775,7 +775,7 @@ func (c *RoleController) GetRoleAchieve() {
 		secid := strings.Replace(v1[2], "secoffice_", "", -1)
 		secids = append(secids, secid)
 	}
-	// beego.Info(secids)
+	beego.Info(secids)
 	c.Data["json"] = secids
 	c.ServeJSON()
 }
