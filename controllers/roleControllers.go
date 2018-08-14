@@ -399,7 +399,7 @@ func (c *RoleController) UserRole() {
 	//要支持批量分配角色，循环用户id
 	uid := c.GetString("uid") //secofficeid
 	//先删除用户的权限
-	// e.DeleteRolesForUser(uid) //数据库没有删掉！
+	e.DeleteRolesForUser(uid) //数据库没有删掉！
 	//删除数据库中角色中的用户
 	// o := orm.NewOrm()
 	// qs := o.QueryTable("casbin_rule")
@@ -651,7 +651,7 @@ func (c *RoleController) RoleAchieve() {
 				// }
 				// success = e.AddPolicy("role_"+v1, "secoffice_"+treearray[nodeidint]) //来自casbin\management_api.go
 				//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
-				success = e.AddPermissionForUser("role_"+v1, "secoffice", "secoffice_"+treearray[nodeidint])
+				success = e.AddPermissionForUser("role_"+v1, "secoffice", "secoffice_"+treearray[nodeidint], "sec")
 			}
 		}
 	} else {
@@ -775,7 +775,7 @@ func (c *RoleController) GetRoleAchieve() {
 		secid := strings.Replace(v1[2], "secoffice_", "", -1)
 		secids = append(secids, secid)
 	}
-	beego.Info(secids)
+	// beego.Info(secids)
 	c.Data["json"] = secids
 	c.ServeJSON()
 }

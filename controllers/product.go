@@ -139,7 +139,6 @@ func (c *ProdController) GetProjProd() {
 		// projurls = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10)
 		projurls = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10)
 	}
-
 	if e.Enforce(useridstring, projurls+"/", "POST", ".1") {
 		c.Data["RoleAdd"] = "true"
 	} else {
