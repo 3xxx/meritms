@@ -12,7 +12,7 @@
       </h3>
     <form method="POST" action="/regist">
       <div class="form-group">
-        <label class="control-label" for="LoginForm-UserName">*用户名</label>
+        <label class="control-label" id="regis" for="LoginForm-UserName">*用户名</label>
         <input id="uname" name="uname" type="text" value="" class="form-control" placeholder="Enter account"></div>
       <div class="form-group">
         <label class="control-label" for="LoginForm-UserName">邮箱</label>
@@ -72,18 +72,13 @@ $(document).ready(function(){
           //假设有数字a、b、c。当a大于5与b小于6或者c不等于8与a等于‘3’时，输出1306
           //var a,b,c;
           //alert (a > 5 && b < 6 || c != 8 && a == 3 ? 1306 : '');
-            if ( $("#uname").val().length>0 && data=="false") 
-            {
+            if ( $("#uname").val().length>0 && data=="false"){
                 $("#regis").html("用户名已存在！");
                 $("#regis").css("color","red");
-            }
-            else if ( $("#uname").val().length>0 && data=="true")
-            {
+            }else if ( $("#uname").val().length>0 && data=="true"){
                 $("#regis").html("用户名可用！");
                 $("#regis").css("color","green");
-            }
-            else if ( $("#uname").val().length==0)
-            {
+            }else if ( $("#uname").val().length==0){
                 $("#regis").html("用户名");
                 $("#regis").css("color","black");
             }
@@ -107,8 +102,9 @@ $(document).ready(function(){
               // alert(data);
               // alert("导出成功！")
               // return false; 
-    });
+      }
       // return true;//这里false应该是不刷新页面的意思?
+    });
   });
 });
 
@@ -118,17 +114,22 @@ function checkInput(){
     alert("请输入账号");
     return false;
   }
-    var pwd=document.getElementById("pwd");
+  var pwd=document.getElementById("pwd");
   if (pwd.value.length==0){
     alert("请输入密码");
     return false;
-    }
+  }
+  if ( $("#uname").val().length>0 && $("#regis").html()=="用户名已存在！"){
+    alert("用户名已存在！");
+    return false;
+  }
 // return true
 }
 function backToHome(){
   window.location.href="/";
   return false;
 }
+
 </script>
 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAAjMUlEQVR42u2dD4xlV13Hz7RAt7TQ
 WSJ0miJ9K4XuarQDKJ0tKlONdqsos8a424jplHWzs8SEKQpsTXC3GtwpojuQyE5jhg6a2KlIuhi0

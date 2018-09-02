@@ -61,6 +61,7 @@ func (this *RegistController) Post() {
 	user.Password = hex.EncodeToString(cipherStr)
 	user.Lastlogintime = time.Now()
 	user.Status = 1
+	user.Role = "4"
 	_, err := models.SaveUser(user) //这里修改
 
 	// _, err = models.AddRoleUser(4, uid)

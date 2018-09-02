@@ -350,8 +350,8 @@ func init() {
 	// beego.Router("/ModifyPost", &controllers.MeritTopicController{}, "post:ModifyPost")
 	// beego.Router("/delete", &controllers.MeritTopicController{}, "get:DeleteMeritTopic")
 
-	beego.Router("/login", &controllers.LoginController{})
-	beego.Router("/loginerr", &controllers.LoginController{}, "get:Loginerr")
+	// beego.Router("/login", &controllers.LoginController{})
+	// beego.Router("/loginerr", &controllers.LoginController{}, "get:Loginerr")
 
 	beego.Router("/regist", &controllers.RegistController{})
 	// beego.Router("/registerr", &controllers.RegistController{}, "get:RegistErr")
@@ -422,6 +422,9 @@ func init() {
 	beego.Router("/project/getprojcate", &controllers.ProjController{}, "*:GetProjCate")
 	//添加项目，应该是project/addproj,delproj,updateproj
 	beego.Router("/project/addproject", &controllers.ProjController{}, "*:AddProject")
+	//添加项目，根据项目模板
+	beego.Router("/project/addprojtemplet", &controllers.ProjController{}, "*:AddProjTemplet")
+
 	//修改项目
 	beego.Router("/project/updateproject", &controllers.ProjController{}, "*:UpdateProject")
 	//删除项目
