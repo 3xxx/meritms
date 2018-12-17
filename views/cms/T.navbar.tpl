@@ -27,7 +27,16 @@
       </li>
       <li {{if .IsProject}}class="active"{{end}}>
         <a href="/project/">项目</a>
-      </li>      
+      </li>
+      <!-- **********定制导航条菜单开始******** -->
+        <!-- /project/id——此处id为app.conf里的navigationid1~navigationid9 -->
+      <li {{if .IsNav2}}class="active"{{end}}>
+        <a href="/project/25002">设计单位</a>
+      </li>
+      <li {{if .IsNav3}}class="active"{{end}}>
+        <a href="/project/25003">施工专业</a>
+      </li>
+      <!-- **********定制导航条菜单结束******** -->
       <li {{if .IsOnlyOffice}}class="active"{{end}}>
         <a href="/onlyoffice">OnlyOffice</a>
       </li>
@@ -50,7 +59,6 @@
           <input type="hidden" name="productid" id="productid" value="{{.Category.Id}}">
           <button type="submit" class="btn btn-default" id="search">Submit</button>
       </form>
-
       <!-- <li class="divider">水平分割线</li> -->
       <li {{if .IsAchievement}} class="active" {{end}} >
         <a href="/achievement">成果</a>
@@ -59,15 +67,16 @@
         <a href="/merit">价值</a>
       </li>
       <li class="dropdown">
+      <li {{if or .IsStandard .IsLegislation}}class="dropdown active"{{end}} class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
           规范 <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-          <li>
-            <a href="http://112.74.42.44:8081" target="_blank">查询</a>
+          <li {{if .IsStandard}}class="active"{{end}}>
+            <a href="/standard" target="_blank">查询</a>
           </li>
-          <li>
-            <a href="http://112.74.42.44:8081/legislation" target="_blank">对标</a>
+          <li {{if .IsLegislation}}class="active"{{end}}>
+            <a href="/legislation" target="_blank">对标</a>
           </li>
         </ul>
       </li>
@@ -90,7 +99,6 @@
           </li>
         </ul>
       </li>
-
     </ul>
 
     <!-- <div class="pull-right"> -->
@@ -101,23 +109,23 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="/admin" title="管理">进入后台</a></li>
-                <li><a href="/login" title="重新登录">重新登录</a></li>
-                <!-- <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
-                <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li> -->
-                <!-- <li><a href="/calendar" title="日程安排">日程安排</a></li> -->
-                <li><a href="/login?exit=true">退出</a></li>
+                <li><a href="javascript:void(0)" id="login">重新登录</a></li>
+                 <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
+                <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li>
+                <li><a href="/calendar" title="日程安排">日程安排</a></li>
+		<li><a href="javascript:void(0)" onclick="logout()">退出</a></li>
               </ul>
             </li>
           {{else}}
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}}<b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <!-- <li><a href="/admin" title="管理">进入后台</a></li> -->
-                <!-- <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
-                <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li> -->
                 <li><a href="/user" title="用户资料">用户资料</a></li>
-                <li><a href="/login" title="重新登录">重新登录</a></li>
-                <li><a href="/login?exit=true">退出</a></li>
+                <li><a href="javascript:void(0)" id="login">重新登录</a></li>
+		<li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
+                <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li>
+                <li><a href="/calendar" title="日程安排">日程安排</a></li>
+                <li><a href="javascript:void(0)" onclick="logout()">退出</a></li>
               </ul>
             </li>
           {{end}}
@@ -127,11 +135,11 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{.Username}} <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li><a href="/admin" title="管理">进入后台</a></li>
-                <li><a href="/login" title="重新登录">重新登录</a></li>
-                <!-- <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
-                <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li> -->
-                <!-- <li><a href="/calendar" title="日程安排">日程安排</a></li> -->
-                <li><a href="/login?exit=true">退出</a></li>
+                <li><a href="javascript:void(0)" id="login">重新登录</a></li>
+		 <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
+                <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li>
+                <li><a href="/calendar" title="日程安排">日程安排</a></li>
+                <li><a href="javascript:void(0)" onclick="logout()">退出</a></li>
               </ul>
             </li>
           {{else}}
@@ -140,9 +148,8 @@
               <ul class="dropdown-menu">
                 <!-- <li><a href="/admin" title="管理">进入后台</a></li> -->
                 <!-- <li><a href="/project/25001/gettimeline" title="大事记">大事记</a></li>
-                <li><a href="/project/25001/getcalendar" title="项目日历">项目日历</a></li> -->
                 <!-- <li><a href="/calendar" title="日程安排">日程安排</a></li> -->
-                <li><a href="/login">登陆</a></li>
+                <li><a href="javascript:void(0)" id="login">登陆</a></li>
               </ul>
             </li>
           {{end}}
@@ -170,5 +177,113 @@
     <!-- </div> -->
   </div>  
 </nav>
+
+  <!-- 登录模态框 -->
+  <div class="form-horizontal">
+    <div class="modal fade" id="modalNav">
+      <div class="modal-dialog" id="modalDialog">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color: #8bc34a">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">登录</h3>
+            <label id="status"></label>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">
+              <div class="form-group" style="width: 100%;">
+                <label class="col-sm-3 control-label">用户名 或 邮箱</label>
+                <div class="col-sm-7">
+                  <input id="uname" name="uname" type="text" value="qin.xc" class="form-control" placeholder="Enter account" list="cars" onkeypress="getKey()"></div>
+              </div>
+              <div class="form-group" style="width: 100%;">
+                <label class="col-sm-3 control-label">密码</label>
+                <div class="col-sm-7">
+                  <input id="pwd" name="pwd" type="password" value="qin.xc" class="form-control" placeholder="Password" onkeypress="getKey()"></div>
+              </div>
+              <div class="form-group" style="width: 100%;">
+                <label class="col-sm-3 control-label"><input type="checkbox">自动登陆</label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" onclick="login()">登录</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+    // 弹出登录模态框
+    $("#login").click(function() {
+      $('#modalNav').modal({
+      show:true,
+      backdrop:'static'
+      });
+    })
+    
+
+    //登陆功能
+    function login(){
+        var uname=document.getElementById("uname");
+        if (uname.value.length==0){
+          alert("请输入账号");
+          return
+        }
+        var pwd=document.getElementById("pwd");
+        if (pwd.value.length==0){
+          alert("请输入密码");
+          return
+        }
+
+        $.ajax({
+          type:'post',
+          url:'/loginpost',
+          data:{
+            "uname":$("#uname").val(),
+            "pwd":$("#pwd").val()
+          },
+          success:function(result){
+            if(result.islogin==0){
+              $("#status").html("登陆成功");
+              $('#modalNav').modal('hide');
+              window.location.reload();
+            }else  if(result.islogin==1){
+              $("#status").html("用户名或密码错误！") 
+            } else if(result.islogin==2){
+              $("#status").html("密码错误") 
+            }
+          }
+        })
+    }
+    //登出功能
+    function logout(){
+        $.ajax({
+            type:'get',
+            url:'/logout',
+            data:{},
+            success:function(result){
+              if(result.islogin){
+                // $("#status").html("登出成功");
+                alert("登出成功");
+                window.location.reload();
+              }else {
+               // $("#status").html("登出失败");
+               alert("登出失败")
+             }
+           }
+        })
+    }
+
+  function getKey(){  
+    if(event.keyCode==13){  
+      login()
+    }     
+  } 
+</script>
+
 {{end}}
 

@@ -48,8 +48,8 @@
           location.href=he;
       };
 
-      var Url="http://192.168.99.1/"+{{.FilePath}};
-      // var Url2="http://192.168.99.1/"+Url.replace(/\u0026/,"");
+      var Url="http://172.16.9.23/{{.FilePath}}?hotqinsessionid={{.Sessionid}}";
+      // var Url2="http://172.16.9.23/"+Url.replace(/\u0026/,"");
       // alert(Url2);
     	window.docEditor = new DocsAPI.DocEditor("placeholder",
       	{
@@ -78,7 +78,7 @@
         },
         "documentType": "{{.documentType}}",
         "editorConfig": {
-          "callbackUrl": "http://192.168.99.1/officeviewcallback",
+          "callbackUrl": "http://172.16.9.23/officeviewcallback?id={{.AttachId}}",
           "user": {
             "id": {{.Uid}},
             "name": "{{.Username}}"

@@ -30,7 +30,7 @@
   
 
   <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.config.js"></script>
-    <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.js"> </script>
+    <script type="text/javascript" charset="utf-8" src="/static/ueditor/ueditor.all.min.js"> </script>
 
     <script type="text/javascript" charset="utf-8" src="/static/ueditor/lang/zh-cn/zh-cn.js"></script>
     <script src="/static/ueditor/ueditor.parse.min.js"></script>

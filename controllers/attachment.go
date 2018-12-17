@@ -3,6 +3,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"github.com/3xxx/meritms/controllers/utils"
 	"github.com/3xxx/meritms/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
@@ -70,6 +71,7 @@ func (c *AttachController) GetAttachments() {
 			linkarr := make([]AttachmentLink, 1)
 			linkarr[0].Id = v.Id
 			linkarr[0].Title = v.FileName
+			// linkarr[0].Suffix=path.Ext(v.FileName)
 			linkarr[0].FileSize = v.FileSize
 			linkarr[0].Downloads = v.Downloads
 			linkarr[0].Created = v.Created
@@ -485,21 +487,22 @@ func (c *AttachController) AddAttachment() {
 				beego.Error(err)
 			}
 			if proj1.ParentId == 0 { //如果是项目名称，则加上项目编号
-				DiskDirectory = ".\\attachment\\" + proj1.Code + proj1.Title
+				DiskDirectory = "./attachment/" + proj1.Code + proj1.Title
 				Url = "/attachment/" + proj1.Code + proj1.Title
 			} else {
 				filepath = proj1.Title
-				DiskDirectory = DiskDirectory + "\\" + filepath
+				DiskDirectory = DiskDirectory + "/" + filepath
 				Url = Url + "/" + filepath
 			}
 		}
-		DiskDirectory = DiskDirectory + "\\" + proj.Title //加上自身
+		DiskDirectory = DiskDirectory + "/" + proj.Title //加上自身
 		Url = Url + "/" + proj.Title
 	} else { //如果是根目录
-		DiskDirectory = ".\\attachment\\" + proj.Code + proj.Title //加上自身
+		DiskDirectory = "./attachment/" + proj.Code + proj.Title //加上自身
 		Url = "/attachment/" + proj.Title
 		catalog.ProjectNumber = proj.Code
 		catalog.ProjectName = proj.Title
+		topprojectid = proj.Id
 	}
 	//获取上传的文件
 	_, h, err := c.GetFile("file")
@@ -510,7 +513,7 @@ func (c *AttachController) AddAttachment() {
 		//保存附件
 		attachment = h.Filename
 
-		// filepath = DiskDirectory + "\\" + h.Filename
+		// filepath = DiskDirectory + "/" + h.Filename
 		// f.Close() // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
 		//将附件的编号和名称写入数据库
 		_, filename1, filename2, _, _, _, _ := Record(attachment)
@@ -564,7 +567,7 @@ func (c *AttachController) AddAttachment() {
 			beego.Error(err)
 		} else {
 			link1 := Url + "/" + filename1 + filename2 + FileSuffix //附件链接地址
-			filepath = DiskDirectory + "\\" + filename1 + filename2 + FileSuffix
+			filepath = DiskDirectory + "/" + filename1 + filename2 + FileSuffix
 			_, err = models.AddCatalogLink(cid, link1)
 			if err != nil {
 				beego.Error(err)
@@ -602,6 +605,50 @@ func (c *AttachController) AddAttachment() {
 	// success : 0 | 1,           // 0 表示上传失败，1 表示上传成功
 	//    message : "提示的信息，上传成功或上传失败及错误信息等。",
 	//    url     : "图片地址"        // 上传成功时才返回
+}
+
+//向服务器保存dwg文件
+func (c *AttachController) SaveDwgfile() {
+	id := c.Input().Get("id")
+	//pid转成64为
+	idNum, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据附件id取得附件的prodid，路径
+	attachment, err := models.GetAttachbyId(idNum)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	product, err := models.GetProd(attachment.ProductId)
+	if err != nil {
+		beego.Error(err)
+	}
+	//由proj id取得文件路径
+	_, diskdirectory, err := GetUrlPath(product.ProjectId)
+	if err != nil {
+		beego.Error(err)
+	}
+
+	//获取上传的文件
+	_, h, err := c.GetFile("file")
+	if err != nil {
+		beego.Error(err)
+	}
+	if h != nil {
+		//保存附件
+		filepath := diskdirectory + "/" + attachment.FileName
+		// f.Close() // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
+		//存入文件夹
+		err = c.SaveToFile("file", filepath) //.Join("attachment", attachment)) //存文件    WaterMark(filepath)    //给文件加水印
+		if err != nil {
+			beego.Error(err)
+		} else {
+			c.Data["json"] = map[string]interface{}{"state": "SUCCESS", "title": attachment, "original": attachment}
+			c.ServeJSON()
+		}
+	}
 }
 
 //向某个侧栏id下添加成果——用于第二种添加，多附件模式
@@ -690,7 +737,7 @@ func (c *AttachController) AddAttachment2() {
 	if h != nil {
 		//保存附件
 		attachment = h.Filename
-		path = DiskDirectory + "\\" + h.Filename
+		path = DiskDirectory + "/" + h.Filename
 		// f.Close()// 关闭上传的文件，不然的话会出现临时文件不能清除的情况
 		//存入成果数据库
 		//如果编号重复，则不写入，值返回Id值。
@@ -800,7 +847,7 @@ func (c *AttachController) UpdateAttachment() {
 	if h != nil {
 		//保存附件
 		attachment = h.Filename
-		path = DiskDirectory + "\\" + h.Filename // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
+		path = DiskDirectory + "/" + h.Filename // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
 		// filesize, _ = FileSize(path)
 		// filesize = filesize / 1000.0
 		//把成果id作为附件的parentid，把附件的名称等信息存入附件数据库
@@ -853,8 +900,8 @@ func (c *AttachController) DeleteAttachment() {
 		_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
 		if err != nil {
 			beego.Error(err)
-		} else {
-			path := DiskDirectory + "\\" + attach.FileName
+		} else if DiskDirectory != "" {
+			path := DiskDirectory + "/" + attach.FileName
 			err = os.Remove(path)
 			if err != nil {
 				beego.Error(err)
@@ -919,8 +966,13 @@ func ImageFilter(ctx *context.Context) {
 	// }
 }
 
-//根据权限查看附件
-func (c *AttachController) Attachment() {
+//根据权限查看附件/downloadattachment?id=
+func (c *AttachController) DownloadAttachment() {
+	// logs := logs.NewLogger()
+	// logs.EnableFuncCallDepth(true)
+	// logs.SetLogger("multifile", `{"filename":"log/meritms.log","level":7,"maxlines":0,"maxsize":0,"daily":true,"maxdays":10,"separate":["emergency", "alert", "critical", "error", "warning", "notice", "info"]}`)
+	// v := c.GetSession("pwd")
+	// beego.Info("v.(string)")
 	c.Data["IsLogin"] = checkAccount(c.Ctx)
 	//4.取得客户端用户名
 	var projurl string
@@ -942,31 +994,41 @@ func (c *AttachController) Attachment() {
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
 	useridstring := strconv.FormatInt(uid, 10)
-
+	var usersessionid string //客户端sesssionid
+	if islogin {
+		usersessionid = c.Ctx.Input.Cookie("hotqinsessionid")
+		//服务端sessionid怎么取出
+		// v := c.GetSession("uname")
+		// beego.Info(v.(string))
+	}
 	id := c.Input().Get("id")
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
 		beego.Error(err)
+		utils.FileLogs.Error(c.Ctx.Input.IP() + " 转换id " + err.Error())
 	}
 
 	//根据附件id取得附件的prodid，路径
 	attachment, err := models.GetAttachbyId(idNum)
 	if err != nil {
 		beego.Error(err)
+		utils.FileLogs.Error(c.Ctx.Input.IP() + " 查询附件 " + err.Error())
 	}
 
 	product, err := models.GetProd(attachment.ProductId)
 	if err != nil {
 		beego.Error(err)
+		utils.FileLogs.Error(c.Ctx.Input.IP() + " 用附件查询成果 " + err.Error())
 	}
 
 	//根据projid取出路径
 	proj, err := models.GetProj(product.ProjectId)
 	if err != nil {
 		beego.Error(err)
+		utils.FileLogs.Error(err.Error())
 	}
-	if proj.ParentIdPath == "" {
+	if proj.ParentIdPath == "" || proj.ParentIdPath == "$#" {
 		projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/"
 	} else {
 		// projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10) + "/"
@@ -976,35 +1038,28 @@ func (c *AttachController) Attachment() {
 	fileurl, _, err := GetUrlPath(product.ProjectId)
 	if err != nil {
 		beego.Error(err)
+		utils.FileLogs.Error(c.Ctx.Input.IP() + " 查询成果路径 " + err.Error())
 	}
 	fileext := path.Ext(attachment.FileName)
 	switch fileext {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 	case ".dwg", ".DWG":
-		// if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
-		dwglink, err := url.ParseRequestURI(c.Ctx.Input.Site() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
-		if err != nil {
-			beego.Error(err)
-		}
-		// beego.Info(dwglink)
-		c.Data["DwgLink"] = dwglink
-		c.TplName = "cms/dwg.tpl"
-		// } else {
-		// 	route := c.Ctx.Request.URL.String()
-		// 	c.Data["Url"] = route
-		// 	c.Redirect("/roleerr?url="+route, 302)
-		// 	// c.Redirect("/roleerr", 302)
-		// 	return
-		// }
-	// case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
-	// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
-	//这里缺少权限设置！！！！！！！！！！！
-	default:
-		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
-			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
-			// c.Redirect(url+"/"+attachment.FileName, 302)
-			c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+		//beego.Info(c.Ctx.Input.Site())
+		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin { //+ strconv.Itoa(c.Ctx.Input.Port())
+			// dwglink, err := url.ParseRequestURI(c.Ctx.Input.Site() + ":" + "/" + fileurl + "/" + attachment.FileName)
+			dwglink, err := url.ParseRequestURI(c.Ctx.Input.Scheme() + "://" + c.Ctx.Input.IP() + ":" + strconv.Itoa(c.Ctx.Input.Port()) + "/" + fileurl + "/" + attachment.FileName)
+			if err != nil {
+				beego.Error(err)
+				utils.FileLogs.Error(c.Ctx.Input.IP() + " 获取dwg路径 " + err.Error())
+			}
+			// beego.Info(dwglink)
+			// beego.Info(usersessionid)
+			c.Data["FileName"] = attachment.FileName
+			c.Data["Id"] = id
+			c.Data["DwgLink"] = dwglink
+			c.Data["Sessionid"] = usersessionid
+			c.TplName = "dwg.tpl"
 		} else {
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
@@ -1012,61 +1067,113 @@ func (c *AttachController) Attachment() {
 			// c.Redirect("/roleerr", 302)
 			return
 		}
+		// case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
+		// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+		//这里缺少权限设置！！！！！！！！！！！
+		// beego.Info(useridstring)
+		// beego.Info(isadmin)
+	default:
+		if e.Enforce(useridstring, projurl, c.Ctx.Request.Method, fileext) || isadmin {
+			// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)//这样写下载的文件名称不对
+			// c.Redirect(url+"/"+attachment.FileName, 302)
+			c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
+			utils.FileLogs.Info(username + " " + "download" + " " + fileurl + "/" + attachment.FileName)
+		} else {
+			utils.FileLogs.Info(c.Ctx.Input.IP() + "want " + "download" + " " + fileurl + "/" + attachment.FileName)
+			route := c.Ctx.Request.URL.String()
+			c.Data["Url"] = route
+			c.Redirect("/roleerr?url="+route, 302)
+			// c.Redirect("/roleerr", 302)
+			return
+		}
 	}
+	// config := make(map[string]interface{})
+	// config["filename"] = "e:/golang/go_pro/logs/logcollect.log"
+	// config["filename"] = "e://golang//go_pro//logs//logcollect.log"
+	// config["filename"] = "e:/golang/go_pro/logs/logcollect.log"
+	// config["level"] = logs.LevelDebug
+	// configStr, err := json.Marshal(config)
+	// if err != nil {
+	// 	fmt.Println("marshal failed, err:", err)
+	// 	return
+	// }
+	// logs.SetLogger(logs.AdapterFile, string(configStr))
+	// utils.FileLogs.Warn("this is a warn, my name is %s", map[string]int{"key": 2016})
+	// utils.FileLogs.Critical("oh,crash")
+	// logs.Close()
+	// 日志有以下7个级别                  对应的方法
+	// LevelEmergency = 0      --> logs.Emergency()
+	// LevelAlert = 1          --> logs.Alert()
+	// LevelCritical = 2       --> logs.Critical()
+	// LevelError = 3          --> logs.Error()
+	// LevelWarning = 4        --> logs.Warning()
+	// LevelNotice = 5         --> logs.Notice()
+	// LevelInformational = 6  --> logs.Informational()
+	// LevelDebug = 7          --> logs.Debug()
+	// utils.FileLogs.Info("this is a file log with info.")
+	// utils.FileLogs.Debug("this is a file log with debug.")
+	// utils.FileLogs.Alert("this is a file log with alert.")
+	// utils.FileLogs.Error("this is a file log with error.")
+	// utils.FileLogs.Trace("this is a file log with trace.")
 }
 
-//目前只有文章中的图片采用绝对路径型式，其他都是用上面的/id型式
+//目前有文章中的图片、成果中文档的预览、onlyoffice中的文档协作、pdf中的附件路径等均采用绝对路径型式
 //文章中的附件呢？
 //default中的pdf页面中的{{.pdflink}}，绝对路径
-func (c *AttachController) DownloadAttachment() {
-	// c.Data["IsLogin"] = checkAccount(c.Ctx)
-	// //4.取得客户端用户名
-	// var uname, useridstring string
-	// v := c.GetSession("uname")
-	// // var role, userrole int
-	// if v != nil {
-	// 	uname = v.(string)
-	// 	c.Data["Uname"] = v.(string)
-	// 	user, err := models.GetUserByUsername(uname)
-	// 	if err != nil {
-	// 		beego.Error(err)
-	// 	}
-	// 	// userrole = user.Role
-	// 	useridstring = strconv.FormatInt(user.Id, 10)
-	// }
-	//else {
-	// userrole = 5
-	// route := c.Ctx.Request.URL.String()
-	// c.Data["Url"] = route
-	// c.Redirect("/roleerr?url="+route, 302)
-	// return
-	// }
+// type Session struct {
+// 	Session int
+// }
+//attachment/路径/附件名称
+func (c *AttachController) Attachment() {
+	// beego.Info("v111.(string)")
+	// c.Ctx.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")
+	// http.ResponseWriter.Header().Set("Access-Control-Allow-Origin", "*")
+	// var sess Session
+	// json.Unmarshal(c.Ctx.Input.RequestBody, &sess)
+	//beego.Info(c.Ctx.Input.RequestBody)
+	// var ob models.Object
+	//    json.Unmarshal(c.Ctx.Input.RequestBody, &ob)
+	// beego.Info(sess.Session)
+	//如果url带了sessionid,就能取到uid等信息
+	var useridstring string
 	_, _, uid, isadmin, _ := checkprodRole(c.Ctx)
-	// c.Data["Username"] = username
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = role
-	// c.Data["IsAdmin"] = isadmin
-	// c.Data["IsLogin"] = islogin
-	// c.Data["Uid"] = uid
-	useridstring := strconv.FormatInt(uid, 10)
-	// iprole := Getiprole(c.Ctx.Input.IP())
-	// if iprole <= userrole {
-	// 	role = iprole
+	// if uid != 0 {
+	useridstring = strconv.FormatInt(uid, 10)
+	// beego.Info(useridstring)
+	// beego.Info(isadmin)
 	// } else {
-	// 	role = userrole
+	// 	//根据url携带的sessionid
+	// 	v := c.GetSession("uname")
+	// 	if v != nil {
+	// 		user, err := models.GetUserByUsername(v.(string))
+	// 		if err != nil {
+	// 			beego.Error(err)
+	// 		} else {
+	// 			useridstring = strconv.FormatInt(user.Id, 10)
+	// 			if user.Role == "1" {
+	// 				isadmin = true
+	// 			} else {
+	// 				isadmin = false
+	// 			}
+	// 		}
+	// 	}
+	// 	beego.Info(useridstring)
+	// 	beego.Info(isadmin)
 	// }
-
+	// }
 	//1.url处理中文字符路径，[1:]截掉路径前面的/斜杠
-	// filePath := path.Base(ctx.Request.RequestURI)
-	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //  attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
+	// filePath := path.Base(c.Ctx.Request.RequestURI)
+	filePath, err := url.QueryUnescape(c.Ctx.Request.RequestURI[1:]) //attachment/SL2016测试添加成果/A/FB/1/Your First Meteor Application.pdf
 	if err != nil {
 		beego.Error(err)
 	}
-
+	if strings.Contains(filePath, "?hotqinsessionid=") {
+		filePathtemp := strings.Split(filePath, "?")
+		filePath = filePathtemp[0]
+		// beego.Info(filePath)
+	}
+	// beego.Info(filePath)
 	fileext := path.Ext(filePath)
-
-	//根据路由path.Dir——再转成数组strings.Split——查出项目id——加上名称——查出下级id
-	// beego.Info(path.Dir(filePath))
 	filepath1 := path.Dir(filePath)
 	array := strings.Split(filepath1, "/")
 	// beego.Info(strings.Split(filepath1, "/"))
@@ -1109,13 +1216,13 @@ func (c *AttachController) DownloadAttachment() {
 	switch fileext {
 	case ".JPG", ".jpg", ".png", ".PNG", ".bmp", ".BMP", ".mp4", ".MP4":
 		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-	case ".dwg", ".DWG":
-		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-	case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
-		// beego.Info("ok")
-		http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
-		// beego.Info(filePath)
-		// beego.Info(useridstring)
+	// case ".dwg", ".DWG":
+	// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	// case ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx":
+	// beego.Info("ok")
+	// http.ServeFile(c.Ctx.ResponseWriter, c.Ctx.Request, filePath)
+	// beego.Info(filePath)
+	// beego.Info(useridstring)
 	//这里缺少权限设置！！！！！！！！！！！
 	default:
 		if e.Enforce(useridstring, projurls+"/", c.Ctx.Request.Method, fileext) || isadmin {
@@ -1123,6 +1230,7 @@ func (c *AttachController) DownloadAttachment() {
 			// c.Redirect(url+"/"+attachment.FileName, 302)
 			// c.Ctx.Output.Download(fileurl + "/" + attachment.FileName)
 		} else {
+			// beego.Info(useridstring)
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
 			c.Redirect("/roleerr?url="+route, 302)
@@ -1196,20 +1304,21 @@ func GetUrlPath(id int64) (Url, DiskDirectory string, err error) {
 				proj1, err := models.GetProj(idNum)
 				if err != nil {
 					beego.Error(err)
-				}
-				if proj1.ParentId == 0 { //如果是项目名称，则加上项目编号
-					DiskDirectory = ".\\attachment\\" + proj1.Code + proj1.Title
-					Url = "attachment/" + proj1.Code + proj1.Title
 				} else {
-					path = proj1.Title
-					DiskDirectory = DiskDirectory + "\\" + path
-					Url = Url + "/" + path
+					if proj1.ParentId == 0 { //如果是项目名称，则加上项目编号
+						DiskDirectory = "./attachment/" + proj1.Code + proj1.Title
+						Url = "attachment/" + proj1.Code + proj1.Title
+					} else {
+						path = proj1.Title
+						DiskDirectory = DiskDirectory + "/" + path
+						Url = Url + "/" + path
+					}
 				}
 			}
-			DiskDirectory = DiskDirectory + "\\" + proj.Title //加上自身
+			DiskDirectory = DiskDirectory + "/" + proj.Title //加上自身
 			Url = Url + "/" + proj.Title
 		} else { //如果是根目录
-			DiskDirectory = ".\\attachment\\" + proj.Code + proj.Title //加上自身
+			DiskDirectory = "./attachment/" + proj.Code + proj.Title //加上自身
 			Url = "attachment/" + proj.Code + proj.Title
 		}
 		return Url, DiskDirectory, err

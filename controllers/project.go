@@ -5,7 +5,10 @@ import (
 	// "encoding/json"
 	"github.com/3xxx/meritms/models"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/utils/pagination"
+	"github.com/casbin/beego-orm-adapter"
+	// "github.com/casbin/casbin"
 	"os"
 	"path"
 	"path/filepath"
@@ -194,19 +197,37 @@ func (c *ProjController) GetProject() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-
 	id := c.Ctx.Input.Param(":id")
+
+	navid1 := beego.AppConfig.String("navigationid1")
+	navid2 := beego.AppConfig.String("navigationid2")
+	navid3 := beego.AppConfig.String("navigationid3")
+	navid4 := beego.AppConfig.String("navigationid4")
+	navid5 := beego.AppConfig.String("navigationid5")
+	navid6 := beego.AppConfig.String("navigationid6")
+	navid7 := beego.AppConfig.String("navigationid7")
+	navid8 := beego.AppConfig.String("navigationid8")
+	navid9 := beego.AppConfig.String("navigationid9")
+
 	switch id {
-	case "25001":
-		c.Data["IsProject"] = true
-	case "25002":
-		c.Data["IsDesign"] = true
-	case "25003":
-		c.Data["IsConstruct"] = true
-	case "25004":
-		c.Data["IsSupervision"] = true
-	case "25005":
-		c.Data["IsBuild"] = true
+	case navid1:
+		c.Data["IsNav1"] = true
+	case navid2:
+		c.Data["IsNav2"] = true
+	case navid3:
+		c.Data["IsNav3"] = true
+	case navid4:
+		c.Data["IsNav4"] = true
+	case navid5:
+		c.Data["IsNav5"] = true
+	case navid6:
+		c.Data["IsNav6"] = true
+	case navid7:
+		c.Data["IsNav7"] = true
+	case navid8:
+		c.Data["IsNav8"] = true
+	case navid9:
+		c.Data["IsNav9"] = true
 	default:
 		c.Data["IsProject"] = true
 	}
@@ -618,7 +639,7 @@ func (c *ProjController) AddProjectCate() {
 	parentpath := DiskDirectory
 	// beego.Info(newpath)
 	//建立目录，并返回作为父级目录
-	err = os.MkdirAll(parentpath+"\\"+title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+	err = os.MkdirAll(parentpath+"/"+title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
 		beego.Error(err)
 	}
@@ -678,7 +699,7 @@ func (c *ProjController) UpdateProjectCate() {
 	path1 := DiskDirectory
 	newpath1 := filepath.Dir(DiskDirectory)
 	// beego.Info(newpath1)
-	newpath := newpath1 + "\\" + title
+	newpath := newpath1 + "/" + title
 	// beego.Info(newpath)
 	err = os.Rename(path1, newpath)
 	if err != nil {
@@ -753,18 +774,19 @@ func (c *ProjController) DeleteProjectCate() {
 		_, DiskDirectory, err := GetUrlPath(idNum)
 		if err != nil {
 			beego.Error(err)
-		}
-		// beego.Info(DiskDirectory)
-		path := DiskDirectory
-		//直接删除这个文件夹，remove删除文件
-		err = os.RemoveAll(path)
-		if err != nil {
-			beego.Error(err)
-		}
-		//删除目录本身
-		err = models.DeleteProject(idNum)
-		if err != nil {
-			beego.Error(err)
+		} else if DiskDirectory != "" {
+			// beego.Info(DiskDirectory)
+			// path := DiskDirectory
+			// //直接删除这个文件夹，remove删除文件
+			// err = os.RemoveAll(path)
+			// if err != nil {
+			// 	beego.Error(err)
+			// }
+			//删除目录本身
+			err = models.DeleteProject(idNum)
+			if err != nil {
+				beego.Error(err)
+			}
 		}
 	}
 	c.Data["json"] = "ok" //data
@@ -878,14 +900,14 @@ func (c *ProjController) AddProject() {
 	c.Data["IsProjects"] = true
 	// c.Data["Ip"] = c.Ctx.Input.IP()
 	// c.Data["role"] = role
-	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
-	c.Data["Username"] = username
-	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["role"] = role
-	c.Data["IsAdmin"] = isadmin
-	c.Data["IsLogin"] = islogin
-	c.Data["Uid"] = uid
-	if role != "1" {
+	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+	if !isadmin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -953,7 +975,7 @@ func (c *ProjController) AddProject() {
 	models.Insertproj(idarr, nodes, 2, height)
 	//递归创建文件夹
 	patharr := make([]Pathstruct, 1)
-	patharr[0].ParentPath = ".\\attachment\\" + projcode + projname
+	patharr[0].ParentPath = "./attachment/" + projcode + projname
 	create(patharr, nodes, 2, height)
 	c.Data["json"] = "ok"
 	c.ServeJSON()
@@ -961,6 +983,21 @@ func (c *ProjController) AddProject() {
 
 //根据项目模板添加项目
 func (c *ProjController) AddProjTemplet() {
+	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+	if !isadmin {
+		route := c.Ctx.Request.URL.String()
+		c.Data["Url"] = route
+		c.Redirect("/roleerr?url="+route, 302)
+		// c.Redirect("/roleerr", 302)
+		return
+	}
+
 	projcode := c.Input().Get("code")
 	projname := c.Input().Get("name")
 	projlabel := c.Input().Get("label")
@@ -1004,14 +1041,67 @@ func (c *ProjController) AddProjTemplet() {
 	//递归创建文件夹
 	// patharr := make([]Pathstruct, 1)
 	//先建立第一层文件夹
-	pathstring := ".\\attachment\\" + projcode + projname
+	pathstring := "./attachment/" + projcode + projname
 	//在递归建立下层文件夹
 	createtemplet(pathstring, root.FileNodes)
-	//权限继承
-	if ispermission == "true" {
 
+	//权限继承
+	var success bool
+	var casbinv1 string
+	if ispermission == "true" {
+		//读取权限里包含projid的
+		var paths []beegoormadapter.CasbinRule
+		o := orm.NewOrm()
+		qs := o.QueryTable("casbin_rule")
+		_, err := qs.Filter("PType", "p").Filter("v1__contains", "/"+projid+"/").All(&paths)
+		if err != nil {
+			beego.Error(err)
+		}
+		//根据最后的/id/*查出proj的parenttitlepath，修改titlepath的项目编号和项目名称
+		//据此再查出新项目对应的parentidpath和id
+		//末端加上/id/*存入casbin
+		for _, v := range paths {
+			array := strings.Split(v.V1, "/")
+			// lenth := len(array)
+			// if len(array) <= 3 { //根目录
+			// id := strings.Replace(strings.Replace(v.V1, "/*", "", -1), "/", "", -1)
+			// } else {
+			id := array[len(array)-2]
+			// parentidpath := strings.Replace(v.V1, "/"+array[len(array)-2]+"/*", "/", -1)
+			// }
+			//id转成64为
+			idNum, err = strconv.ParseInt(id, 10, 64)
+			if err != nil {
+				beego.Error(err)
+			}
+			oldproj, err := models.GetProj(idNum)
+			if err != nil {
+				beego.Error(err)
+			}
+			if len(array) <= 3 { //根目录
+				newproj, err := models.GetProjectCodeTitle(projcode, projname)
+				if err != nil {
+					beego.Error(err)
+				}
+				casbinv1 = "/" + strconv.FormatInt(newproj.Id, 10) + "/*"
+			} else {
+				array1 := strings.Split(oldproj.ParentTitlePath, "-")
+				newprojparenttitlepath := strings.Replace(oldproj.ParentTitlePath, array1[0], projcode+projname, -1)
+				newproj, err := models.GetProjbyParenttitlepath(newprojparenttitlepath, oldproj.Title)
+				if err != nil {
+					beego.Error(err)
+				}
+				casbinv1 = strings.Replace(strings.Replace(strings.Replace(newproj.ParentIdPath, "#$", "/", -1), "$", "/", -1), "#", "/", -1) + strconv.FormatInt(newproj.Id, 10) + "/*"
+			}
+			success = e.AddPermissionForUser(v.V0, casbinv1, v.V2, v.V3)
+			//这里应该用AddPermissionForUser()，来自casbin\rbac_api.go
+		}
 	}
-	c.Data["json"] = "ok"
+	if success == true {
+		c.Data["json"] = "ok"
+	} else {
+		c.Data["json"] = "wrong"
+	}
 	c.ServeJSON()
 }
 
@@ -1034,14 +1124,14 @@ func (c *ProjController) UpdateProject() {
 	c.Data["IsProjects"] = true
 	// c.Data["Ip"] = c.Ctx.Input.IP()
 	// c.Data["role"] = role
-	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
-	c.Data["Username"] = username
-	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["role"] = role
-	c.Data["IsAdmin"] = isadmin
-	c.Data["IsLogin"] = islogin
-	c.Data["Uid"] = uid
-	if role != "1" {
+	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+	if !isadmin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -1094,14 +1184,14 @@ func (c *ProjController) DeleteProject() {
 	c.Data["IsProjects"] = true
 	// c.Data["Ip"] = c.Ctx.Input.IP()
 	// c.Data["role"] = role
-	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
-	c.Data["Username"] = username
-	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["role"] = role
-	c.Data["IsAdmin"] = isadmin
-	c.Data["IsLogin"] = islogin
-	c.Data["Uid"] = uid
-	if role != "1" {
+	_, _, _, isadmin, _ := checkprodRole(c.Ctx)
+	// c.Data["Username"] = username
+	// c.Data["Ip"] = c.Ctx.Input.IP()
+	// c.Data["role"] = role
+	// c.Data["IsAdmin"] = isadmin
+	// c.Data["IsLogin"] = islogin
+	// c.Data["Uid"] = uid
+	if !isadmin {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
 		c.Redirect("/roleerr?url="+route, 302)
@@ -1181,14 +1271,18 @@ func (c *ProjController) DeleteProject() {
 		_, DiskDirectory, err := GetUrlPath(projid)
 		if err != nil {
 			beego.Error(err)
-		} else {
+		} else if DiskDirectory != "" {
 			// beego.Info(DiskDirectory)
-			path := DiskDirectory
-			//直接删除这个文件夹，remove删除文件
-			err = os.RemoveAll(path)
-			if err != nil {
-				beego.Error(err)
-			}
+			// path := DiskDirectory
+			// //直接删除这个文件夹，remove删除文件
+			// err = os.RemoveAll(path)
+			// if err != nil {
+			// 	beego.Error(err)
+			// }
+			//20181008删除一个“空”项目，导致attachment文件夹下所有附件都删除的悲惨事件
+			//所以，不再提供删除文件夹功能
+			//只修改文件夹名称??
+
 			//删除项目自身数据表
 			err = models.DeleteProject(projid)
 			if err != nil {
@@ -1646,11 +1740,11 @@ func (c *ProjController) UploadImage() {
 	newname := strconv.FormatInt(time.Now().UnixNano(), 10) + fileSuffix
 	year, month, _ := time.Now().Date()
 
-	err = os.MkdirAll(DiskDirectory+"\\"+strconv.Itoa(year)+month.String()+"\\", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+	err = os.MkdirAll(DiskDirectory+"/"+strconv.Itoa(year)+month.String()+"/", 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 	if err != nil {
 		beego.Error(err)
 	}
-	path1 := DiskDirectory + "\\" + strconv.Itoa(year) + month.String() + "\\" + newname //h.Filename
+	path1 := DiskDirectory + "/" + strconv.Itoa(year) + month.String() + "/" + newname //h.Filename
 	Url1 := Url + "/" + strconv.Itoa(year) + month.String() + "/"
 	err = c.SaveToFile("file", path1) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 	if err != nil {
@@ -1948,13 +2042,13 @@ func create(path []Pathstruct, nodes []*models.AdminCategory, igrade, height int
 				title := v1.Title
 				parentpath := v.ParentPath
 				//建立目录，并返回作为父级目录
-				err := os.MkdirAll(parentpath+"\\"+title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+				err := os.MkdirAll(parentpath+"/"+title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 				if err != nil {
 					beego.Error(err)
 				}
 
 				var cpath1 Pathstruct
-				cpath1.ParentPath = parentpath + "\\" + title
+				cpath1.ParentPath = parentpath + "/" + title
 				cpath = append(cpath, cpath1) //每次要清0吗？
 			}
 		}
@@ -1970,11 +2064,11 @@ func create(path []Pathstruct, nodes []*models.AdminCategory, igrade, height int
 func createtemplet(parentpath string, nodes []*models.FileNode) {
 	for _, v1 := range nodes {
 		//建立目录，并返回作为父级目录
-		err := os.MkdirAll(parentpath+"\\"+v1.Title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
+		err := os.MkdirAll(parentpath+"/"+v1.Title, 0777) //..代表本当前exe文件目录的上级，.表示当前目录，没有.表示盘的根目录
 		if err != nil {
 			beego.Error(err)
 		}
-		ParentPath := parentpath + "\\" + v1.Title
+		ParentPath := parentpath + "/" + v1.Title
 		if len(v1.FileNodes) > 0 {
 			nodes1 := v1.FileNodes
 			createtemplet(ParentPath, nodes1)

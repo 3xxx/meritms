@@ -1,16 +1,15 @@
-<!-- 首页右侧的frame -->
+<!-- 首页右侧的frame——百度地图 -->
 <!-- <!DOCTYPE html> -->
 <html>
 <head>  
-    <meta charset="utf-8"> 
-<script src="/static/js/echarts.min.js"></script>
-<script src="/static/js/china.js"></script>  
-<!-- <script src="/static/js/world.js"></script>   -->
-<!-- <script src="/static/js/jquery.min223.js"></script>   -->
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=hYCENCEx1nXO0Nt46ldexfG9oI49xBGh"></script> 
-
-<script src="/static/js/echarts-gl.min.js "></script> 
-<script src="/static/js/bmap.min.js"></script> 
+  <meta charset="utf-8"> 
+  <script src="/static/js/echarts.min.js"></script>
+  <script src="/static/js/china.js"></script>  
+  <!-- <script src="/static/js/world.js"></script>   -->
+  <!-- <script src="/static/js/jquery.min223.js"></script>   -->
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=hYCENCEx1nXO0Nt46ldexfG9oI49xBGh"></script> 
+  <script src="/static/js/echarts-gl.min.js "></script> 
+  <script src="/static/js/bmap.min.js"></script> 
 
   <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
@@ -89,14 +88,14 @@
         <th data-width="10" data-radio="true"></th>
         <th data-formatter="index1">#</th>
         <!-- <th data-field="Id">编号</th> -->
-        <th data-field="Code">编号</th>
-        <th data-field="Title">名称</th>
-        <th data-field="Label" data-formatter="setLable">关键字</th>
-        <th data-field="Principal">设计</th>
-        <th data-field="Articlecontent" data-formatter="setArticle" data-events="actionEvents">文章</th>
-        <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents">附件</th>
-        <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents">PDF</th>
-        <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
+        <th data-field="Code" data-align="center" data-valign="middle">编号</th>
+        <th data-field="Title" data-align="center" data-valign="middle">名称</th>
+        <th data-field="Label" data-formatter="setLable" data-align="center" data-valign="middle">关键字</th>
+        <th data-field="Principal" data-align="center" data-valign="middle">设计</th>
+        <th data-field="Articlecontent" data-formatter="setArticle" data-events="actionEvents" data-align="center" data-valign="middle">文章</th>
+        <th data-field="Attachmentlink" data-formatter="setAttachment" data-events="actionEvents" data-align="center" data-valign="middle" data-align="center" data-valign="middle">附件</th>
+        <th data-field="Pdflink" data-formatter="setPdf" data-events="actionEvents" data-align="center" data-valign="middle">PDF</th>
+        <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
         <!-- <th data-field="Created" data-formatter="actionFormatter" events="actionEvents">操作</th> -->
       </tr>
         </thead>
@@ -105,7 +104,7 @@
 </div>  
 
 <script type="text/javascript">
-// 改变点击行颜色
+  // 改变点击行颜色
   $(function(){
      $("#table0").on("click-row.bs.table",function(e,row,ele){
          $(".info").removeClass("info");
@@ -303,7 +302,7 @@
   }  
 </script>
 
-<!-- 文章列表 -->
+  <!-- 文章列表 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalarticle">
       <div class="modal-dialog">
@@ -330,11 +329,11 @@
                     <tr>
                       <th data-width="10" data-checkbox="true"></th>
                       <th data-formatter="index1">#</th>
-                      <th data-field="Title">名称</th>
-                      <th data-field="Subtext">副标题</th>
-                      <th data-field="Link" data-formatter="setArticlecontent">查看</th>
-                      <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
-                      <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
+                      <th data-field="Title" data-align="center" data-valign="middle">名称</th>
+                      <th data-field="Subtext" data-align="center" data-valign="middle">副标题</th>
+                      <th data-field="Link" data-formatter="setArticlecontent" data-align="center" data-valign="middle">查看</th>
+                      <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
+                      <th data-field="Updated" data-formatter="localDateFormatter" data-align="center" data-valign="middle">修改时间</th>
                     </tr>
                   </thead>
                 </table>
@@ -375,11 +374,11 @@
                     <tr>
                       <th data-width="10" data-checkbox="true"></th>
                       <th data-formatter="index1">#</th>
-                      <th data-field="Title">名称</th>
-                      <th data-field="FileSize">大小</th>
-                      <th data-field="Link" data-formatter="setAttachlink">下载</th>
-                      <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
-                      <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
+                      <th data-field="Title" data-align="center" data-valign="middle">名称</th>
+                      <th data-field="FileSize" data-align="center" data-valign="middle">大小</th>
+                      <th data-field="Link" data-formatter="setAttachlink" data-align="center" data-valign="middle">下载</th>
+                      <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
+                      <th data-field="Updated" data-formatter="localDateFormatter" data-align="center" data-valign="middle">修改时间</th>
                     </tr>
                   </thead>
                 </table>
@@ -420,11 +419,11 @@
                     <tr>
                       <th data-width="10" data-checkbox="true"></th>
                       <th data-formatter="index1">#</th>
-                      <th data-field="Title">名称</th>
-                      <th data-field="FileSize">大小</th>
-                      <th data-field="Link" data-formatter="setPdflink">下载</th>
-                      <th data-field="Created" data-formatter="localDateFormatter">建立时间</th>
-                      <th data-field="Updated" data-formatter="localDateFormatter">修改时间</th>
+                      <th data-field="Title" data-align="center" data-valign="middle">名称</th>
+                      <th data-field="FileSize" data-align="center" data-valign="middle">大小</th>
+                      <th data-field="Link" data-formatter="setPdflink" data-align="center" data-valign="middle">下载</th>
+                      <th data-field="Created" data-formatter="localDateFormatter" data-align="center" data-valign="middle">建立时间</th>
+                      <th data-field="Updated" data-formatter="localDateFormatter" data-align="center" data-valign="middle">修改时间</th>
                     </tr>
                   </thead>
                 </table>
@@ -439,7 +438,7 @@
     </div>
   </div>
 
-<script>  
+  <script>  
     var myChart = echarts.init(document.getElementById('main'));  
     var szRoad = {
     success: true,
@@ -478,26 +477,26 @@
 
     var i = 0;
     for (var x in data) {
-    // i++;
-    // if(i<5000)
-    //     continue;
-    var line = data[x];
-    // if(busLines.length>500)
-    //     break;
-    var pointString = line.ROAD_LINE;
-    var pointArr = pointString.split(';');
-    var lnglats = [];
-    for (var j in pointArr) {
-        lnglats.push(pointArr[j].split(','))
-    }
-    busLines.push({
+      // i++;
+      // if(i<5000)
+      //     continue;
+      var line = data[x];
+      // if(busLines.length>500)
+      //     break;
+      var pointString = line.ROAD_LINE;
+      var pointArr = pointString.split(';');
+      var lnglats = [];
+      for (var j in pointArr) {
+          lnglats.push(pointArr[j].split(','))
+      }
+      busLines.push({
         coords: lnglats,
         lineStyle: {
             normal: {
                 color: echarts.color.modifyHSL('#5A94DF', Math.round(hStep * x))
             }
         }
-    })
+      })
     }
 
     option = {

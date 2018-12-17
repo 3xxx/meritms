@@ -7,7 +7,7 @@ import (
 	"encoding/hex"
 	m "github.com/3xxx/meritms/models"
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
+	// "github.com/astaxie/beego/logs"
 	"github.com/tealeg/xlsx"
 	"os"
 	"strconv"
@@ -194,6 +194,13 @@ func (c *UserController) AddUser() {
 	md5Ctx.Write([]byte(Pwd1))
 	cipherStr := md5Ctx.Sum(nil)
 	user.Password = hex.EncodeToString(cipherStr)
+	// user.Repassword = c.Input().Get("repassword")
+	// Pwd1=c.Input().Get("password")
+	// 				md5Ctx := md5.New()
+	// 				md5Ctx.Write([]byte(Pwd1))
+	// 				cipherStr := md5Ctx.Sum(nil)
+	// 				user.Password = hex.EncodeToString(cipherStr)
+
 	user.Email = c.Input().Get("email")
 	user.Department = c.Input().Get("department")
 	user.Secoffice = c.Input().Get("secoffice")
@@ -253,12 +260,6 @@ func (c *UserController) UpdateUser() {
 		data := "ok!"
 		c.Ctx.WriteString(data)
 	}
-
-	logs := logs.NewLogger(1000)
-	logs.SetLogger("file", `{"filename":"log/engineercms.log"}`)
-	logs.EnableFuncCallDepth(true)
-	logs.Info(c.Ctx.Input.IP() + " " + "修改保存设计记录" + pk)
-	logs.Close()
 }
 
 //这个作废，用在线修改
@@ -400,114 +401,120 @@ func (c *UserController) ImportUsers() {
 	// beego.Info(h.path)
 	// var attachment string
 	var path string
+
 	// var filesize int64
 	if h != nil {
 		//保存附件
-		path = ".\\attachment\\" + h.Filename  // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
+		path = "./attachment/" + h.Filename    // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
 		err = c.SaveToFile("usersexcel", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
 		if err != nil {
 			beego.Error(err)
-		}
-	}
+			c.Data["json"] = "err保存文件失败"
+			c.ServeJSON()
+		} else {
+			var user m.User
+			//读出excel内容写入数据库
+			xlFile, err := xlsx.OpenFile(path) //
+			if err != nil {
+				beego.Error(err)
+			}
+			for _, sheet := range xlFile.Sheets {
+				for i, row := range sheet.Rows {
+					if i != 0 { //忽略第一行标题
+						// 这里要判断单元格列数，如果超过单元格使用范围的列数，则出错for j := 2; j < 7; j += 5 {
+						j := 1
+						if len(row.Cells) >= 2 { //总列数，从1开始
+							user.Username = row.Cells[j].String()
+							if err != nil {
+								beego.Error(err)
+							}
+						}
+						if len(row.Cells) >= 3 {
+							user.Nickname = row.Cells[j+1].String()
+							if err != nil {
+								beego.Error(err)
+							}
+						}
+						if len(row.Cells) >= 4 {
+							Pwd1 := row.Cells[j+2].String()
+							if err != nil {
+								beego.Error(err)
+							}
 
-	var user m.User
-	//读出excel内容写入数据库
-	xlFile, err := xlsx.OpenFile(path) //
-	if err != nil {
-		beego.Error(err)
-	}
-	for _, sheet := range xlFile.Sheets {
-		for i, row := range sheet.Rows {
-			if i != 0 { //忽略第一行标题
-				// 这里要判断单元格列数，如果超过单元格使用范围的列数，则出错for j := 2; j < 7; j += 5 {
-				j := 1
-				if len(row.Cells) >= 2 { //总列数，从1开始
-					user.Username = row.Cells[j].String()
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-				if len(row.Cells) >= 3 {
-					user.Nickname = row.Cells[j+1].String()
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-				if len(row.Cells) >= 4 {
-					Pwd1 := row.Cells[j+2].String()
-					if err != nil {
-						beego.Error(err)
-					}
+							md5Ctx := md5.New()
+							md5Ctx.Write([]byte(Pwd1))
+							cipherStr := md5Ctx.Sum(nil)
+							user.Password = hex.EncodeToString(cipherStr)
+						}
+						if len(row.Cells) >= 5 {
+							user.Email = row.Cells[j+3].String()
+							if err != nil {
+								beego.Error(err)
+							}
+						}
+						if len(row.Cells) >= 6 {
+							user.Department = row.Cells[j+4].String()
+							if err != nil {
+								beego.Error(err)
+							}
+						}
+						if len(row.Cells) >= 7 {
+							user.Secoffice = row.Cells[j+5].String()
+							if err != nil {
+								beego.Error(err)
+							}
+						}
+						if len(row.Cells) >= 8 {
+							user.Ip = row.Cells[j+6].String()
+							if err != nil {
+								beego.Error(err)
+							}
+						}
+						if len(row.Cells) >= 9 {
+							user.Port = row.Cells[j+7].String()
+							if err != nil {
+								beego.Error(err)
+							}
+						}
+						if len(row.Cells) >= 10 {
+							status := row.Cells[j+8].String()
+							if err != nil {
+								beego.Error(err)
+							}
+							status1, err := strconv.Atoi(status)
+							if err != nil {
+								beego.Error(err)
+							}
+							user.Status = status1
+						}
+						if len(row.Cells) >= 11 {
+							role := row.Cells[j+9].String()
+							if err != nil {
+								beego.Error(err)
+							}
 
-					md5Ctx := md5.New()
-					md5Ctx.Write([]byte(Pwd1))
-					cipherStr := md5Ctx.Sum(nil)
-					user.Password = hex.EncodeToString(cipherStr)
-				}
-				if len(row.Cells) >= 5 {
-					user.Email = row.Cells[j+3].String()
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-				if len(row.Cells) >= 6 {
-					user.Department = row.Cells[j+4].String()
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-				if len(row.Cells) >= 7 {
-					user.Secoffice = row.Cells[j+5].String()
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-				if len(row.Cells) >= 8 {
-					user.Ip = row.Cells[j+6].String()
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-				if len(row.Cells) >= 9 {
-					user.Port = row.Cells[j+7].String()
-					if err != nil {
-						beego.Error(err)
-					}
-				}
-				if len(row.Cells) >= 10 {
-					status := row.Cells[j+8].String()
-					if err != nil {
-						beego.Error(err)
-					}
-					status1, err := strconv.Atoi(status)
-					if err != nil {
-						beego.Error(err)
-					}
-					user.Status = status1
-				}
-				if len(row.Cells) >= 11 {
-					role := row.Cells[j+9].String()
-					if err != nil {
-						beego.Error(err)
-					}
-
-					user.Role = role
-					user.Lastlogintime = time.Now()
-					_, err = m.SaveUser(user) //如果姓名重复，也要返回uid
-					if err != nil {
-						beego.Error(err)
+							user.Role = role
+							user.Lastlogintime = time.Now()
+							_, err = m.SaveUser(user) //如果姓名重复，也要返回uid
+							if err != nil {
+								beego.Error(err)
+							}
+						}
 					}
 				}
 			}
+			//删除附件
+			err = os.Remove(path)
+			if err != nil {
+				beego.Error(err)
+			}
+			c.Data["json"] = "ok"
+			c.ServeJSON()
 		}
+	} else {
+		c.Data["json"] = "err文件为空！"
+		c.ServeJSON()
 	}
-	//删除附件
-	err = os.Remove(path)
-	if err != nil {
-		beego.Error(err)
-	}
-	c.Data["json"] = "ok"
-	c.ServeJSON()
 }
 
 func (this *UserController) Roleerr() {

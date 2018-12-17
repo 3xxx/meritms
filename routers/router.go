@@ -1,20 +1,75 @@
 // @APIVersion 1.0.0
-// @Title mobile API
-// @Description mobile has every tool to get any job done, so codename for the new mobile APIs.
-// @Contact astaxie@gmail.com
+// @Title MeritMS API
+// @Description ECMS has every tool to get any job done, so codename for the new ECMS APIs.
+// @Contact 504284@qq.com
 package routers
 
 import (
 	"github.com/3xxx/meritms/controllers"
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/plugins/cors"
 )
 
 func init() {
+	//运行跨域请求
+	//在http请求的响应流头部加上如下信息
+	//rw.Header().Set("Access-Control-Allow-Origin", "*")
+	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin", "Access-Control-Allow-Headers", "Content-Type"},
+		AllowCredentials: true,
+	}))
+	//自动化文档
+	ns :=
+		beego.NewNamespace("/v1",
+			beego.NSNamespace("/admin",
+				beego.NSInclude(
+					&controllers.AdminController{},
+					// &controllers.CustomerCookieCheckerController{},
+				),
+			),
+			beego.NSNamespace("/wx",
+				beego.NSInclude(
+					&controllers.ArticleController{},
+					&controllers.FroalaController{},
+					&controllers.LoginController{},
+					&controllers.ReplyController{},
+					&controllers.SearchController{},
+					&controllers.MainController{},
+					&controllers.StandardController{},
+					&controllers.RegistController{},
+				),
+			),
+			beego.NSNamespace("/adminlog",
+				beego.NSInclude(
+					&controllers.AdminLogController{},
+				),
+			),
+
+			// beego.NSNamespace("/cms",
+			// 	beego.NSInclude(
+			// 		&controllers.CMSController{},
+			// 	),
+			// ),
+			// beego.NSNamespace("/suggest",
+			// 	beego.NSInclude(
+			// 		&controllers.SearchController{},
+			// 	),
+			// ),
+		)
+	beego.AddNamespace(ns)
+
 	beego.Router("/test", &controllers.MainController{}, "*:Test")
+	// beego.Router("/.well-known/pki-validation/AC9A20F9BD09F18D247337AABC67BC06.txt", &controllers.AdminController{}, "*:Testdown")
+	beego.Router("/.well-known/pki-validation/*", &controllers.AdminController{}, "*:Testdown")
+
+	beego.Router("/doctree", &controllers.OnlyController{}, "*:GetTree")
 	//升级数据库
-	// beego.Router("/updatedatabase", &controllers.MainController{}, "*:UpdateDatabase")
+	beego.Router("/updatedatabase", &controllers.MainController{}, "*:UpdateDatabase")
 	//删除数据表和字段测试
-	// beego.Router("/modifydatabase", &controllers.MainController{}, "*:ModifyDatabase")
+	beego.Router("/modifydatabase", &controllers.MainController{}, "*:ModifyDatabase")
 
 	beego.Router("/url-to-callback", &controllers.OnlyController{}, "*:UrltoCallback")
 	//cms中预览office回调
@@ -57,21 +112,13 @@ func init() {
 	//api接口
 	beego.Router("/api/ecms", &controllers.MainController{}, "get:Getecmsapi")
 	beego.Router("/api/meritms", &controllers.MainController{}, "get:Getmeritmsapi")
-
-	beego.Router("/zsj", &controllers.MainController{}, "*:ZSJ")
-	beego.Router("/pro", &controllers.MainController{}, "*:Progress")
-	beego.Router("/getprogress", &controllers.MainController{}, "*:GetProgress")
-	beego.Router("/getselect", &controllers.MainController{}, "*:GetSelect")
-	beego.Router("/getprogress1", &controllers.MainController{}, "*:GetProgress1")
-
-	beego.Router("/modifyprogress", &controllers.MainController{}, "*:ModifyProgress")
-
-	beego.Router("/shower", &controllers.MainController{}, "*:Shower")
-
-	beego.Router("/pdf", &controllers.MainController{}, "*:Pdf")
+	//根据app.conf里的设置，显示首页
+	beego.Router("/", &controllers.MainController{}, "get:Get")
 	//显示首页
-	beego.Router("/", &controllers.IndexController{}, "*:GetIndex")
 	beego.Router("/index", &controllers.IndexController{}, "*:GetIndex")
+	//首页放到onlyoffice
+	// beego.Router("/", &controllers.OnlyController{}, "get:Get")
+	beego.Router("/pdf", &controllers.MainController{}, "*:Pdf")
 	//显示右侧页面框架
 	beego.Router("/index/user", &controllers.IndexController{}, "*:GetUser")
 	//这里显示用户查看主人日程
@@ -104,7 +151,7 @@ func init() {
 
 	//根据数字id查询类别或目录分级表
 	beego.Router("/admin/category/?:id:string", &controllers.AdminController{}, "*:Category")
-	//根据名字查询目录分级表
+	//根据名字查询目录分级表_这里应该放多一个/category路径下
 	beego.Router("/admin/categorytitle", &controllers.AdminController{}, "*:CategoryTitle")
 	//添加目录类别
 	beego.Router("/admin/category/addcategory", &controllers.AdminController{}, "*:AddCategory")
@@ -256,7 +303,12 @@ func init() {
 	//用户产看自己的table中数据填充
 	beego.Router("/usermyself", &controllers.UserController{}, "get:Usermyself")
 
-	beego.Router("/login", &controllers.LoginController{})
+	beego.Router("/login", &controllers.LoginController{}, "get:Login")
+	//页面登录提交用户名和密码
+	beego.Router("/post", &controllers.LoginController{}, "post:Post")
+	//弹框登录提交用户名和密码
+	beego.Router("/loginpost", &controllers.LoginController{}, "post:LoginPost")
+	beego.Router("/logout", &controllers.LoginController{}, "get:Logout")
 	beego.Router("/loginerr", &controllers.LoginController{}, "get:Loginerr")
 	beego.Router("/roleerr", &controllers.UserController{}, "*:Roleerr") //显示权限不够
 
@@ -513,6 +565,9 @@ func init() {
 
 	//向成果里添加附件：批量一对一模式
 	beego.Router("/project/product/addattachment", &controllers.AttachController{}, "post:AddAttachment")
+	//dwg写入服务器
+	beego.Router("/project/product/savedwgfile", &controllers.AttachController{}, "post:SaveDwgfile")
+
 	//向成果里添加附件：多附件模式
 	beego.Router("/project/product/addattachment2", &controllers.AttachController{}, "post:AddAttachment2")
 	//编辑附件列表：向成果里追加附件：多附件模式
@@ -548,10 +603,10 @@ func init() {
 
 	//附件下载"/attachment/*", &controllers.AttachController{}
 	// beego.InsertFilter("/attachment/*", beego.BeforeRouter, controllers.ImageFilter)
-	//根据附件地址下载
-	beego.Router("/attachment/*", &controllers.AttachController{}, "get:DownloadAttachment")
-	//根据权限下载附件id号
-	beego.Router("/attachment", &controllers.AttachController{}, "get:Attachment")
+	//根据附件绝对地址下载
+	beego.Router("/attachment/*", &controllers.AttachController{}, "get:Attachment")
+	//根据附件id号，判断权限下载
+	beego.Router("/downloadattachment", &controllers.AttachController{}, "get:DownloadAttachment")
 
 	//上面用attachment.ImageFilter是不行的，必须是package.func
 	//首页轮播图片的权限
@@ -598,6 +653,7 @@ func init() {
 	beego.Router("/wiki/add", &controllers.WikiController{}, "get:Add")
 	//发表文章提交
 	beego.Router("/wiki/addwiki", &controllers.WikiController{}, "post:AddWiki")
+
 	//查看一个文章
 	beego.Router("/wiki/view/", &controllers.WikiController{}, "get:View")
 	//删除wiki
@@ -608,9 +664,45 @@ func init() {
 	//添加删除wiki的评论
 	beego.Router("/reply/addwiki", &controllers.ReplyController{}, "post:AddWiki")
 	beego.Router("/reply/deletewiki", &controllers.ReplyController{}, "get:DeleteWiki")
+	//这个有哦何用？
 	beego.SetStaticPath("/attachment/wiki", "attachment/wiki")
+	beego.SetStaticPath("/swagger", "swagger")
 	// *全匹配方式 //匹配 /download/ceshi/file/api.json :splat=file/api.json
 	beego.Router("/searchwiki", &controllers.SearchController{}, "get:SearchWiki")
+
+	//规范管理
+	beego.Router("/standard", &controllers.StandardController{}, "*:Index")
+	beego.Router("/standard/search", &controllers.StandardController{}, "*:Search")
+	beego.Router("/standard/importexcel", &controllers.StandardController{}, "*:ImportExcel")
+	beego.Router("/standard/standard_one_addbaidu", &controllers.StandardController{}, "post:Standard_one_addbaidu")
+	beego.Router("/standard/importlibrary", &controllers.StandardController{}, "post:ImportLibrary")
+	//显示规范所有
+	beego.Router("/standard/getstandard", &controllers.StandardController{}, "get:GetStandard")
+	//修改规范库
+	beego.Router("/standard/updatestandard", &controllers.StandardController{}, "post:UpdateStandard")
+	//删除规范库
+	beego.Router("/standard/deletestandard", &controllers.StandardController{}, "post:DeleteStandard")
+
+	//显示有效库所有
+	beego.Router("/standard/valid", &controllers.StandardController{}, "get:Valid")
+	//删除有效库中选中
+	beego.Router("/standard/deletevalid", &controllers.StandardController{}, "post:DeleteValid")
+	//对标
+	beego.Router("/legislation", &controllers.LegislationController{}, "*:Index")
+	beego.Router("/legislation/checklist", &controllers.LegislationController{}, "*:Checklist")
+
+	//微信小程序
+	//小程序发表文章提交
+	// beego.Router("/wx/addwxarticle", &controllers.ArticleController{}, "post:AddWxArticle")
+	//小程序上传图片，返回地址
+	// beego.Router("/wx/uploadwximg", &controllers.FroalaController{}, "*:UploadWxImg")
+	//小程序获得文章列表，分页
+	// beego.Router("/wx/getwxarticles", &controllers.ArticleController{}, "*:GetWxArticles")
+	//小程序根据文章id返回文章数据
+	// beego.Router("/wx/getwxarticle/:id:string", &controllers.ArticleController{}, "*:GetWxArticle")
+	//微信登录
+	// beego.Router("/wx/wxlogin", &controllers.LoginController{}, "*:WxLogin")
+
 	//获得ecms提交过来的成果清单
 	beego.Router("/getecmspost", &controllers.EcmsController{}, "post:GetEcmsPost")
 

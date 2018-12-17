@@ -160,8 +160,8 @@
         </div>
       </div>
     </div>
-  </div>
-</form>
+    </div>
+  </form>
 </div>
 
 <script type="text/javascript">

@@ -39,10 +39,11 @@ type ProductLink struct {
 }
 
 type AttachmentLink struct {
-	Id        int64
-	Title     string
-	Link      string
-	FileSize  int64
+	Id       int64
+	Title    string
+	Link     string
+	FileSize int64
+	// Suffix    string
 	Downloads int64
 	Created   time.Time
 	Updated   time.Time
@@ -52,11 +53,13 @@ type PdfLink struct {
 	Id        int64
 	Title     string
 	Link      string
+	ActIndex  string
 	FileSize  int64
 	Downloads int64
 	Created   time.Time
 	Updated   time.Time
 }
+
 type ArticleContent struct {
 	Id        int64
 	Title     string
@@ -139,17 +142,18 @@ func (c *ProdController) GetProjProd() {
 		// projurls = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + strconv.FormatInt(proj.Id, 10)
 		projurls = "/" + strings.Replace(strings.Replace(proj.ParentIdPath, "#", "/", -1), "$", "", -1) + strconv.FormatInt(proj.Id, 10)
 	}
-	if e.Enforce(useridstring, projurls+"/", "POST", ".1") {
+
+	if e.Enforce(useridstring, projurls+"/", "POST", ".1") || isadmin {
 		c.Data["RoleAdd"] = "true"
 	} else {
 		c.Data["RoleAdd"] = "false"
 	}
-	if e.Enforce(useridstring, projurls+"/", "PUT", ".1") {
+	if e.Enforce(useridstring, projurls+"/", "PUT", ".1") || isadmin {
 		c.Data["RoleUpdate"] = "true"
 	} else {
 		c.Data["RoleUpdate"] = "false"
 	}
-	if e.Enforce(useridstring, projurls+"/", "DELETE", ".1") {
+	if e.Enforce(useridstring, projurls+"/", "DELETE", ".1") || isadmin {
 		c.Data["RoleDelete"] = "true"
 	} else {
 		c.Data["RoleDelete"] = "false"
@@ -238,7 +242,7 @@ func (c *ProdController) GetProducts() {
 		offset = (page1 - 1) * limit1
 	}
 	//根据项目id取得所有成果
-	products, err := models.GetProductsPage(idNum, limit1, offset, searchText)
+	products, err := models.GetProductsPage(idNum, limit1, offset, 0, searchText)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -824,8 +828,8 @@ func (c *ProdController) DeleteProduct() {
 			_, DiskDirectory, err := GetUrlPath(prod.ProjectId)
 			if err != nil {
 				beego.Error(err)
-			} else {
-				path := DiskDirectory + "\\" + attach.FileName
+			} else if DiskDirectory != "" {
+				path := DiskDirectory + "/" + attach.FileName
 				//删除附件
 				err = os.Remove(path)
 				if err != nil {

@@ -52,6 +52,20 @@ func UpdateProduct(cid int64, code, title, label, principal string) error {
 	return nil
 }
 
+//修改成果时间信息
+func UpdateProductTime(cid int64) error {
+	o := orm.NewOrm()
+	product := &Product{Id: cid}
+	if o.Read(product) == nil {
+		product.Updated = time.Now()
+		_, err := o.Update(product, "Updated")
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 //删除_把附件也一并删除（在controllers中实现吧）
 func DeleteProduct(cid int64) error {
 	o := orm.NewOrm()
@@ -124,7 +138,7 @@ func GetProducts(id int64) (products []*Product, err error) {
 }
 
 //根据侧栏id分页查出所有成果——按编号排序
-func GetProductsPage(id int64, limit, offset int64, searchText string) (products []*Product, err error) {
+func GetProductsPage(id, limit, offset, uid int64, searchText string) (products []*Product, err error) {
 	o := orm.NewOrm()
 	qs := o.QueryTable("Product")
 	if searchText != "" {
@@ -133,8 +147,10 @@ func GetProductsPage(id int64, limit, offset int64, searchText string) (products
 		cond2 := cond.AndCond(cond1).And("ProjectId", id)
 		qs = qs.SetCond(cond2)
 		_, err = qs.Limit(limit, offset).OrderBy("-created").All(&products)
-	} else {
+	} else if uid == 0 {
 		_, err = qs.Filter("ProjectId", id).Limit(limit, offset).OrderBy("-created").All(&products)
+	} else if uid != 0 {
+		_, err = qs.Filter("ProjectId", id).Filter("Uid", uid).Limit(limit, offset).OrderBy("-created").All(&products)
 	}
 	return products, err
 }
@@ -150,12 +166,13 @@ func GetProductsCount(id int64, searchText string) (count int64, err error) {
 		qs = qs.SetCond(cond2)
 		count, err = qs.Limit(-1).Count()
 	} else {
-		count, err = qs.Filter("ProjectId", id).Limit(-1).Count()
+		count, err = qs.Filter("ProjectId", id).Count()
 	}
 	return count, err
 }
 
 //根据项目顶级id查出所有成果
+//这个不优雅，应该用循环子孙id，查询字段在id数组中，参考SearchProjProductPage
 //直接把所有成果都查出来。getallproduct
 func GetProjProducts(id int64, number int) (count int64, products []*Product, err error) {
 	// idstring := strconv.FormatInt(id, 10)

@@ -5,7 +5,7 @@ import (
 	// "github.com/astaxie/beego/orm"
 	"crypto/md5"
 	"encoding/hex"
-	m "engineercms/models"
+	m "github.com/3xxx/meritms/models"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/tealeg/xlsx"
@@ -307,7 +307,7 @@ func (c *UserController) UpdateUser() {
 	}
 
 	logs := logs.NewLogger(1000)
-	logs.SetLogger("file", `{"filename":"log/engineercms.log"}`)
+	logs.SetLogger("file", `{"filename":"log/meritms.log"}`)
 	logs.EnableFuncCallDepth(true)
 	logs.Info(c.Ctx.Input.IP() + " " + "修改保存设计记录" + pk)
 	logs.Close()

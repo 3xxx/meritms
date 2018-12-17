@@ -561,7 +561,7 @@ func (c *RoleController) RolePermission() {
 					if err != nil {
 						beego.Error(err)
 					}
-					if proj.ParentIdPath == "" {
+					if proj.ParentIdPath == "" || proj.ParentIdPath == "$#" {
 						projurl = "/" + strconv.FormatInt(proj.Id, 10) + "/*"
 					} else {
 						// projurl = "/" + strings.Replace(proj.ParentIdPath, "-", "/", -1) + "/" + treearray[nodeidint] + "/*"

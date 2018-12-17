@@ -5,9 +5,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MeritMS</title>
+  <title>MeritMS后台</title>
 
-  <script type="text/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+  <script type="text/javascript" src="/static/js/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css"/>
 
@@ -86,7 +86,7 @@
       <a href="#">
         <i class="fa fa-gear"></i>
       </a>
-      <a href="#">
+      <a href="/">
         <i class="fa fa-power-off"></i>
       </a>
     </div>

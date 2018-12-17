@@ -81,7 +81,7 @@
             // alert("部门级别："+data.Level);
             $("#regis").html(data.text);//显示部门名称
             $("#regis").css("color","black");
-          document.getElementById("iframepage").src="/achievement/secofficeshow?secid="+data.Id+"&level="+data.Level;
+          document.getElementById("iframepage").src="/achievement/secofficeshow?secid="+data.id+"&level="+data.Level;
         });   
       });
       // document.getElementById()返回对拥有指定 id 的第一个对象的引用。

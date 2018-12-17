@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"strconv"
-	// "fmt"
+	"fmt"
 	"log"
 	"time"
 	// "github.com/astaxie/beego"
@@ -35,8 +35,19 @@ type User struct {
 	// Roles         []*Role   `orm:"rel(m2m)"`
 }
 
+//用户和openid对应表,一个用户对应多个openid
+type UserOpenID struct {
+	Id     int64
+	Uid    int64
+	OpenID string
+}
+
+// Id            int64
+// Username      string    `orm:"unique;size(32)" form:"Username"  valid:"Required;MaxSize(20);MinSize(6)"`
+// Password      string    `orm:"size(32)" form:"Password" valid:"Required;MaxSize(20);MinSize(6)"`
+
 func init() {
-	orm.RegisterModel(new(User))
+	orm.RegisterModel(new(User), new(UserOpenID))
 }
 
 //这个是使用的，下面那个adduser不知干啥的
@@ -73,6 +84,40 @@ func SaveUser(user User) (uid int64, err error) {
 	// 	uid = user1.Id
 	// }
 	return uid, err
+}
+
+//后台手工操作添加微信小程序openid和用户名
+func AddUserOpenID(userid int64, openid string) (id int64, err error) {
+	o := orm.NewOrm()
+	var useropenid UserOpenID
+	//判断是否有重名
+	err = o.QueryTable("UserOpenID").Filter("openid", openid).One(&useropenid, "Id")
+	if err == orm.ErrNoRows { //Filter("tnumber", tnumber).One(topic, "Id")==nil则无法建立
+		// 没有找到记录
+		useropenid.Uid = userid
+		useropenid.OpenID = openid
+		id, err = o.Insert(&useropenid)
+		if err != nil {
+			return id, err
+		}
+	}
+	return id, err //这里需要改改，否则，即使已经存在，则err为空。
+}
+
+//根据openid查user
+func GetUserByOpenID(openid string) (user User, err error) {
+	o := orm.NewOrm()
+	var useropenid UserOpenID
+	qs := o.QueryTable("UserOpenID")
+	//进行编号唯一性检查
+	err = qs.Filter("openid", openid).One(&useropenid)
+	if err != nil {
+		return user, err
+	}
+	//查询user
+	user = User{Id: useropenid.Uid}
+	o.Read(&user) //这里是默认主键查询。=(&user,"Id")
+	return user, err
 }
 
 func ValidateUser(user User) error {
@@ -473,9 +518,6 @@ func GetUserByNickname(nickname string) (user User) {
 	qs := o.QueryTable("user") //不知道主键就用这个过滤操作
 	//进行编号唯一性检查
 	qs.Filter("nickname", nickname).One(&user)
-	// user = User{Username: username} //指定字段查询，这样也行
-	// o := orm.NewOrm()
-	// o.Read(&user,"Username")
 	return user
 }
 
@@ -487,29 +529,54 @@ func GetUserByUserId(userid int64) (user User) {
 	return user
 }
 
-// func GetAllReplies(tid string) (replies []*Comment, err error) {
-// 	tidNum, err := strconv.ParseInt(tid, 10, 64)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	replies = make([]*Comment, 0)
+//*********初始化数据库中的用户********
+func InsertUser() {
+	fmt.Println("insert user ...")
+	// u := new(User)
+	var u User
+	u.Username = "admin"
+	u.Nickname = "Hotqin888"
+	Pwd1 := "admin"
+	md5Ctx := md5.New()
+	md5Ctx.Write([]byte(Pwd1))
+	cipherStr := md5Ctx.Sum(nil)
+	u.Password = hex.EncodeToString(cipherStr)
+	// u.Password = Pwdhash("admin")
+	u.Email = "504284@qq.com"
+	u.Remark = "I'm admin"
+	u.Status = 1
+	u.Role = "1"
+	id, err := SaveUser(u)
+	// o = orm.NewOrm()
+	// o.Insert(u)
+	// fmt.Println("insert user end")
+	if err == nil && id > 0 {
+		fmt.Println("insert user end")
+	} else {
+		log.Println(err)
+	}
+}
 
-// 	o := orm.NewOrm()
-// 	qs := o.QueryTable("comment")
-// 	_, err = qs.Filter("tid", tidNum).All(&replies)
-// 	return replies, err
-
+// func insertGroup() {
+// 	fmt.Println("insert group ...")
+// 	g := new(Group)
+// 	g.Name = "APP"
+// 	g.Title = "System"
+// 	g.Sort = 1
+// 	g.Status = 2
+// 	o.Insert(g)
+// 	fmt.Println("insert group end")
 // }
 
-// func GetRoleByUserId(userid int64) (roles []*Role, count int64) { //*Topic, []*Attachment, error
-// 	roles = make([]*Role, 0)
-// 	o := orm.NewOrm()
-// 	// role := new(Role)
-// 	count, _ = o.QueryTable("role").Filter("Users__User__Id", userid).All(&roles)
-// 	return roles, count
-// 	// 通过 post title 查询这个 post 有哪些 tag
-// 	// var tags []*Tag
-// 	// num, err := dORM.QueryTable("tag").Filter("Posts__Post__Title", "Introduce Beego ORM").All(&tags)
+// func insertRole() {
+// 	fmt.Println("insert role ...")
+// 	r := new(Role)
+// 	r.Name = "Admin"
+// 	r.Remark = "I'm a admin role"
+// 	r.Status = 2
+// 	r.Title = "Admin role"
+// 	o.Insert(r)
+// 	fmt.Println("insert role end")
 // }
 
 func GetRoleByUsername(username string) (roles []*Role, count int64, err error) { //*Topic, []*Attachment, error

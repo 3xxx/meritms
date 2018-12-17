@@ -22,8 +22,8 @@ type Role struct {
 	Rolename   string `json:"name",orm:"unique"` //这个拼音的简写
 	Rolenumber string
 	Status     string    `json:"role",orm:"default('0');size(2)"` //,form:"Status",valid:"Range('0','1','2','3','4')"`
-	Createtime time.Time `orm:"auto_now_add;type(datetime)"`
-	Updated    time.Time `orm:"auto_now_add;type(datetime)"`
+	Createtime time.Time `orm:"type(datetime);auto_now_add" `
+	Updated    time.Time `orm:"type(datetime);auto_now_add" `
 }
 
 type UserRole struct {
@@ -36,7 +36,7 @@ func init() {
 	orm.RegisterModel(new(Role), new(UserRole))
 }
 
-//添加角色
+//添加权限
 func SaveRole(role Role) (rid int64, err error) {
 	o := orm.NewOrm()
 	var role1 Role

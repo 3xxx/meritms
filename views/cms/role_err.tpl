@@ -36,7 +36,7 @@
       <p>成功登出</p>
     </div>
     -->
-    <form method="POST" action="/login">
+    <form method="POST" action="/post">
      <!-- <input type="hidden" name="_xsrf" value="z2rSZ3cjoR110qfJGIKVyE62pH7Brd1L">
       -->
       <!-- <input type="hidden" name="_once" value="dRFmv4aizZ">

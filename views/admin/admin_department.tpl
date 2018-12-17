@@ -201,8 +201,7 @@
 </script>
 
 <!-- 添加部门代码 -->
-<div class="container">
-  <div  class="form-horizontal">
+<div class="container form-horizontal">
     <div class="modal fade" id="modalTable">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -233,7 +232,6 @@
         </div>
       </div>
     </div>
-  </div>
 </div>
     <script type="text/javascript">
       function save(){
