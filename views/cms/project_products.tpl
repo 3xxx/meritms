@@ -6,14 +6,12 @@
   <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css"/>
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
-  
   <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-zh-CN.min.js"></script>
   <script type="text/javascript" src="/static/js/bootstrap-table-export.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css"/>
   <script src="/static/js/tableExport.js"></script>
   <script type="text/javascript" src="/static/js/moment.min.js"></script>
-
   <link rel="stylesheet" type="text/css" href="/static/css/webuploader.css">
   <script type="text/javascript" src="/static/js/webuploader.min.js"></script>
   <script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
@@ -48,6 +46,7 @@
     #modalDialog5 .modal-header {cursor: move;}
     #modalDialog6 .modal-header {cursor: move;}
     #modalDialog7 .modal-header {cursor: move;}
+    #modalNewDwg .modal-header {cursor: move;}
       /*body {
           text-align: center;
       }*/
@@ -95,6 +94,9 @@
         <button {{if ne "true" .RoleDelete}} style="display:none" {{end}} type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
         </button>
+        <button {{if ne "true" .RoleNewDwg}} style="display:none" {{end}} type="button" data-name="newdwgButton" id="newdwgButton" class="btn btn-default">
+        <i class="fa fa-trash">NEWdwg</i>
+        </button>
         <!-- <button type="button" data-name="synchIP" id="synchIP" class="btn btn-default">
         <i class="fa fa-refresh">同步</i>
         </button> -->
@@ -106,152 +108,152 @@
   $(function () {
     // 初始化【未接受】工作流表格
     $("#table0").bootstrapTable({
-        url : '/project/products/{{.Id}}',
-        method: 'get',
-        search:'true',
-        showRefresh:'true',
-        showToggle:'true',
-        showColumns:'true',
-        toolbar:'#toolbar1',
-        pagination: 'true',
-        sidePagination: "server",
-        queryParamsType:'',
-        //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
-        // limit, offset, search, sort, order 否则, 需要包含: 
-        // pageSize, pageNumber, searchText, sortName, sortOrder. 
-        // 返回false将会终止请求。
-        pageSize: 15,
-        pageNumber: 1,
-        pageList: [15, 50, 100],
-        uniqueId:"id",
-        singleSelect:"true",
-        clickToSelect:"true",
-        showExport:"true",
-        queryParams:function queryParams(params) {   //设置查询参数
-          var param = {
-              limit: params.pageSize,   //每页多少条数据
-              pageNo: params.pageNumber, // 页码
-              searchText:$(".search .form-control").val()
-          };
-          //搜索框功能
-          //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
-          // if (null != searchText) {
-          //   try {
-          //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
-          //   } catch (Exception e) {
-          //     e.printStackTrace();
-          //   }
-          // }
-          return param;
+      url : '/project/products/{{.Id}}',
+      method: 'get',
+      search:'true',
+      showRefresh:'true',
+      showToggle:'true',
+      showColumns:'true',
+      toolbar:'#toolbar1',
+      pagination: 'true',
+      sidePagination: "server",
+      queryParamsType:'',
+      //请求服务器数据时，你可以通过重写参数的方式添加一些额外的参数，例如 toolbar 中的参数 如果 queryParamsType = 'limit' ,返回参数必须包含
+      // limit, offset, search, sort, order 否则, 需要包含: 
+      // pageSize, pageNumber, searchText, sortName, sortOrder. 
+      // 返回false将会终止请求。
+      pageSize: 15,
+      pageNumber: 1,
+      pageList: [15, 50, 100],
+      uniqueId:"id",
+      singleSelect:"true",
+      clickToSelect:"true",
+      showExport:"true",
+      queryParams:function queryParams(params) {   //设置查询参数
+        var param = {
+            limit: params.pageSize,   //每页多少条数据
+            pageNo: params.pageNumber, // 页码
+            searchText:$(".search .form-control").val()
+        };
+        //搜索框功能
+        //当查询条件中包含中文时，get请求默认会使用ISO-8859-1编码请求参数，在服务端需要对其解码
+        // if (null != searchText) {
+        //   try {
+        //     searchText = new String(searchText.getBytes("ISO-8859-1"), "UTF-8");
+        //   } catch (Exception e) {
+        //     e.printStackTrace();
+        //   }
+        // }
+        return param;
+      },
+      columns: [
+        {
+          title: '选择',
+          radio: 'true',
+          width: '10',
+          align:"center",
+          valign:"middle"
         },
-        columns: [
-          {
-            title: '选择',
-            radio: 'true',
-            width: '10',
-            align:"center",
-            valign:"middle"
+        {
+          // field: 'Number',
+          title: '序号',
+          formatter:function(value,row,index){
+            return index+1
           },
-          {
-            // field: 'Number',
-            title: '序号',
-            formatter:function(value,row,index){
-              return index+1
-            },
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Code',
-            title: '编号',
-            // formatter:setCode,
-            halign:"center",
-            align:"left",
-            valign:"middle"
-          },
-          {
-            field: 'Title',
-            title: '名称',
-            // formatter:setTitle,
-            halign:"center",
-            align:"left",
-            valign:"middle"
-          },
-          {
-            field: 'Label',
-            title: '标签',
-            formatter:setLable,
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Principal',
-            title: '设计',
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Articlecontent',
-            title: '文章',
-            formatter:setArticle,
-            events:actionEvents,
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Attachmentlink',
-            title: '附件',
-            formatter:setAttachment,
-            events:actionEvents,
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Pdflink',
-            title: 'PDF',
-            formatter:setPdf,
-            events:actionEvents,
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Created',
-            title: '建立时间',
-            formatter:localDateFormatter,
-            visible:"false",
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Updated',
-            title: '更新时间',
-            formatter:localDateFormatter,
-            visible:"false",
-            align:"center",
-            valign:"middle"
-          },
-          {
-            field: 'Relevancy',
-            title: '关联',
-            formatter:RelevFormatter,
-            // events:actionRelevancy,
-            // visible："false",
-            align:"center",
-            valign:"middle"
-          }
-            // {
-            //     field: 'dContMainEntity.createTime',
-            //     title: '发起时间',
-            //     formatter: function (value, row, index) {
-            //         return new Date(value).toLocaleString().substring(0,9);
-            //     }
-            // },
-            // {
-            //     field: 'dContMainEntity.operate',
-            //     title: '操作',
-            //     formatter: operateFormatter
-            // }
-        ]
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Code',
+          title: '编号',
+          // formatter:setCode,
+          halign:"center",
+          align:"left",
+          valign:"middle"
+        },
+        {
+          field: 'Title',
+          title: '名称',
+          // formatter:setTitle,
+          halign:"center",
+          align:"left",
+          valign:"middle"
+        },
+        {
+          field: 'Label',
+          title: '标签',
+          formatter:setLable,
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Principal',
+          title: '设计',
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Articlecontent',
+          title: '文章',
+          formatter:setArticle,
+          events:actionEvents,
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Attachmentlink',
+          title: '附件',
+          formatter:setAttachment,
+          events:actionEvents,
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Pdflink',
+          title: 'PDF',
+          formatter:setPdf,
+          events:actionEvents,
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Created',
+          title: '建立时间',
+          formatter:localDateFormatter,
+          visible:"false",
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Updated',
+          title: '更新时间',
+          formatter:localDateFormatter,
+          visible:"false",
+          align:"center",
+          valign:"middle"
+        },
+        {
+          field: 'Relevancy',
+          title: '关联',
+          formatter:RelevFormatter,
+          // events:actionRelevancy,
+          // visible："false",
+          align:"center",
+          valign:"middle"
+        }
+        // {
+        //     field: 'dContMainEntity.createTime',
+        //     title: '发起时间',
+        //     formatter: function (value, row, index) {
+        //         return new Date(value).toLocaleString().substring(0,9);
+        //     }
+        // },
+        // {
+        //     field: 'dContMainEntity.operate',
+        //     title: '操作',
+        //     formatter: operateFormatter
+        // }
+      ]
     });
   });
 
@@ -293,6 +295,7 @@
   function setCode(value,row,index){
     return "<a href='/project/product/attachment/"+row.Id+"'>" + value + "</a>";
   }
+
   function setLable(value,row,index){
     // alert(value);
     if (value){//注意这里如果value未定义则出错，一定要加这个判断。
@@ -304,7 +307,8 @@
       }
         return labelarray.join(",");
       }
-  }  
+  } 
+
   function setCodetest(value,row,index){
     //保留，数组和字符串以及循环的处理
     // array=value.split(",")
@@ -345,7 +349,11 @@
   function setAttachment(value,row,index){
     if (value){
       if (value.length==1){
-        var ext =/\.[^\.]+/.exec(value[0].Title);
+        // var ext =/\.[^\.]+/.exec(value[0].Title);
+        var filename=value[0].Title
+        var index1=filename.lastIndexOf(".");
+        var index2=filename.length;
+        var ext=filename.substring(index1,index2);//后缀名
         if (ext==".dwg"){
           attachUrl= '<a href="/downloadattachment?id='+value[0].Id+'" title="打开" target="_blank"><i class="fa fa-codepen fa-lg" style="color:Black;"></i></a>';
         }else if(ext==".doc"||ext==".docx"){
@@ -791,12 +799,10 @@
         $("#prodname3").val(selectRow[0].Title);
         $("#prodlabel3").val(selectRow[0].Label);
         $("#prodprincipal3").val(selectRow[0].Principal);
-
         $('#modalProdEditor').modal({
         show:true,
         backdrop:'static'
         });
-
       }else{
         alert("权限不够！"+selectRow[0].Uid);
         return;
@@ -827,34 +833,33 @@
 
       if (selectRow[0].Uid==={{.Uid}}||{{.RoleDelete}}=="true"){
 
-      if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
-      var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
-      }
-      if (selectRow[0].Articlecontent[0]){
-      var site=/http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link);//非贪婪模式 
-      }
-      if (selectRow[0].Pdflink[0]){
-      var site=/http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link);//非贪婪模式 
-      }
-      if (site){
-        alert("同步成果不允许！");
-        return;
-      }
-      selectrowid=selectRow[0].Id;
-      $("input#pid").remove();
-      var th1="<input id='pid' type='hidden' name='pid' value='" +selectRow[0].Id+"'/>"
-      $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
-      $('#attachments').bootstrapTable('refresh', {url:'/project/product/allattachments/'+selectRow[0].Id});//取得所有附件列表和文章列表
-      $('#modalAttachEditor').modal({
-      show:true,
-      backdrop:'static'
-      });
+        if (selectRow[0].Attachmentlink[0]){//||selectRow[0].Pdflink[0].Link||selectRow[0].Articlecontent[0].Link)
+          var site=/http:\/\/.*?\//.exec(selectRow[0].Attachmentlink[0].Link);//非贪婪模式 
+        }
+        if (selectRow[0].Articlecontent[0]){
+          var site=/http:\/\/.*?\//.exec(selectRow[0].Articlecontent[0].Link);//非贪婪模式 
+        }
+        if (selectRow[0].Pdflink[0]){
+          var site=/http:\/\/.*?\//.exec(selectRow[0].Pdflink[0].Link);//非贪婪模式 
+        }
+        if (site){
+          alert("同步成果不允许！");
+          return;
+        }
+        selectrowid=selectRow[0].Id;
+        $("input#pid").remove();
+        var th1="<input id='pid' type='hidden' name='pid' value='" +selectRow[0].Id+"'/>"
+        $(".modal-body").append(th1);//这里是否要换名字$("p").remove();
+        $('#attachments').bootstrapTable('refresh', {url:'/project/product/allattachments/'+selectRow[0].Id});//取得所有附件列表和文章列表
+        $('#modalAttachEditor').modal({
+          show:true,
+          backdrop:'static'
+        });
 
       }else{
         alert("权限不够！"+selectRow[0].Uid);
         return;
       }
-
   })
 
   $(document).ready(function() {
@@ -1010,6 +1015,21 @@
       }  
   })
 
+  // 新建dwg文件
+  $("#newdwgButton").click(function() {
+      if ({{.RoleNewDwg}}!="true"){
+        alert("权限不够！");
+        return;
+      }
+      $("input#pid").remove();
+      var th1="<input id='pid' type='hidden' name='pid' value='" +{{.Id}}+"'/>"
+        $(".modal-body").append(th1);
+        $('#modalNewDwg').modal({
+          show:true,
+          backdrop:'static'
+        });
+  })
+
 </script>
   <!-- 批量上传 -->
   <div class="form-horizontal">
@@ -1074,12 +1094,12 @@
     </div>
   </div>
 
-<!-- 多附件 -->
+  <!-- 多附件 -->
   <div class="form-horizontal">
     <div class="modal fade" id="modalTable1">
-      <div class="modal-dialog"  id="modalDialog1" style="background-color: #8bc34a">
+      <div class="modal-dialog"  id="modalDialog1">
         <div class="modal-content">
-          <div class="modal-header">
+          <div class="modal-header" style="background-color: #8bc34a">
             <button type="button" class="close" data-dismiss="modal">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -1125,6 +1145,50 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             <!-- <button type="button" class="btn btn-primary" onclick="save1()">保存</button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- 新建dwg文件 -->
+  <div class="form-horizontal">
+    <div class="modal fade" id="modalNewDwg">
+      <div class="modal-dialog"  id="modalDialog1">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color: #8bc34a">
+            <button type="button" class="close" data-dismiss="modal">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h3 class="modal-title">新建DWG文件</h3>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-content">
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">编号</label>
+                <div class="col-sm-7">
+                  <input type="text" class="form-control" id="NewDwgcode" name="NewDwgcode"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">名称</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="NewDwgname" name="NewDwgname"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">关键字</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="NewDwglabel" name="NewDwglabel" placeholder="以英文,号分割"></div>
+              </div>
+              <div class="form-group must">
+                <label class="col-sm-3 control-label">设计</label>
+                <div class="col-sm-7">
+                  <input type="tel" class="form-control" id="NewDwgprincipal" name="NewDwgprincipal"></div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-primary" onclick="saveNewDwg()">保存</button>
           </div>
         </div>
       </div>
@@ -1562,6 +1626,35 @@ $('#edit').froalaEditor('destroy'); -->
       return;
     }
   }
+
+    //新建dwg文件
+  function saveNewDwg(){
+    // var radio =$("input[type='radio']:checked").val();
+    var projectid = $('#pid').val();
+    var NewDwgcode = $('#NewDwgcode').val();
+    var NewDwgname = $('#NewDwgname').val();
+    var NewDwgprincipal = $('#NewDwgprincipal').val();
+    var NewDwglabel = $('#NewDwglabel').val();
+    // var relevancy = $('#relevancy').val();
+    if (prodname&&prodcode){  
+      $.ajax({
+        type:"post",
+        url:"/project/product/newdwg",
+        data: {pid:projectid,code:NewDwgcode,title:NewDwgname,label:NewDwglabel,principal:NewDwgprincipal},
+        success:function(data,status){
+          alert("添加“"+data+"”成功！(status:"+status+".)");
+          $('#modalNewDwg').modal('hide');
+          $('#table0').bootstrapTable('refresh', {url:'/project/products/'+{{.Id}}});
+          //打开新的dwg页面
+          // window.open("/downloadattachment?id="+data.Id); 
+        },
+      });
+    }else{
+      alert("请填写编号和名称！");
+      return;
+    }
+  }
+
   // 编辑成果信息
   function updateprod(){
     // var radio =$("input[type='radio']:checked").val();
@@ -1682,7 +1775,6 @@ $('#edit').froalaEditor('destroy'); -->
     }
 
     //勾选后输入框可用
-
     function station_select(){ 
       if(box.checked){ 
         document.getElementById("relevancy").disabled=false; 
@@ -1700,6 +1792,7 @@ $('#edit').froalaEditor('destroy'); -->
         $("#modalDialog5").draggable({ handle: ".modal-header" });
         $("#modalDialog6").draggable({ handle: ".modal-header" });
         $("#modalDialog7").draggable({ handle: ".modal-header" });
+        $("#modalNewDwg").draggable({ handle: ".modal-header" });
         $("#myModal").css("overflow", "hidden");//禁止模态对话框的半透明背景滚动
     })
 </script>

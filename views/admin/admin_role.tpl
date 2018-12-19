@@ -254,6 +254,7 @@
         pageList: [15,20, 50, 100],
         singleSelect:"true",
         clickToSelect:"true",
+        selectItemName:"project",
         queryParams:function queryParams(params) {   //设置查询参数
           var param = {
               limit: params.pageSize,   //每页多少条数据

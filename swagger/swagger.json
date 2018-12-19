@@ -1,12 +1,848 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "mobile API",
-        "description": "mobile has every tool to get any job done, so codename for the new mobile APIs.",
+        "title": "EngineerCMS API",
+        "description": "ECMS has every tool to get any job done, so codename for the new ECMS APIs.",
         "version": "1.0.0",
         "contact": {
-            "email": "astaxie@gmail.com"
+            "email": "504284@qq.com"
         }
     },
-    "paths": null
+    "basePath": "/v1",
+    "paths": {
+        "/admin/": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "description": "get admin page",
+                "operationId": "AdminController.getAdminBlock",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.success"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page"
+                    },
+                    "404": {
+                        "description": "page not found"
+                    }
+                }
+            }
+        },
+        "/admin/category/addcategory": {
+            "post": {
+                "tags": [
+                    "admin"
+                ],
+                "description": "Get Category list by title info",
+                "operationId": "AdminController.Post Category by pid title code grade",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "pid",
+                        "description": "parentid of category",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "description": "title of category",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "code",
+                        "description": "code of category",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "grade",
+                        "description": "grade of category",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.AddAdminCategory"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/category/{id}": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "description": "Get Category list by some info",
+                "operationId": "AdminController.Get Category list",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "category id",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetAdminCategory"
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/categorytitle": {
+            "get": {
+                "tags": [
+                    "admin"
+                ],
+                "description": "Get Category list by title info",
+                "operationId": "AdminController.Get Category by title",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "description": "title of search",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetAdminCategory"
+                        }
+                    }
+                }
+            }
+        },
+        "/adminlog/errlog": {
+            "get": {
+                "tags": [
+                    "adminlog"
+                ],
+                "description": "get log list",
+                "operationId": "AdminLogController.getAdminBlock",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.success"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page"
+                    },
+                    "404": {
+                        "description": "page not found"
+                    }
+                }
+            }
+        },
+        "/adminlog/infolog": {
+            "get": {
+                "tags": [
+                    "adminlog"
+                ],
+                "description": "get log list",
+                "operationId": "AdminLogController.getAdminBlock",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.success"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page"
+                    },
+                    "404": {
+                        "description": "page not found"
+                    }
+                }
+            }
+        },
+        "/wx/addwxarticle": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post article by catalogid",
+                "operationId": "ArticleController.post wx artile by catalogId",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "description": "The title of article",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "content",
+                        "description": "The content of article",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.AddArticle"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/wx/addwxarticles/{id}": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post article by catalogid",
+                "operationId": "ArticleController.post wx artile by catalogId",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "The id of project",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "title",
+                        "description": "The title of article",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "content",
+                        "description": "The content of article",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.AddArticle"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/wx/addwxlike/{id}": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post like by articleId",
+                "operationId": "ReplyController.post wx like by articleId",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "The id of article",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.AddTopicLike"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "article not found"
+                    }
+                }
+            }
+        },
+        "/wx/addwxrelease/{id}": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post release by articleId",
+                "operationId": "ReplyController.post wx release by articleId",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "The id of article",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "content",
+                        "description": "The content of release",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "code",
+                        "description": "The code of wx",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "avatar",
+                        "description": "The avatar of release",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "username",
+                        "description": "The username of release",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "created",
+                        "description": "The time of release",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.AddTopicReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "article not found"
+                    }
+                }
+            }
+        },
+        "/wx/deletewxrelease/{id}": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "delete release by releaseid",
+                "operationId": "ReplyController.delete wx release by releaseid",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "The id of release",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.DeleteTopicReply"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "article not found"
+                    }
+                }
+            }
+        },
+        "/wx/getwxarticle/{id}": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get article by articleid",
+                "operationId": "ArticleController.get wx artile by articleId",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of article",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetArticle"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/wx/getwxarticles": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get articles by page",
+                "operationId": "ArticleController.get wx artiles list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page for articles list",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/wx/getwxarticless/{id}": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get articles by page",
+                "operationId": "ArticleController.get wx artiles list",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of project",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "description": "The page for articles list",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/wx/searchwxdrawings": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get drawings by page",
+                "operationId": "SearchController.get wx drawings list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "keyword",
+                        "description": "The keyword of drawings",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "projectid",
+                        "description": "The projectid of drawings",
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "searchpage",
+                        "description": "The page for drawings list",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "drawings not found"
+                    }
+                }
+            }
+        },
+        "/wx/searchwxstandards": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get standards by page",
+                "operationId": "StandardController.get wx standards list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "keyword",
+                        "description": "The keyword of standards",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "searchpage",
+                        "description": "The page for drawings list",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "standards not found"
+                    }
+                }
+            }
+        },
+        "/wx/uploadwximg": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post article img by catalogid",
+                "operationId": "FroalaController.post wx artile img by catalogId",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.SUCCESS"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/wx/uploadwximgs/{id}": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post article img by catalogid",
+                "operationId": "FroalaController.post wx artile img by catalogId",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "The id of project",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.SUCCESS"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/wx/wxlogin/{id}": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post wx login",
+                "operationId": "LoginController.post wx login",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of wx",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "code",
+                        "description": "The jscode of wxuser",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.success"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articl not found"
+                    }
+                }
+            }
+        },
+        "/wx/wxpdf/{id}": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get wx pdf by id",
+                "operationId": "MainController.dowload wx pdf",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of pdf",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "code",
+                        "description": "The code of wx",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "app_version",
+                        "description": "The app_version of wx",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetAttachbyId"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "pdf not found"
+                    }
+                }
+            }
+        },
+        "/wx/wxregist": {
+            "post": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "post wx regist",
+                "operationId": "RegistController.post wx regist",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "uname",
+                        "description": "The username of ueser",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "password",
+                        "description": "The password of account",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "code",
+                        "description": "The code of wx",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "app_version",
+                        "description": "The app_version of wx",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.SaveUser"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "user not found"
+                    }
+                }
+            }
+        },
+        "/wx/wxstandardpdf/{id}": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get wx standardpdf by id",
+                "operationId": "MainController.dowload wx standardpdf",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The id of standardpdf",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetAttachbyId"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "pdf not found"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        ".AddAdminCategory": {
+            "type": "object"
+        },
+        ".AddArticle": {
+            "type": "object"
+        },
+        ".AddTopicLike": {
+            "type": "object"
+        },
+        ".AddTopicReply": {
+            "type": "object"
+        },
+        ".DeleteTopicReply": {
+            "type": "object"
+        },
+        ".GetAdminCategory": {
+            "type": "object"
+        },
+        ".GetArticle": {
+            "type": "object"
+        },
+        ".GetAttachbyId": {
+            "type": "object"
+        },
+        ".GetProductsPage": {
+            "type": "object"
+        },
+        ".SUCCESS": {
+            "type": "object"
+        },
+        ".SaveUser": {
+            "type": "object"
+        },
+        ".success": {
+            "type": "object"
+        }
+    },
+    "tags": [
+        {
+            "name": "admin",
+            "description": "CMSADMIN API\n"
+        },
+        {
+            "name": "adminlog",
+            "description": "CMSADMIN API\n"
+        }
+    ]
 }

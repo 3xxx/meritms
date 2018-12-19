@@ -149,9 +149,9 @@ function DoCommandEventFunc(iCmd){
 
 function DrawSpline() {
   // alert("保存DWG文件到服务器");
-  // var hostName = window.location.hostname;
-  // var port = window.location.port;
-  // var path = "http://" + hostName + ":" + port;
+  var hostName = window.location.hostname;
+  var port = window.location.port;
+  var path = "http://" + hostName + ":" + port;
   // alert(hostName+"==="+path);
   if (!mxOcx.SaveDwgToURL(path, "/project/product/savedwgfile?id={{.Id}}","file","")){
     // alert(path);

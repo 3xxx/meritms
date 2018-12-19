@@ -145,8 +145,10 @@ func (c *ProdController) GetProjProd() {
 
 	if e.Enforce(useridstring, projurls+"/", "POST", ".1") || isadmin {
 		c.Data["RoleAdd"] = "true"
+		c.Data["RoleNewDwg"] = "true"
 	} else {
 		c.Data["RoleAdd"] = "false"
+		c.Data["RoleNewDwg"] = "false"
 	}
 	if e.Enforce(useridstring, projurls+"/", "PUT", ".1") || isadmin {
 		c.Data["RoleUpdate"] = "true"

@@ -601,10 +601,10 @@
     return [
         '<a class="send" href="javascript:void(0)" title="提交">',
         '<i class="fa fa-step-forward"></i>',
-        '</a>&nbsp;',
+        '</a>&nbsp;&nbsp;',
         '<a class="downsend" href="javascript:void(0)" title="退回">',
         '<i class="fa fa-step-backward"></i>',
-        '</a>&nbsp;',
+        '</a>&nbsp;&nbsp;',
         '<a class="remove" href="javascript:void(0)" title="删除">',
         '<i id="delete" class="fa fa-remove"></i>',
         '</a>'
@@ -856,7 +856,7 @@
     return [
         '<a class="send" href="javascript:void(0)" title="提交">',
         '<i class="fa fa-step-forward"></i>',
-        '</a>',
+        '</a>&nbsp;&nbsp;',
         '<a class="downsend" href="javascript:void(0)" title="退回">',
         '<i class="fa fa-step-backward"></i>',
         '</a>',
