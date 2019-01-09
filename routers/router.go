@@ -1,6 +1,6 @@
 // @APIVersion 1.0.0
 // @Title MeritMS API
-// @Description ECMS has every tool to get any job done, so codename for the new ECMS APIs.
+// @Description MeritMS has every tool to get any job done, so codename for the new MeritMS APIs.
 // @Contact 504284@qq.com
 package routers
 
@@ -45,6 +45,11 @@ func init() {
 			beego.NSNamespace("/adminlog",
 				beego.NSInclude(
 					&controllers.AdminLogController{},
+				),
+			),
+			beego.NSNamespace("/flow",
+				beego.NSInclude(
+					&controllers.FlowController{},
 				),
 			),
 

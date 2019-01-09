@@ -1,14 +1,15 @@
 package main
 
 import (
+	// "fmt"
+	"github.com/3xxx/meritms/controllers"
+	"github.com/3xxx/meritms/models"
+	_ "github.com/3xxx/meritms/routers"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/toolbox"
-	"github.com/3xxx/meritms/models"
 	_ "github.com/mattn/go-sqlite3"
 	"time"
-	"github.com/3xxx/meritms/controllers"
-	_ "github.com/3xxx/meritms/routers"
 )
 
 //自定义模板函数，序号加1
@@ -33,7 +34,8 @@ func main() {
 	toolbox.AddTask("tk1", tk1)
 	toolbox.StartTask()
 	defer toolbox.StopTask()
-
+	// controllers.WorkflowsCreate()
+	models.InitFlow()
 	beego.Run()
 }
 
@@ -41,6 +43,7 @@ func main() {
 func loadtimes(t time.Time) int {
 	return int(time.Now().Sub(t).Nanoseconds() / 1e6)
 }
+
 //错误描述：当controllers中的func中没有使用models中的func时，提示没有定义default数据库。
 //也就是controllers中不使用models时，models中的init()不起作用
 

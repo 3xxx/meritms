@@ -87,6 +87,46 @@ func init() {
 			MethodParams: param.Make(),
 			Params: nil})
 
+	beego.GlobalControllerRouter["github.com/3xxx/meritms/controllers:FlowController"] = append(beego.GlobalControllerRouter["github.com/3xxx/meritms/controllers:FlowController"],
+		beego.ControllerComments{
+			Method: "FlowGetDocTypeByName",
+			Router: `/flowgetdoctypebyname`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/3xxx/meritms/controllers:FlowController"] = append(beego.GlobalControllerRouter["github.com/3xxx/meritms/controllers:FlowController"],
+		beego.ControllerComments{
+			Method: "FlowGetDocTypeByName1",
+			Router: `/flowgetdoctypebyname1`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/3xxx/meritms/controllers:FlowController"] = append(beego.GlobalControllerRouter["github.com/3xxx/meritms/controllers:FlowController"],
+		beego.ControllerComments{
+			Method: "WorkFlow",
+			Router: `/workflow`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/3xxx/meritms/controllers:FlowController"] = append(beego.GlobalControllerRouter["github.com/3xxx/meritms/controllers:FlowController"],
+		beego.ControllerComments{
+			Method: "WorkFlowData",
+			Router: `/workflowdata`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
+	beego.GlobalControllerRouter["github.com/3xxx/meritms/controllers:FlowController"] = append(beego.GlobalControllerRouter["github.com/3xxx/meritms/controllers:FlowController"],
+		beego.ControllerComments{
+			Method: "WorkFlowData1",
+			Router: `/workflowdata1`,
+			AllowHTTPMethods: []string{"get"},
+			MethodParams: param.Make(),
+			Params: nil})
+
 	beego.GlobalControllerRouter["github.com/3xxx/meritms/controllers:FroalaController"] = append(beego.GlobalControllerRouter["github.com/3xxx/meritms/controllers:FroalaController"],
 		beego.ControllerComments{
 			Method: "UploadWxImg",

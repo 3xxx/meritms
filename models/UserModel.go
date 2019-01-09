@@ -4,9 +4,9 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"errors"
-	"strconv"
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 	// "github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -588,5 +588,4 @@ func GetRoleByUsername(username string) (roles []*Role, count int64, err error) 
 	// 通过 post title 查询这个 post 有哪些 tag
 	// var tags []*Tag
 	// num, err := dORM.QueryTable("tag").Filter("Posts__Post__Title", "Introduce Beego ORM").All(&tags)
-
 }

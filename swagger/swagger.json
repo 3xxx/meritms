@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "title": "EngineerCMS API",
-        "description": "ECMS has every tool to get any job done, so codename for the new ECMS APIs.",
+        "title": "MeritMS API",
+        "description": "MeritMS has every tool to get any job done, so codename for the new MeritMS APIs.",
         "version": "1.0.0",
         "contact": {
             "email": "504284@qq.com"
@@ -10,29 +10,6 @@
     },
     "basePath": "/v1",
     "paths": {
-        "/admin/": {
-            "get": {
-                "tags": [
-                    "admin"
-                ],
-                "description": "get admin page",
-                "operationId": "AdminController.getAdminBlock",
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "schema": {
-                            "$ref": "#/definitions/.success"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid page"
-                    },
-                    "404": {
-                        "description": "page not found"
-                    }
-                }
-            }
-        },
         "/admin/category/addcategory": {
             "post": {
                 "tags": [
@@ -168,6 +145,121 @@
                     },
                     "404": {
                         "description": "page not found"
+                    }
+                }
+            }
+        },
+        "/flow/flowgetdoctypebyname": {
+            "get": {
+                "tags": [
+                    "flow"
+                ],
+                "description": "post workflow state",
+                "operationId": "FlowController.post wf state",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "data not found"
+                    }
+                }
+            }
+        },
+        "/flow/flowgetdoctypebyname1": {
+            "get": {
+                "tags": [
+                    "flow"
+                ],
+                "description": "post workflow state",
+                "operationId": "FlowController.post wf state",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "data not found"
+                    }
+                }
+            }
+        },
+        "/flow/workflow": {
+            "get": {
+                "tags": [
+                    "flow"
+                ],
+                "description": "show workflow page",
+                "operationId": "FlowController.show wf list",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "articls not found"
+                    }
+                }
+            }
+        },
+        "/flow/workflowdata": {
+            "get": {
+                "tags": [
+                    "flow"
+                ],
+                "description": "get workflowlist by page",
+                "operationId": "FlowController.get wf list",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "data not found"
+                    }
+                }
+            }
+        },
+        "/flow/workflowdata1": {
+            "get": {
+                "tags": [
+                    "flow"
+                ],
+                "description": "get workflowlist by page",
+                "operationId": "FlowController.get wf list",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/.GetProductsPage"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "data not found"
                     }
                 }
             }
@@ -843,6 +935,10 @@
         {
             "name": "adminlog",
             "description": "CMSADMIN API\n"
+        },
+        {
+            "name": "flow",
+            "description": "FLOW API\n"
         }
     ]
 }
