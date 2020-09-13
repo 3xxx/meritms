@@ -98,352 +98,33 @@ paths:
           description: Invalid page
         "404":
           description: page not found
-  /flow/flowgetdoctypebyname:
-    get:
-      tags:
-      - flow
-      description: post workflow state
-      operationId: FlowController.post wf state
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: data not found
-  /flow/flowgetdoctypebyname1:
-    get:
-      tags:
-      - flow
-      description: post workflow state
-      operationId: FlowController.post wf state
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: data not found
-  /flow/workflow:
-    get:
-      tags:
-      - flow
-      description: show workflow page
-      operationId: FlowController.show wf list
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: articls not found
-  /flow/workflowdata:
-    get:
-      tags:
-      - flow
-      description: get workflowlist by page
-      operationId: FlowController.get wf list
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: data not found
-  /flow/workflowdata1:
-    get:
-      tags:
-      - flow
-      description: get workflowlist by page
-      operationId: FlowController.get wf list
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: data not found
-  /wx/addwxarticle:
+  /wx/addmerit:
     post:
       tags:
       - wx
-      description: post article by catalogid
-      operationId: ArticleController.post wx artile by catalogId
+      description: post user merit
+      operationId: MeritController.post user merit
       parameters:
       - in: query
-        name: title
-        description: The title of article
-        required: true
-        type: string
-      - in: query
-        name: content
-        description: The content of article
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.AddArticle'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: articl not found
-  /wx/addwxarticles/{id}:
-    post:
-      tags:
-      - wx
-      description: post article by catalogid
-      operationId: ArticleController.post wx artile by catalogId
-      parameters:
-      - in: query
-        name: id
-        description: The id of project
+        name: meritid
+        description: The id of merit
         required: true
         type: string
       - in: query
         name: title
-        description: The title of article
+        description: The title of merit_topic
         required: true
         type: string
       - in: query
         name: content
-        description: The content of article
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.AddArticle'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: articl not found
-  /wx/addwxlike/{id}:
-    post:
-      tags:
-      - wx
-      description: post like by articleId
-      operationId: ReplyController.post wx like by articleId
-      parameters:
-      - in: query
-        name: id
-        description: The id of article
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.AddTopicLike'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: article not found
-  /wx/addwxrelease/{id}:
-    post:
-      tags:
-      - wx
-      description: post release by articleId
-      operationId: ReplyController.post wx release by articleId
-      parameters:
-      - in: query
-        name: id
-        description: The id of article
+        description: The content of merit_topic
         required: true
         type: string
       - in: query
-        name: content
-        description: The content of release
+        name: active
+        description: The actuve of merit_topic
         required: true
         type: string
-      - in: query
-        name: code
-        description: The code of wx
-        type: string
-      - in: query
-        name: avatar
-        description: The avatar of release
-        type: string
-      - in: query
-        name: username
-        description: The username of release
-        type: string
-      - in: query
-        name: created
-        description: The time of release
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.AddTopicReply'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: article not found
-  /wx/deletewxrelease/{id}:
-    post:
-      tags:
-      - wx
-      description: delete release by releaseid
-      operationId: ReplyController.delete wx release by releaseid
-      parameters:
-      - in: query
-        name: id
-        description: The id of release
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.DeleteTopicReply'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: article not found
-  /wx/getwxarticle/{id}:
-    get:
-      tags:
-      - wx
-      description: get article by articleid
-      operationId: ArticleController.get wx artile by articleId
-      parameters:
-      - in: path
-        name: id
-        description: The id of article
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetArticle'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: articl not found
-  /wx/getwxarticles:
-    get:
-      tags:
-      - wx
-      description: get articles by page
-      operationId: ArticleController.get wx artiles list
-      parameters:
-      - in: query
-        name: page
-        description: The page for articles list
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: articls not found
-  /wx/getwxarticless/{id}:
-    get:
-      tags:
-      - wx
-      description: get articles by page
-      operationId: ArticleController.get wx artiles list
-      parameters:
-      - in: path
-        name: id
-        description: The id of project
-        required: true
-        type: string
-      - in: query
-        name: page
-        description: The page for articles list
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: articls not found
-  /wx/searchwxdrawings:
-    get:
-      tags:
-      - wx
-      description: get drawings by page
-      operationId: SearchController.get wx drawings list
-      parameters:
-      - in: query
-        name: keyword
-        description: The keyword of drawings
-        required: true
-        type: string
-      - in: query
-        name: projectid
-        description: The projectid of drawings
-        type: string
-      - in: query
-        name: searchpage
-        description: The page for drawings list
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: drawings not found
-  /wx/searchwxstandards:
-    get:
-      tags:
-      - wx
-      description: get standards by page
-      operationId: StandardController.get wx standards list
-      parameters:
-      - in: query
-        name: keyword
-        description: The keyword of standards
-        required: true
-        type: string
-      - in: query
-        name: searchpage
-        description: The page for drawings list
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetProductsPage'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: standards not found
-  /wx/uploadwximg:
-    post:
-      tags:
-      - wx
-      description: post article img by catalogid
-      operationId: FroalaController.post wx artile img by catalogId
       responses:
         "200":
           description: ""
@@ -452,17 +133,32 @@ paths:
         "400":
           description: Invalid page supplied
         "404":
-          description: articl not found
-  /wx/uploadwximgs/{id}:
+          description: merit not found
+  /wx/testxorm:
+    get:
+      tags:
+      - wx
+      description: get usertopics by page
+      operationId: MeritController.get usertopics list
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/.GetProductsPage'
+        "400":
+          description: Invalid page supplied
+        "404":
+          description: articls not found
+  /wx/uploadmeritimg:
     post:
       tags:
       - wx
-      description: post article img by catalogid
-      operationId: FroalaController.post wx artile img by catalogId
+      description: post user merit img
+      operationId: FroalaController.post merit user img
       parameters:
       - in: query
-        name: id
-        description: The id of project
+        name: meritid
+        description: The id of adminmerit
         required: true
         type: string
       responses:
@@ -500,37 +196,6 @@ paths:
           description: Invalid page supplied
         "404":
           description: articl not found
-  /wx/wxpdf/{id}:
-    get:
-      tags:
-      - wx
-      description: get wx pdf by id
-      operationId: MainController.dowload wx pdf
-      parameters:
-      - in: path
-        name: id
-        description: The id of pdf
-        required: true
-        type: string
-      - in: query
-        name: code
-        description: The code of wx
-        required: true
-        type: string
-      - in: query
-        name: app_version
-        description: The app_version of wx
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetAttachbyId'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: pdf not found
   /wx/wxregist:
     post:
       tags:
@@ -567,43 +232,10 @@ paths:
           description: Invalid page supplied
         "404":
           description: user not found
-  /wx/wxstandardpdf/{id}:
-    get:
-      tags:
-      - wx
-      description: get wx standardpdf by id
-      operationId: MainController.dowload wx standardpdf
-      parameters:
-      - in: path
-        name: id
-        description: The id of standardpdf
-        required: true
-        type: string
-      responses:
-        "200":
-          description: ""
-          schema:
-            $ref: '#/definitions/.GetAttachbyId'
-        "400":
-          description: Invalid page supplied
-        "404":
-          description: pdf not found
 definitions:
   .AddAdminCategory:
     type: object
-  .AddArticle:
-    type: object
-  .AddTopicLike:
-    type: object
-  .AddTopicReply:
-    type: object
-  .DeleteTopicReply:
-    type: object
   .GetAdminCategory:
-    type: object
-  .GetArticle:
-    type: object
-  .GetAttachbyId:
     type: object
   .GetProductsPage:
     type: object
@@ -620,6 +252,3 @@ tags:
 - name: adminlog
   description: |
     CMSADMIN API
-- name: flow
-  description: |
-    FLOW API

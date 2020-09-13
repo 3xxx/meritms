@@ -7,8 +7,12 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	// "strconv"
 	// "strings"
+	"log"
 	"time"
+	"xorm.io/xorm"
 )
+
+var engine *xorm.Engine
 
 type AdminCategory struct {
 	Id       int64     `form:"-"`
@@ -66,14 +70,23 @@ type AdminDepartment struct {
 
 //价值分类
 type AdminMerit struct {
-	Id       int64     `form:"-"`
-	ParentId int64     `orm:"null"`
-	Title    string    `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
-	Mark     string    `orm:"null"`                                              //设置分数
-	List     string    `orm:"null"`                                              //选择项
-	ListMark string    `orm:"null"`
-	Created  time.Time `orm:"auto_now_add;type(datetime)"`
-	Updated  time.Time `orm:"auto_now_add;type(datetime)"`
+	Id       int64  `form:"-"`
+	ParentId int64  `orm:"null"`
+	Title    string `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)"` //orm:"unique",
+	// Mark     string    `orm:"null"`                                              //设置分数
+	// List     string    `orm:"null"`                                              //选择项
+	// ListMark string    `orm:"null"`
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now_add;type(datetime)"`
+}
+
+//价值分值
+type AdminMeritMark struct {
+	Id      int64     `form:"-"`
+	MeritId int64     `orm:"null"`
+	Mark    int       `orm:"null"`
+	Created time.Time `orm:"auto_now_add;type(datetime)"`
+	Updated time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
 type AdminDepartMerit struct {
@@ -120,10 +133,16 @@ type AdminCarousel struct {
 //   `color` varchar(20) DEFAULT NULL,
 
 func init() {
-	orm.RegisterModel(new(AdminCategory), new(AdminIpsegment), new(AdminDepartment), new(AdminMerit), new(AdminDepartMerit), new(AdminSynchIp), new(AdminCarousel), new(AdminCalendar)) //, new(Article)
+	orm.RegisterModel(new(AdminCategory), new(AdminIpsegment), new(AdminDepartment), new(AdminMerit), new(AdminMeritMark), new(AdminDepartMerit), new(AdminSynchIp), new(AdminCarousel), new(AdminCalendar)) //, new(Article)
 	// orm.RegisterModel(new(AdminIpsegment))
 	orm.RegisterDriver("sqlite", orm.DRSqlite)
 	orm.RegisterDataBase("default", "sqlite3", "database/meritms.db", 10)
+	// 注册xorm
+	var err error
+	engine, err = xorm.NewEngine("sqlite3", "database/meritms.db")
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 //添加部门
@@ -249,26 +268,38 @@ func GetAdminDepartbyidtitle(id int64, title string) (*AdminDepartment, error) {
 
 //*********价值********************
 //添加价值
-func AddAdminMerit(pid int64, title, mark, list, listmark string) (id int64, err error) {
+func AddAdminMerit(pid int64, title string, mark int) (id int64, err error) {
 	//重复性检查
 	o := orm.NewOrm()
 	cate := &AdminMerit{
 		ParentId: pid,
 		Title:    title,
-		Mark:     mark,
-		List:     list,
-		ListMark: listmark,
-		Created:  time.Now(),
-		Updated:  time.Now(),
+		// Mark:     mark,
+		// List:     list,
+		// ListMark: listmark,
+		Created: time.Now(),
+		Updated: time.Now(),
 	}
 	id, err = o.Insert(cate)
 	if err != nil {
 		return 0, err
 	}
+	if mark != 0 {
+		mmark := &AdminMeritMark{
+			MeritId: id,
+			Mark:    mark,
+			Created: time.Now(),
+			Updated: time.Now(),
+		}
+		_, err = o.Insert(mmark)
+		if err != nil {
+			return 0, err
+		}
+	}
 	return id, nil
 }
 
-//由父级id（科室id）得到所有价值
+//由父级id（项目管理类）得到所有价值
 func GetAdminMeritbyPid(pid int64) ([]*AdminMerit, error) {
 	o := orm.NewOrm()
 	cates := make([]*AdminMerit, 0)
@@ -279,22 +310,38 @@ func GetAdminMeritbyPid(pid int64) ([]*AdminMerit, error) {
 	return cates, err
 }
 
+//价值表带mark分值
+type UserMerit struct {
+	// gorm.Model
+	Id    int64  `json:"id"`
+	Title string `json:"title"`
+	Mark  int    `json:"mark"`
+	// Children []UserMerit
+}
+
 //根据父级id取到所有的价值结构
-func GetAdminMerit(pid int64) ([]*AdminMerit, error) {
-	o := orm.NewOrm()
-	merits := make([]*AdminMerit, 0)
-	qs := o.QueryTable("AdminMerit")
-	_, err := qs.Filter("parentid", pid).All(&merits)
-	if err != nil {
-		return nil, err
-	}
-	return merits, err
+func GetAdminMerit(pid int64) (usermerit []*UserMerit, err error) {
+	// o := orm.NewOrm()
+	// merits := make([]*AdminMerit, 0)
+	// qs := o.QueryTable("AdminMerit")
+	// _, err := qs.Filter("parentid", pid).All(&merits)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// return merits, err
+	db := GetDB()
+	// 必须要写权select，坑爹啊
+	err = db.Table("admin_merit").Select("admin_merit.id,admin_merit.title,admin_merit_mark.mark as mark").
+		Where("admin_merit.parent_id=?", pid).
+		Joins("left JOIN admin_merit_mark on admin_merit_mark.merit_id = admin_merit.id").
+		Scan(&usermerit).Error
+	return usermerit, err
 }
 
 //由id取得价值
+//要么本身能查到分值，要么要子价值查出分值
 func GetAdminMeritbyId(id int64) (*AdminMerit, error) {
 	o := orm.NewOrm()
-	// cate := &Category{Id: id}
 	merit := new(AdminMerit)
 	qs := o.QueryTable("AdminMerit")
 	err := qs.Filter("id", id).One(merit)
@@ -302,6 +349,18 @@ func GetAdminMeritbyId(id int64) (*AdminMerit, error) {
 		return nil, err
 	}
 	return merit, err
+}
+
+//由id取得价值分值
+func GetAdminMeritMarkbyId(meritid int64) (*AdminMeritMark, error) {
+	o := orm.NewOrm()
+	meritmark := new(AdminMeritMark)
+	qs := o.QueryTable("AdminMeritMark")
+	err := qs.Filter("merit_id", meritid).One(meritmark)
+	if err != nil {
+		return nil, err
+	}
+	return meritmark, err
 }
 
 //由科室id取得所有价值分类
@@ -351,20 +410,72 @@ func DeleteSecofficeMerit(sid, mid int64) error {
 }
 
 //修改merit
-func UpdateAdminMerit(id int64, title, mark, list, listmark string) error {
+func UpdateAdminMerit(id int64, title string, mark int) error {
 	o := orm.NewOrm()
 	merit := &AdminMerit{Id: id}
 	var err error
 	if o.Read(merit) == nil {
 		merit.Title = title
-		merit.Mark = mark
-		merit.List = list
-		merit.ListMark = listmark
+		// merit.Mark = mark
+		// merit.List = list
+		// merit.ListMark = listmark
 		merit.Updated = time.Now()
 		_, err = o.Update(merit)
 		if err != nil {
 			return err
 		}
+
+		if mark != 0 {
+			mmark := &AdminMeritMark{MeritId: id}
+			if o.Read(mmark) == nil {
+				mmark.Mark = mark
+				mmark.Updated = time.Now()
+				_, err = o.Update(mmark)
+				if err != nil {
+					return err
+				}
+			} else { //如果未查到，则插入
+				mmark := &AdminMeritMark{
+					MeritId: id,
+					Mark:    mark,
+					Created: time.Now(),
+					Updated: time.Now(),
+				}
+				_, err = o.Insert(mmark)
+				if err != nil {
+					return err
+				}
+			}
+		}
+		// else {
+		// 	array := strings.Split(list, ",")
+		// 	array2 := strings.Split(listmark, ",")
+		// 	for i, v := range array {
+		// 		//下面有很多个，所以不行
+		// 		cate := &AdminMerit{ParentId: id}
+		// 		if o.Read(cate) == nil {
+		// 			cate.Title = v
+		// 			cate.Updated = time.Now()
+		// 		}
+		// 		_, err = o.Update(cate)
+		// 		if err != nil {
+		// 			return err
+		// 		}
+		// 		markint, err := strconv.Atoi(array2[i])
+		// 		if err != nil {
+		// 			return err
+		// 		}
+		// 		mmark := &AdminMeritMark{MeritId: cate.Id}
+		// 		if o.Read(mmark) == nil {
+		// 			mmark.Mark = markint
+		// 			mmark.Updated = time.Now()
+		// 		}
+		// 		_, err = o.Update(mmark)
+		// 		if err != nil {
+		// 			return err
+		// 		}
+		// 	}
+		// }
 	}
 	return err
 }

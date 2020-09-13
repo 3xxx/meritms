@@ -1,11 +1,13 @@
 package models
 
 import (
-	// "github.com/astaxie/beego"
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"github.com/jinzhu/gorm"
 	// _ "github.com/mattn/go-sqlite3"
 	"strconv"
 	// "strings"
+	"fmt"
 	"time"
 )
 
@@ -21,11 +23,58 @@ type AchievementTopic struct {
 	Updated  time.Time `orm:"auto_now_add;type(datetime)"`
 }
 
+//定义全局的db对象，我们执行数据库操作主要通过他实现。
+var _db *gorm.DB
+
 func init() {
-	orm.RegisterModel(new(AchievementTopic)) //, new(Article)
-	// orm.RegisterDriver("sqlite", orm.DRSqlite)
-	// orm.RegisterDataBase("default", "sqlite3", "database/merit.db", 10)
+	var err error
+	var dns string
+	db_type := beego.AppConfig.String("db_type")
+	db_name := beego.AppConfig.String("db_name")
+	db_path := beego.AppConfig.String("db_path")
+	if db_path == "" {
+		db_path = "./"
+	}
+
+	dns = fmt.Sprintf("%s%s.db", db_path, db_name)
+	_db, err = gorm.Open(db_type, dns)
+	// defer _db.Close()//20200803这个不能打开。
+	// _db.LogMode(true)
+	if err != nil {
+		panic("连接数据库失败, error=" + err.Error())
+	}
+	// defer gdb.Close()
+	//禁止表名复数形式
+	_db.SingularTable(true)
+	// 开发的时候需要打开调试日志
+	// _db.LogMode(true)
+	//设置数据库连接池参数
+	_db.DB().SetMaxOpenConns(100) //设置数据库连接池最大连接数
+	_db.DB().SetMaxIdleConns(20)  //连接池最大允许的空闲连接数，如果没有sql任务需要执行的连接数大于20，超过的连接会被连接池关闭。
+
+	// _db.CreateTable(&Pay{}, &Money{}, &Recharge{})
+	// if !gdb.HasTable(&Pay1{}) {
+	// 	if err = gdb.CreateTable(&Pay1{}).Error; err != nil {
+	// 		panic(err)
+	// 	}
+	// }
+	orm.RegisterModel(new(AchievementTopic))
 }
+
+//获取gorm db对象，其他包需要执行数据库查询的时候，只要通过tools.getDB()获取db对象即可。
+//不用担心协程并发使用同样的db对象会共用同一个连接，
+// db对象在调用他的方法的时候会从数据库连接池中获取新的连接
+// 注意：使用连接池技术后，千万不要使用完db后调用db.Close关闭数据库连接，
+// 这样会导致整个数据库连接池关闭，导致连接池没有可用的连接
+func GetDB() *gorm.DB {
+	return _db
+}
+
+// func init() {
+// orm.RegisterModel(new(AchievementTopic)) //, new(Article)
+// orm.RegisterDriver("sqlite", orm.DRSqlite)
+// orm.RegisterDataBase("default", "sqlite3", "database/merit.db", 10)
+// }
 
 //用户添加价值
 func AddAchievementTopic(pid int64, uname, title, choose, content, mark string) (id int64, err error) {

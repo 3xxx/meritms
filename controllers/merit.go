@@ -10,7 +10,7 @@ import (
 	// "github.com/bitly/go-simplejson"
 	// "io/ioutil"
 	"github.com/3xxx/meritms/models"
-	"sort"
+	// "sort"
 	"strconv"
 	"strings"
 	"time"
@@ -75,33 +75,35 @@ type MeritDepartment struct { //分院：施工预算、水工分院……
 }
 
 type Person struct {
-	Id         int64  `json:"Id"`
-	Name       string `json:"Name"`
-	Department string `json:"Department"`
-	Secoffice  string `json:"Keshi"` //当controller返回json给view的时候，必须用text作为字段
-	Numbers    int    //记录个数
-	Marks      int    //分值
-	UserId     int64  //用户id
+	// Id int64 `json:"Id"`
+	// Name       string `json:"Name"`//用户名
+	// Department string `json:"Department"`
+	// Secoffice  string `json:"Keshi"` //当controller返回json给view的时候，必须用text作为字段
+	// Numbers    int    //记录个数
+	Marks int //分值
+	// UserId     int64  //用户id
+	User models.User
 }
 
 type MeritTopicSlice struct {
 	Id           int64
-	MeritCate    string //价值分类
-	Merit        string //价值
+	MeritCate    string `json:"meritcate"` //价值分类
+	Merit        string `json:"merit"`     //价值
 	MeritId      int64
 	UserId       int64
-	UserNickName string
-	Title        string
+	UserNickName string `json:"usernickname"`
+	Title        string `json:"title"`
 	Choose       string
-	Content      string
-	State        int //1编写状态，未提交；2编写者提交，等待审核确认;3,已经审核确认
-	Mark         int
+	Content      string    `json:"content"`
+	State        int       //1编写状态，未提交；2编写者提交，等待审核确认;3,已经审核确认
+	Mark         int       `json:"mark"`
 	Created      time.Time `orm:"index","auto_now_add;type(datetime)"`
 	Updated      time.Time `orm:"index","auto_now_add;type(datetime)"`
 }
 
 //struct排序
-type person1 []Person
+// type person1 []Person
+type person1 []models.UserMeritTopics
 
 func (list person1) Len() int {
 	return len(list)
@@ -113,12 +115,13 @@ func (list person1) Less(i, j int) bool {
 	} else if list[i].Marks < list[j].Marks {
 		return false
 	} else {
-		return list[i].Name > list[j].Name
+		return list[i].User.Nickname > list[j].User.Nickname
 	}
 }
 
 func (list person1) Swap(i, j int) {
-	var temp Person = list[i]
+	// var temp Person = list[i]
+	var temp models.UserMeritTopics = list[i]
 	list[i] = list[j]
 	list[j] = temp
 }
@@ -177,24 +180,12 @@ func (list person1) Swap(i, j int) {
 // 	c.TplName = "admin_person.tpl"
 // }
 
-//管理员登录后显示侧栏：所有部门——科室——价值分类——价值
-//用户登录后侧栏显示：价值分类——价值
-//科室主任登录侧栏显示：科室——价值分类——价值
-//分院登录侧栏显示：分院——科室——价值分类——价值
+//管理员1登录后显示侧栏：所有部门——科室——价值分类——价值
+//分院2登录侧栏显示：       分院——科室——价值分类——价值
+//科室主任3登录侧栏显示：         科室——价值分类——价值
+//用户4登录后侧栏显示：                 价值分类——价值
 func (c *MeritController) GetMerit() {
-	// username, role := checkprodRole(c.Ctx)
-	// if role == 1 {
-	// 	c.Data["IsAdmin"] = true
-	// } else if role > 1 && role < 5 {
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// }
-	// c.Data["Username"] = username
 	c.Data["IsMerit"] = true
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = role
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -206,6 +197,7 @@ func (c *MeritController) GetMerit() {
 	if err != nil {
 		beego.Error(err)
 	}
+	// beego.Info(role)
 	//读取用户id
 	//查询用户分院名称和科室名称
 	//查出分院id和科室id
@@ -216,31 +208,13 @@ func (c *MeritController) GetMerit() {
 	//查询所有pid为价值id——得到选择项和分值——进行字符串分割
 	//构造struct——
 	//这个不用：转json数据b, err := json.Marshal(group) fmt.Println(string(b))
-	//1.首先判断是否注册
-	// if !checkAccount(c.Ctx) {
-	// 	route := c.Ctx.Request.URL.String()
-	// 	c.Data["Url"] = route
-	// 	c.Redirect("/login?url="+route, 302)
-	// 	return
-	// }
-	//4.取得客户端用户名
-	// var uname string
-	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	// v := sess.Get("uname")
-	// if v != nil {
-	// 	uname = v.(string)
-	// 	c.Data["Uname"] = v.(string)
-	// }
 	//4.取出用户的权限等级
-	// role, _ := checkRole(c.Ctx) //login里的
 	if roleint > 4 { //
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
+		c.Redirect("/login?url="+route, 302)
 		return
 	}
-	// beego.Info(uname)
 	meritlist := make([]MeritList, 0)
 	meritcategory := make([]MeritCategory, 0)
 	meritsecoffice := make([]MeritSecoffice, 0)
@@ -250,7 +224,6 @@ func (c *MeritController) GetMerit() {
 	if err != nil {
 		beego.Error(err)
 	}
-	// var depcount int
 	switch role {
 	case "1": //管理员登录显示的侧栏：所有部门——科室——价值分类——价值
 		depart, err := models.GetAdminDepart(0) //得到多个分院
@@ -310,10 +283,19 @@ func (c *MeritController) GetMerit() {
 
 							// beego.Info(users[i3].Nickname)
 							ee[0].Selectable = true
+							//根据userid和meritid，取得项数和分值
+
+							// ee[0].Tags[0]=//有几项
+							// ee[0].Tags[1]=//总共多少分
+
 							meritlist = append(meritlist, ee...)
 						}
 						cc[0].List = meritlist
 						// cc[0].Selectable = false
+
+						// cc[0].Tags[0]=
+						// cc[0].Tags[1]=
+
 						meritlist = make([]MeritList, 0)
 						meritcategory = append(meritcategory, cc...)
 					}
@@ -379,6 +361,7 @@ func (c *MeritController) GetMerit() {
 			meritsecoffice = make([]MeritSecoffice, 0) //再把slice置0
 			meritdepartment = append(meritdepartment, aa...)
 		}
+		c.Data["json"] = meritdepartment
 	case "2": //分院管理人员登录
 		depart, err := models.GetAdminDepartName(user.Department)
 		if err != nil {
@@ -488,7 +471,10 @@ func (c *MeritController) GetMerit() {
 					ee[0].Pid = v5.Id
 
 					ee[0].Title = v6.Title //名称
+					//根据userid和meritid，取得项数和分值
 
+					// ee[0].Tags[0]=//有几项
+					// ee[0].Tags[1]=//总共多少分
 					// beego.Info(users[i3].Nickname)
 					ee[0].Selectable = true
 					meritcategory = append(meritcategory, ee...)
@@ -508,15 +494,16 @@ func (c *MeritController) GetMerit() {
 		// aa[0].Selectable = false                   //默认是false_点击展开
 		meritsecoffice = make([]MeritSecoffice, 0) //再把slice置0
 		meritdepartment = append(meritdepartment, aa...)
+		c.Data["json"] = meritdepartment
 	case "3": //主任登录
 		depart, err := models.GetAdminDepartName(user.Department)
 		if err != nil {
 			beego.Error(err)
 		}
-		aa := make([]MeritDepartment, 1)
-		aa[0].Id = depart.Id
-		aa[0].Level = "1"
-		aa[0].Title = depart.Title //分院名称
+		// aa := make([]MeritDepartment, 1)
+		// aa[0].Id = depart.Id
+		// aa[0].Level = "1"
+		// aa[0].Title = depart.Title //分院名称
 		//由分院id和科室名称取得科室
 		secoffice, err := models.GetAdminDepartbyidtitle(depart.Id, user.Secoffice)
 		if err != nil {
@@ -533,11 +520,14 @@ func (c *MeritController) GetMerit() {
 		bb[0].Pid = depart.Id
 		bb[0].Title = secoffice.Title //科室名称
 		// beego.Info(category2[i2].Title)
-		//根据分院和科室查所有价值分类
+		//根据分院和科室查所有价值分类：项目管理类的id
 		meritcates, err := models.GetMeritsbySec(depart.Title, secoffice.Title)
 		if err != nil {
 			beego.Error(err)
 		}
+		beego.Info(meritcates)
+		//取得所有儿子价值，如果有孙子价值（大型、中型……）则用孙子
+
 		for _, v3 := range meritcates {
 			cc := make([]MeritCategory, 1)
 			cc[0].Id = v3.Id
@@ -547,14 +537,16 @@ func (c *MeritController) GetMerit() {
 			if err != nil {
 				beego.Error(err)
 			}
+			beego.Info(merittitle)         //20 项目管理类
 			cc[0].Title = merittitle.Title //名称
-			//由价值分类取得所有价值列表
-			merits, err := models.GetAdminMerit(v3.MeritId)
+			//由价值分类(项目管理）取得所有儿子价值列表
+			adminmerits, err := models.GetAdminMeritbyPid(v3.MeritId)
 			if err != nil {
 				beego.Error(err)
 			}
+			beego.Info(adminmerits) //专业负责类，
 			//循环价值分类，取得价值列表
-			for _, v4 := range merits {
+			for _, v4 := range adminmerits {
 				ee := make([]MeritList, 1)
 				ee[0].Id = v4.Id
 				ee[0].Level = "4"
@@ -562,15 +554,33 @@ func (c *MeritController) GetMerit() {
 
 				ee[0].Title = v4.Title //名称
 
-				// beego.Info(users[i3].Nickname)
+				//根据userid和meritid，取得项数和分值
+				//取得用户的价值topic数量和分值
+				// merits, err := models.GetMerit(0, uid, 3)
+				merits, err := models.GetMeritTopic(v4.Id, uid, 3)
+				if err != nil {
+					beego.Error(err)
+				}
+				beego.Info(merits)
+				//用聚合查询查出分值
+				ee[0].Tags[0] = len(merits) //有几项
+				for _, v5 := range merits {
+					ee[0].Tags[1] = ee[0].Tags[1] + v5.Mark //总共多少分
+				}
+
 				ee[0].Selectable = true
 				meritlist = append(meritlist, ee...)
 			}
 			cc[0].List = meritlist
+
+			// cc[0].Tags[0]=//有几项
+			// cc[0].Tags[1]=//总共多少分
+
 			// cc[0].Selectable = false
 			meritlist = make([]MeritList, 0)
 			meritcategory = append(meritcategory, cc...)
 		}
+
 		// bb[0].Tags[0] = strconv.Itoa(count)
 		bb[0].List = meritcategory
 		bb[0].Selectable = true
@@ -582,12 +592,98 @@ func (c *MeritController) GetMerit() {
 		// achsecoffice = make([]AchSecoffice, 0) //再把slice置0
 		// achdepart = append(achdepart, aa...)
 		// }
-		aa[0].Secoffice = meritsecoffice
-		aa[0].Selectable = false                   //默认是false_点击展开
-		meritsecoffice = make([]MeritSecoffice, 0) //再把slice置0
-		meritdepartment = append(meritdepartment, aa...)
+		// aa[0].Secoffice = meritsecoffice
+		// aa[0].Selectable = false                   //默认是false_点击展开
+		// meritsecoffice = make([]MeritSecoffice, 0) //再把slice置0
+		// meritdepartment = append(meritdepartment, aa...)
+		c.Data["json"] = meritsecoffice
+	default: //如果是用户role=4登录
+		depart, err := models.GetAdminDepartName(user.Department)
+		if err != nil {
+			beego.Error(err)
+		}
+		// aa := make([]MeritDepartment, 1)
+		// aa[0].Id = depart.Id
+		// aa[0].Level = "1"
+		// aa[0].Title = depart.Title //分院名称
+		//由分院id和科室名称取得科室
+		secoffice, err := models.GetAdminDepartbyidtitle(depart.Id, user.Secoffice)
+		if err != nil {
+			beego.Error(err)
+		}
+		//如果返回科室为空，则直接取得价值分类
+		//这个逻辑判断不完美，如果一个部门即有科室，又有人没有科室属性怎么办，直接挂在部门下的呢？
+		//应该是反过来找出所有没有科室字段的人员，把他放在部门下
+		// bb := make([]MeritSecoffice, 1)
+		// bb[0].Id = secoffice.Id
+		// bb[0].Level = "2"
+		// bb[0].Pid = depart.Id
+		// bb[0].Title = secoffice.Title //科室名称
+		// beego.Info(category2[i2].Title)
+		//根据分院和科室查所有价值分类：项目管理类的id
+		meritcates, err := models.GetMeritsbySec(depart.Title, secoffice.Title)
+		if err != nil {
+			beego.Error(err)
+		}
+		beego.Info(meritcates)
+		//取得所有儿子价值，如果有孙子价值（大型、中型……）则用孙子
+		for _, v3 := range meritcates {
+			cc := make([]MeritCategory, 1)
+			cc[0].Id = v3.Id
+			cc[0].Level = "3"
+			cc[0].Pid = secoffice.Id
+			merittitle, err := models.GetAdminMeritbyId(v3.MeritId) //因为这个数据库只是科室和分类的对应表
+			if err != nil {
+				beego.Error(err)
+			}
+			beego.Info(merittitle)         //20 项目管理类
+			cc[0].Title = merittitle.Title //名称
+			//由价值分类(项目管理）取得所有儿子价值列表
+			adminmerits, err := models.GetAdminMeritbyPid(v3.MeritId)
+			if err != nil {
+				beego.Error(err)
+			}
+			beego.Info(adminmerits) //专业负责类，
+			//循环价值分类，取得价值列表
+			for _, v4 := range adminmerits {
+				ee := make([]MeritList, 1)
+				ee[0].Id = v4.Id
+				ee[0].Level = "4"
+				ee[0].Pid = v3.Id
+
+				ee[0].Title = v4.Title //名称
+
+				merits, err := models.GetMeritTopic(v4.Id, uid, 3)
+				if err != nil {
+					beego.Error(err)
+				}
+				beego.Info(merits)
+				//用聚合查询查出分值
+				ee[0].Tags[0] = len(merits) //有几项
+				for _, v5 := range merits {
+					ee[0].Tags[1] = ee[0].Tags[1] + v5.Mark //总共多少分
+				}
+
+				ee[0].Selectable = true
+				meritlist = append(meritlist, ee...)
+			}
+			cc[0].List = meritlist
+			meritlist = make([]MeritList, 0)
+			meritcategory = append(meritcategory, cc...)
+		}
+
+		// bb[0].List = meritcategory
+		// bb[0].Selectable = true
+		// meritcategory = make([]MeritCategory, 0) //再把slice置0
+		// meritsecoffice = append(meritsecoffice, bb...)
+
+		// aa[0].Secoffice = meritsecoffice
+		// aa[0].Selectable = false                   //默认是false_点击展开
+		// meritsecoffice = make([]MeritSecoffice, 0) //再把slice置0
+		// meritdepartment = append(meritdepartment, aa...)
+		c.Data["json"] = meritcategory
 	}
-	c.Data["json"] = meritdepartment
+
 	c.TplName = "merit/merit.tpl"
 }
 
@@ -595,19 +691,6 @@ func (c *MeritController) GetMerit() {
 //上面那个是显示侧栏
 //这个是显示右侧iframe框架内容——科室内人员情况统计
 func (c *MeritController) Secofficeshow() {
-	// username, role := checkprodRole(c.Ctx)
-	// if role == 1 {
-	// 	c.Data["IsAdmin"] = true
-	// } else if role > 1 && role < 5 {
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// }
-	// c.Data["Username"] = username
-	// c.Data["IsProjects"] = true
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = role
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -622,7 +705,7 @@ func (c *MeritController) Secofficeshow() {
 	if roleint > 4 { //
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
+		c.Redirect("/login?url="+route, 302)
 		return
 	}
 	//由uname取得user
@@ -682,7 +765,7 @@ func (c *MeritController) Secofficeshow() {
 			beego.Error(err)
 		}
 		//权限判断，并且属于这个分院
-		if role == "1" || role == "2" && user.Department == categoryname.Title { //
+		if role == "1" || role == "2" && user.Department == categoryname.Title {
 			c.Data["Starttime"] = t1
 			c.Data["Endtime"] = t2
 			c.Data["Secid"] = secid
@@ -692,7 +775,7 @@ func (c *MeritController) Secofficeshow() {
 		} else {
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
+			c.Redirect("/login?url="+route, 302)
 			return
 		}
 	case "2": //如果是科室，则显示全部人员情况，此时secid为科室id
@@ -717,12 +800,17 @@ func (c *MeritController) Secofficeshow() {
 		} else {
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
+			c.Redirect("/login?url="+route, 302)
 			return
 		}
-	case "4": //如果是价值列表，此时secid为价值id
+	case "4": //如果是个人，则显示个人详细情况。如果是价值列表，此时secid为价值id
 		//取得价值
 		merit, err := models.GetAdminMeritbyId(secid1)
+		if err != nil {
+			beego.Error(err)
+		}
+		//取得所有子价值和分值
+		meritarray, err := models.GetAdminMerit(merit.Id)
 		if err != nil {
 			beego.Error(err)
 		}
@@ -732,16 +820,15 @@ func (c *MeritController) Secofficeshow() {
 			beego.Error(err)
 		}
 		//进行选择列表拆分
-		array1 := strings.Split(merit.List, ",")
+		// array1 := strings.Split(merit.List, ",")
 		// beego.Info(merit.List)
-		slice1 := make([]List1, 0)
-		for _, v := range array1 {
-			ee := make([]List1, 1)
-			ee[0].Choose = v
-			slice1 = append(slice1, ee...)
+		slice1 := make([]string, 0)
+		for _, v := range meritarray {
+			slice1 = append(slice1, v.Title)
 		}
-		c.Data["list"] = slice1
-		c.Data["select2"] = array1
+		// c.Data["list"] = slice1
+		c.Data["list"] = meritarray
+		c.Data["select2"] = slice1 //array1//这个用meritarray中的[]title代替
 		// topics, err := models.GetAllMeritTopic(user.Id)
 		// 	c.Data["topics"] = topics
 		c.Data["UserNickname"] = user.Nickname
@@ -759,13 +846,12 @@ func (c *MeritController) Secofficeshow() {
 
 		//这里给定secid的meritcategoryid和名，merit的名和id
 		c.TplName = "merit/merit_employee.tpl"
-
 	default:
-		// case "3": //如果是个人，则显示个人详细情况
+		// case "3": //科室主任
 		//分2部分，一部分是已经完成状态的，state是4，另一部分是状态分别是3待审查通过,2，1的
 		usernickname := models.GetUserByUserId(secid1)
 		//1.进行权限读取，室主任以上并且属于这个科室，或者或本人
-		if role == "1" || role == "3" && user.Secoffice == usernickname.Secoffice || role == "2" && user.Department == usernickname.Department || user.Nickname == usernickname.Nickname { //
+		if role == "1" || role == "3" && user.Secoffice == usernickname.Secoffice || role == "2" && user.Department == usernickname.Department || user.Nickname == usernickname.Nickname {
 			c.Data["Starttime"] = t1
 			c.Data["Endtime"] = t2
 			//下面这个catalogs用于employee_show.tpl
@@ -788,7 +874,7 @@ func (c *MeritController) Secofficeshow() {
 		} else {
 			route := c.Ctx.Request.URL.String()
 			c.Data["Url"] = route
-			c.Redirect("/roleerr?url="+route, 302)
+			c.Redirect("/login?url="+route, 302)
 			return
 		}
 	}
@@ -799,11 +885,11 @@ func (c *MeritController) Secofficeshow() {
 func (c *MeritController) SecofficeData() {
 	//分院——科室——人员甲（乙、丙……）——绘制——设计——校核——审查——合计——排序
 	secid := c.Input().Get("secid")
-	secid1, err := strconv.ParseInt(secid, 10, 64)
-	if err != nil {
-		beego.Error(err)
-	}
-	level := c.Input().Get("level")
+	// secid1, err := strconv.ParseInt(secid, 10, 64)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	// level := c.Input().Get("level")
 	daterange := c.Input().Get("datefilter")
 	// beego.Info(daterange)
 	type Duration int64
@@ -837,70 +923,76 @@ func (c *MeritController) SecofficeData() {
 	}
 
 	//取得科室名称
-	secoffice, err := models.GetAdminDepartbyId(secid1)
-	if err != nil {
-		beego.Error(err)
-	}
+	// secoffice, err := models.GetAdminDepartbyId(secid1)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
 
 	// employeevalue := make([]models.Employeeachievement, 0)
 	//根据科室id查所有员工
 	users, _, err := models.GetUsersbySecId(secid) //得到员工姓名
-	// beego.Info(users)
+	beego.Info(users)
 	if err != nil {
 		beego.Error(err)
 	}
 
-	var numbers, marks int
-	slice1 := make([]Person, 0)
-	for i1, v1 := range users {
+	// var numbers, marks int
+	// slice1 := make([]Person, 0)
+	slice1 := make([]*models.UserMeritTopics, 0)
+	for _, v1 := range users {
 		//根据价值id和用户id，得到成果，统计数量和分值
 		//取得用户的价值topic数量和分值
-		merits, err := models.GetMerit(0, users[i1].Id, 3)
+		// merits, err := models.GetMerit(0, users[i1].Id, 3)
+		beego.Info(v1.Id)
+		merittopics, err := models.GetMeritTopics(v1.Id, 3, true)
 		if err != nil {
 			beego.Error(err)
 		}
-
-		for _, v := range merits {
-			//根据choose取得adminmerit分值
-			adminmerit, err := models.GetAdminMeritbyId(v.MeritId)
-			if err != nil {
-				beego.Error(err)
-			}
-			var ff string
-			if adminmerit.Mark == "" {
-				// 如果mark为空，则寻找选择列表的分值，如果不为空，则直接用价值的分值
-				// 进行选择列表拆分
-				array1 := strings.Split(adminmerit.List, ",")
-				array2 := strings.Split(adminmerit.ListMark, ",")
-				for i2, v2 := range array1 {
-					if v2 == v.Choose {
-						ff = array2[i2]
-					}
-				}
-			} else {
-				ff = adminmerit.Mark
-			}
-			markint, err := strconv.Atoi(ff)
-			if err != nil {
-				beego.Error(err)
-			}
-			marks = marks + markint
-		}
-		numbers = len(merits)
+		beego.Info(merittopics)
+		slice1 = append(slice1, merittopics...)
+		// for _, v := range merits {
+		//根据choose取得adminmerit分值
+		// adminmerit, err := models.GetAdminMeritbyId(v.MeritId)
+		// adminmeritmark, err := models.GetAdminMeritMarkbyId(v.MeritId)
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
+		// var ff string
+		// if adminmerit.Mark == "" {
+		// 	// 如果mark为空，则寻找选择列表的分值，如果不为空，则直接用价值的分值
+		// 	// 进行选择列表拆分
+		// 	array1 := strings.Split(adminmerit.List, ",")
+		// 	array2 := strings.Split(adminmerit.ListMark, ",")
+		// 	for i2, v2 := range array1 {
+		// 		if v2 == v.Choose {
+		// 			ff = array2[i2]
+		// 		}
+		// 	}
+		// } else {
+		// 	ff = adminmerit.Mark
+		// }
+		// markint, err := strconv.Atoi(ff)
+		// if err != nil {
+		// 	beego.Error(err)
+		// }
+		// marks = marks + markint
+		// marks = marks + adminmeritmark.Mark
+		// }
+		// numbers = len(merits)
 		// marks1 = marks1 + marks
 		// numbers1 = numbers1 + numbers
-		aa := make([]Person, 1)
-		aa[0].Id = users[i1].Id //这里用for i1,v1,然后用v1.Id一样的意思
-		aa[0].Name = users[i1].Nickname
-		aa[0].Department = users[i1].Department
-		aa[0].Secoffice = users[i1].Secoffice
-		aa[0].Numbers = numbers
+		// aa := make([]Person, 1)
+		// aa[0].Id = users[i1].Id //这里用for i1,v1,然后用v1.Id一样的意思
+		// aa[0].Name = users[i1].Nickname
+		// aa[0].Department = users[i1].Department
+		// aa[0].Secoffice = users[i1].Secoffice
+		// aa[0].Numbers = numbers
 		// aa[0].Marks = marks
-		aa[0].Marks = marks
-		aa[0].UserId = v1.Id
-		slice1 = append(slice1, aa...)
-		marks = 0
-		numbers = 0
+		// aa[0].Marks = marks
+		// aa[0].UserId = v1.Id
+		// slice1 = append(slice1, aa...)
+		// marks = 0
+		// numbers = 0
 	}
 
 	// for _, v := range users {
@@ -912,14 +1004,34 @@ func (c *MeritController) SecofficeData() {
 	// 	employeevalue = append(employeevalue, employee...)
 	// }
 	//排序
-	pList := person1(slice1)
-	sort.Sort(pList)
+	// pList := person1(slice1)
+	// sort.Sort(pList)
+	// sort.Sort(slice1)
 	c.Data["Starttime"] = t1
 	c.Data["Endtime"] = t2
-	c.Data["Secid"] = secid
-	c.Data["Sectitle"] = secoffice.Title
-	c.Data["Level"] = level
-	c.Data["json"] = pList
+	// c.Data["Secid"] = secid
+	// c.Data["Sectitle"] = secoffice.Title
+	// c.Data["Level"] = level
+	// c.Data["json"] = pList
+	c.Data["json"] = slice1
+	c.ServeJSON()
+}
+
+// @Title get usertopics list
+// @Description get usertopics by page
+// @Success 200 {object} models.GetProductsPage
+// @Failure 400 Invalid page supplied
+// @Failure 404 articls not found
+// @router /testxorm [get]
+//测试取得xorm取得结构体嵌套_查不出来，奇怪
+func (c *MeritController) TestXorm() {
+	// merittopics, err := models.GetMeritTopicUser(1490, 3)
+	// merittopics, err := models.GetMeritTopics2(1490, 3)
+	merittopics, err := models.GetMeritTopic2(27, 1490, 3)
+	if err != nil {
+		beego.Error(err)
+	}
+	c.Data["json"] = merittopics
 	c.ServeJSON()
 }
 
@@ -927,110 +1039,38 @@ func (c *MeritController) SecofficeData() {
 //如果是主任以上权限人查看，则id代表用户名id，个人查看，id则代表价值id
 //要修改——已经完成的*************
 func (c *MeritController) Myself() {
-	// var userid int64
-	// var err error
-	// uid := c.Input().Get("userid")
-	// if uid != "" {
-	// 	userid, err = strconv.ParseInt(uid, 10, 64)
-	// 	if err != nil {
-	// 		beego.Error(err)
-	// 	}
-	// } else { //显示登录用户的
-	// 	//1.首先判断是否注册
-	// 	username, role := checkprodRole(c.Ctx)
-	// 	if role == 1 {
-	// 		c.Data["IsAdmin"] = true
-	// 	} else if role > 1 && role < 5 {
-	// 		c.Data["IsLogin"] = true
-	// 	} else {
-	// 		c.Data["IsAdmin"] = false
-	// 		c.Data["IsLogin"] = false
-	// 	}
-	// 	c.Data["Username"] = username
-	// 	c.Data["IsProjects"] = true
-	// 	c.Data["Ip"] = c.Ctx.Input.IP()
-	// 	c.Data["role"] = role
-	// 	if role > 4 { //
-	// 		route := c.Ctx.Request.URL.String()
-	// 		c.Data["Url"] = route
-	// 		c.Redirect("/roleerr?url="+route, 302)
-	// 		return
-	// 	}
-	// 	user, err := models.GetUserByUsername(username)
-	// 	if err != nil {
-	// 		beego.Error(err)
-	// 	}
-	// 	userid = user.Id
-	// }
-	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
-	c.Data["Username"] = username
-	c.Data["Ip"] = c.Ctx.Input.IP()
-	c.Data["role"] = role
-	c.Data["IsAdmin"] = isadmin
-	c.Data["IsLogin"] = islogin
-	c.Data["Uid"] = uid
-	roleint, err := strconv.Atoi(role)
+	var userid int64
+	var err error
+	uid := c.Input().Get("userid")
+	if uid != "" {
+		userid, err = strconv.ParseInt(uid, 10, 64)
+		if err != nil {
+			beego.Error(err)
+		}
+	} else { //显示登录用户的
+		username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
+		c.Data["Username"] = username
+		c.Data["Ip"] = c.Ctx.Input.IP()
+		c.Data["role"] = role
+		c.Data["IsAdmin"] = isadmin
+		c.Data["IsLogin"] = islogin
+		c.Data["Uid"] = uid
+		roleint, err := strconv.Atoi(role)
+		if err != nil {
+			beego.Error(err)
+		}
+		if roleint > 4 { //
+			route := c.Ctx.Request.URL.String()
+			c.Data["Url"] = route
+			c.Redirect("/login?url="+route, 302)
+			return
+		}
+		userid = uid
+	}
+
+	merittopics, err := models.GetMyselfMeritTopic(userid, 3, true) //这个其实是merittopic
 	if err != nil {
 		beego.Error(err)
-	}
-	if roleint > 4 { //
-		route := c.Ctx.Request.URL.String()
-		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
-		return
-	}
-	// user, err := models.GetUserByUsername(username)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	merits, err := models.GetMyselfMerit(uid) //这个其实是merittopic
-	if err != nil {
-		beego.Error(err)
-	}
-	merittopics := make([]MeritTopicSlice, 0)
-	for _, v := range merits {
-		//根据choose取得adminmerit分值
-		adminmerit, err := models.GetAdminMeritbyId(v.MeritId)
-		if err != nil {
-			beego.Error(err)
-		}
-		//价值分类
-		meritcate, err := models.GetAdminMeritbyId(adminmerit.ParentId)
-		if err != nil {
-			beego.Error(err)
-		}
-		var ff string
-		if adminmerit.Mark == "" {
-			// 如果mark为空，则寻找选择列表的分值，如果不为空，则直接用价值的分值
-			// 进行选择列表拆分
-			array1 := strings.Split(adminmerit.List, ",")
-			array2 := strings.Split(adminmerit.ListMark, ",")
-			for i1, v1 := range array1 {
-				if v1 == v.Choose {
-					ff = array2[i1]
-				}
-			}
-		} else {
-			ff = adminmerit.Mark
-		}
-		markint, err := strconv.Atoi(ff)
-		if err != nil {
-			beego.Error(err)
-		}
-		aa := make([]MeritTopicSlice, 1)
-		aa[0].Id = v.Id
-		aa[0].MeritId = v.MeritId
-		aa[0].MeritCate = meritcate.Title //价值类型
-		aa[0].Merit = adminmerit.Title    //价值
-		aa[0].UserId = v.UserId
-		aa[0].Title = v.Title //价值内容名称
-		aa[0].Choose = v.Choose
-		aa[0].Content = v.Content
-		aa[0].State = v.State
-		aa[0].Mark = markint
-		aa[0].Created = v.Created
-		aa[0].Updated = v.Updated
-		merittopics = append(merittopics, aa...)
 	}
 	c.Data["json"] = merittopics
 	c.ServeJSON()
@@ -1043,26 +1083,13 @@ func (c *MeritController) MeritSend() {
 	if err != nil {
 		beego.Error(err)
 	}
-	mid := c.Input().Get("mid")
+	mid := c.Input().Get("meritid")
 	midNum, err := strconv.ParseInt(mid, 10, 64)
 	if err != nil {
 		beego.Error(err)
 	}
 	//如果是主任以上权限人查看，则id代表用户名id，个人查看，id则代表价值id
 	//1.首先判断是否注册
-	// username, role := checkprodRole(c.Ctx)
-	// if role == 1 {
-	// 	c.Data["IsAdmin"] = true
-	// } else if role > 1 && role < 5 {
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// }
-	// c.Data["Username"] = username
-	// c.Data["IsProjects"] = true
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = role
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -1078,7 +1105,7 @@ func (c *MeritController) MeritSend() {
 	if roleint > 4 { //
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
+		c.Redirect("/login?url="+route, 302)
 		return
 	}
 
@@ -1086,73 +1113,11 @@ func (c *MeritController) MeritSend() {
 	if err != nil {
 		beego.Error(err)
 	}
-	var merits []*models.MeritTopic
-	if idint == 1 {
-		//取得这个id下的所有merittopic
-		merits, err = models.GetMerit(midNum, user.Id, 1)
-		if err != nil {
-			beego.Error(err)
-		}
-	} else if idint == 2 {
-		merits, err = models.GetMerit(midNum, user.Id, 2)
-		if err != nil {
-			beego.Error(err)
-		}
-	} else if idint == 3 {
-		merits, err = models.GetMerit(midNum, user.Id, 3)
-		if err != nil {
-			beego.Error(err)
-		}
-	}
-
-	merittopics := make([]MeritTopicSlice, 0)
-	//根据choose取得adminmerit分值
-	adminmerit, err := models.GetAdminMeritbyId(midNum)
+	// beego.Info(idint)
+	// beego.Info(user.Id)
+	merittopics, err := models.GetMeritTopic(midNum, user.Id, idint)
 	if err != nil {
 		beego.Error(err)
-	}
-	//价值分类
-	meritcate, err := models.GetAdminMeritbyId(adminmerit.ParentId)
-	if err != nil {
-		beego.Error(err)
-	}
-	for _, v := range merits {
-		var ff string
-		if adminmerit.Mark == "" {
-			// 如果mark为空，则寻找选择列表的分值，如果不为空，则直接用价值的分值
-			// 进行选择列表拆分
-			array1 := strings.Split(adminmerit.List, ",")
-			array2 := strings.Split(adminmerit.ListMark, ",")
-			for i1, v1 := range array1 {
-				if v1 == v.Choose {
-					ff = array2[i1]
-				}
-			}
-		} else {
-			ff = adminmerit.Mark
-		}
-		var markint int
-		if ff != "" {
-			markint, err = strconv.Atoi(ff)
-			if err != nil {
-				beego.Error(err)
-			}
-		}
-		aa := make([]MeritTopicSlice, 1)
-		aa[0].Id = v.Id
-		aa[0].MeritId = v.MeritId
-		aa[0].MeritCate = meritcate.Title //价值类型
-		aa[0].Merit = adminmerit.Title    //价值
-		aa[0].UserId = v.UserId
-		aa[0].Title = v.Title
-		aa[0].Choose = v.Choose
-		aa[0].Content = v.Content
-		aa[0].State = v.State
-		aa[0].Mark = markint
-		aa[0].Created = v.Created
-		aa[0].Updated = v.Updated
-		merittopics = append(merittopics, aa...)
-		// merittopics = make([]MeritTopicSlice, 0) //再把slice置0
 	}
 	c.Data["json"] = merittopics
 	c.ServeJSON()
@@ -1161,36 +1126,6 @@ func (c *MeritController) MeritSend() {
 //显示需要审核的价值内容——计算分值
 func (c *MeritController) MeritExamined() {
 	//如果是主任以上权限人查看，则id代表用户名id，个人查看，id则代表价值id
-	//1.首先判断是否注册
-	// if !checkAccount(c.Ctx) {
-	// 	route := c.Ctx.Request.URL.String()
-	// 	c.Data["Url"] = route
-	// 	c.Redirect("/login?url="+route, 302)
-	// 	return
-	// }
-	//4.取得客户端用户名
-	// var uname string
-	// sess, _ := globalSessions.SessionStart(c.Ctx.ResponseWriter, c.Ctx.Request)
-	// defer sess.SessionRelease(c.Ctx.ResponseWriter)
-	// v := sess.Get("uname")
-	// if v != nil {
-	// uname = v.(string)
-	// c.Data["Uname"] = v.(string)
-	// }
-	//4.取出用户的权限等级
-	// username, role := checkprodRole(c.Ctx)
-	// if role == 1 {
-	// 	c.Data["IsAdmin"] = true
-	// } else if role > 1 && role < 5 {
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// }
-	// c.Data["Username"] = username
-	// c.Data["IsProjects"] = true
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = role
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -1205,25 +1140,26 @@ func (c *MeritController) MeritExamined() {
 	if roleint > 4 { //
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route
-		c.Redirect("/roleerr?url="+route, 302)
+		c.Redirect("/login?url="+route, 302)
 		return
 	}
-	// user, err := models.GetUserByUsername(uname)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	merittopics := make([]MeritTopicSlice, 0)
+
+	// merittopics := make([]MeritTopicSlice, 0)
+
+	merittopics := make([]*models.MyMeritTopic, 0)
 	//如果权限<=2级，则取出科室所有人员，循环人员取出待审核的价值内容
 	if roleint <= 2 {
 		depart, err := models.GetAdminDepart(0) //得到多个分院
 		if err != nil {
 			beego.Error(err)
 		}
+		beego.Info(depart)
 		for _, v1 := range depart {
 			secoffice, err := models.GetAdminDepart(v1.Id) //得到多个科室
 			if err != nil {
 				beego.Error(err)
 			}
+			beego.Info(secoffice)
 			//如果返回科室为空，则直接取得价值分类
 			//这个逻辑判断不完美，如果一个部门即有科室，又有人没有科室属性怎么办，直接挂在部门下的呢？
 			//应该是反过来找出所有没有科室字段的人员，把他放在部门下
@@ -1234,8 +1170,10 @@ func (c *MeritController) MeritExamined() {
 					if err != nil {
 						beego.Error(err)
 					}
+					beego.Info(users)
 					for _, v3 := range users {
-						cc, err := getusermerit(v3.Id)
+						// cc, err := getusermerit(v3.Id)
+						cc, err := models.GetMyselfMeritTopic(v3.Id, 2, true)
 						if err != nil {
 							beego.Error(err)
 						}
@@ -1246,12 +1184,15 @@ func (c *MeritController) MeritExamined() {
 			}
 			//查出所有有这个部门但科室名为空的人员
 			//根据分院查所有员工
+			// beego.Info(v1.Title)
 			users, _, err := models.GetUsersbySecOnly(v1.Title) //得到员工姓名
 			if err != nil {
 				beego.Error(err)
 			}
+			// beego.Info(users)
 			for _, v4 := range users {
-				cc, err := getusermerit(v4.Id)
+				// cc, err := getusermerit(v4.Id)
+				cc, err := models.GetMyselfMeritTopic(v4.Id, 2, true)
 				if err != nil {
 					beego.Error(err)
 				}
@@ -1264,6 +1205,7 @@ func (c *MeritController) MeritExamined() {
 }
 
 //函数——取得用户的价值内容，待审核的
+//作废，用cc, err := models.GetMyselfMeritTopic(v3.Id,2)代替
 func getusermerit(userid int64) (merittopics []MeritTopicSlice, err error) {
 	merits, err := models.GetMerit(0, userid, 2)
 	if err != nil {
@@ -1281,26 +1223,30 @@ func getusermerit(userid int64) (merittopics []MeritTopicSlice, err error) {
 		if err != nil {
 			beego.Error(err)
 		}
-		var ff string
-		if adminmerit.Mark == "" {
-			// 如果mark为空，则寻找选择列表的分值，如果不为空，则直接用价值的分值
-			// 进行选择列表拆分
-			array1 := strings.Split(adminmerit.List, ",")
-			array2 := strings.Split(adminmerit.ListMark, ",")
-			for i1, v1 := range array1 {
-				if v1 == v.Choose {
-					ff = array2[i1]
-				}
-			}
-		} else {
-			ff = adminmerit.Mark
-		}
-		var markint int
-		if ff != "" {
-			markint, err = strconv.Atoi(ff)
-			if err != nil {
-				beego.Error(err)
-			}
+		// var ff string
+		// if adminmerit.Mark == "" {
+		// 	// 如果mark为空，则寻找选择列表的分值，如果不为空，则直接用价值的分值
+		// 	// 进行选择列表拆分
+		// 	array1 := strings.Split(adminmerit.List, ",")
+		// 	array2 := strings.Split(adminmerit.ListMark, ",")
+		// 	for i1, v1 := range array1 {
+		// 		if v1 == v.Choose {
+		// 			ff = array2[i1]
+		// 		}
+		// 	}
+		// } else {
+		// 	ff = adminmerit.Mark
+		// }
+		// var markint int
+		// if ff != "" {
+		// 	markint, err = strconv.Atoi(ff)
+		// 	if err != nil {
+		// 		beego.Error(err)
+		// 	}
+		// }
+		adminmeritmark, err := models.GetAdminMeritMarkbyId(v.MeritId)
+		if err != nil {
+			beego.Error(err)
 		}
 		aa := make([]MeritTopicSlice, 1)
 		aa[0].Id = v.Id
@@ -1312,10 +1258,11 @@ func getusermerit(userid int64) (merittopics []MeritTopicSlice, err error) {
 		user := models.GetUserByUserId(v.UserId)
 		aa[0].UserNickName = user.Nickname
 		aa[0].Title = v.Title
-		aa[0].Choose = v.Choose
+		// aa[0].Choose = v.Choose
 		aa[0].Content = v.Content
 		aa[0].State = v.State
-		aa[0].Mark = markint
+		// aa[0].Mark = markint
+		aa[0].Mark = adminmeritmark.Mark
 		aa[0].Created = v.Created
 		aa[0].Updated = v.Updated
 		merittopics = append(merittopics, aa...)
@@ -1323,34 +1270,37 @@ func getusermerit(userid int64) (merittopics []MeritTopicSlice, err error) {
 	return merittopics, err
 }
 
-//用户进行价值添加
+// @Title post user merit
+// @Description post user merit
+// @Param meritid query string true "The id of merit"
+// @Param title query string true "The title of merit_topic"
+// @Param content query string true "The content of merit_topic"
+// @Param active query string true "The actuve of merit_topic"
+// @Success 200 {object} SUCCESS
+// @Failure 400 Invalid page supplied
+// @Failure 404 merit not found
+// @router /addmerit [post]
+// 用户进行价值添加
 func (c *MeritController) AddMerit() {
 	// mcid := c.Input().Get("mcid")
 	// mcidNum, err := strconv.ParseInt(mcid, 10, 64)
 	// if err != nil {
 	// 	beego.Error(err)
 	// }
-	mid := c.Input().Get("mid")
+	mid := c.Input().Get("meritid")
 	midNum, err := strconv.ParseInt(mid, 10, 64)
 	if err != nil {
 		beego.Error(err)
 	}
 	title := c.Input().Get("title")
-	choose := c.Input().Get("choose")
 	content := c.Input().Get("content")
-	// username, role := checkprodRole(c.Ctx)
-	// if role == 1 {
-	// 	c.Data["IsAdmin"] = true
-	// } else if role > 1 && role < 5 {
-	// 	c.Data["IsLogin"] = true
-	// } else {
-	// 	c.Data["IsAdmin"] = false
-	// 	c.Data["IsLogin"] = false
-	// }
-	// c.Data["Username"] = username
-	// c.Data["IsProjects"] = true
-	// c.Data["Ip"] = c.Ctx.Input.IP()
-	// c.Data["role"] = role
+	active := c.Input().Get("active")
+	var activebool bool
+	if active == "true" {
+		activebool = true
+	} else {
+		activebool = false
+	}
 	username, role, uid, isadmin, islogin := checkprodRole(c.Ctx)
 	c.Data["Username"] = username
 	c.Data["Ip"] = c.Ctx.Input.IP()
@@ -1358,16 +1308,7 @@ func (c *MeritController) AddMerit() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-	// roleint, err := strconv.Atoi(role)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	//先由uname取得uid
-	// user, err := models.GetUserByUsername(username)
-	// if err != nil {
-	// 	beego.Error(err)
-	// }
-	_, err = models.AddMerit(midNum, uid, title, choose, content)
+	_, err = models.AddMerit(midNum, uid, title, content, activebool)
 	if err != nil {
 		beego.Error(err)
 	} else {
@@ -1404,7 +1345,7 @@ func (c *MeritController) UpdateMerit() {
 func (c *MeritController) SendMerit() {
 	// name := "state" //c.Input().Get("name")
 	value := c.Input().Get("state")
-	pk := c.Input().Get("mid")
+	pk := c.Input().Get("meritid")
 	id, err := strconv.ParseInt(pk, 10, 64)
 	if err != nil {
 		beego.Error(err)
@@ -1436,7 +1377,7 @@ func (c *MeritController) SendMerit() {
 func (c *MeritController) DownSendMerit() {
 	// name := "state" //c.Input().Get("name")
 	value := c.Input().Get("state")
-	pk := c.Input().Get("mid")
+	pk := c.Input().Get("meritid")
 	id, err := strconv.ParseInt(pk, 10, 64)
 	if err != nil {
 		beego.Error(err)
@@ -1465,7 +1406,7 @@ func (c *MeritController) DownSendMerit() {
 
 //删除价值
 func (c *MeritController) Delete() {
-	mid := c.Input().Get("mid")
+	mid := c.Input().Get("meritid")
 	midNum, err := strconv.ParseInt(mid, 10, 64)
 	if err != nil {
 		beego.Error(err)

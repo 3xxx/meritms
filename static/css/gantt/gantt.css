@@ -21,7 +21,7 @@ body{
 
 .gdfCell {
   overflow: hidden;
-  padding:1px 2px;/*2017.10.4½«ÕâÀïµÄ4px 2px¸Ä³É1px 2px¾Í²»»á´íÎ»ÁË¡£*/
+  padding:1px 2px;/*2017.10.4å°†è¿™é‡Œçš„4px 2pxæ”¹æˆ1px 2pxå°±ä¸ä¼šé”™ä½äº†ã€‚*/
   border-bottom: 1px solid #eee;
   border-right: 1px solid #eee;
   font-family: arial, helvetica, sans-serif;

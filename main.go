@@ -1,14 +1,11 @@
 package main
 
 import (
-	// "fmt"
-	"github.com/3xxx/meritms/controllers"
 	"github.com/3xxx/meritms/models"
 	_ "github.com/3xxx/meritms/routers"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"github.com/astaxie/beego/toolbox"
-	_ "github.com/mattn/go-sqlite3"
+
 	"time"
 )
 
@@ -19,6 +16,7 @@ func Indexaddone(index int) (index1 int) {
 }
 
 func main() {
+	// InitDB()//导致数据库lock，不要用！
 	beego.AddFuncMap("indexaddone", Indexaddone) //模板中使用{{indexaddone $index}}或{{$index|indexaddone}}
 	beego.AddFuncMap("loadtimes", loadtimes)
 
@@ -27,15 +25,7 @@ func main() {
 	//自动建表
 	orm.RunSyncdb("default", false, true)
 	models.InsertUser()
-	// time1 := "0/" + time + " * * * * *"
 
-	time1 := "0 30 23 * * *"
-	tk1 := toolbox.NewTask("tk1", time1, func() error { controllers.Postdata(); return nil }) //func() error { fmt.Println("tk1"); return nil }
-	toolbox.AddTask("tk1", tk1)
-	toolbox.StartTask()
-	defer toolbox.StopTask()
-	// controllers.WorkflowsCreate()
-	models.InitFlow()
 	beego.Run()
 }
 
@@ -43,6 +33,34 @@ func main() {
 func loadtimes(t time.Time) int {
 	return int(time.Now().Sub(t).Nanoseconds() / 1e6)
 }
+
+// var db *sql.DB
+
+// func InitDB() {
+// 	var err error
+// 	db, err = sql.Open("sqlite3", "database/meritms.db")
+// 	if err != nil {
+// 		log.Panic(err)
+// 	}
+// 	if err = db.Ping(); err != nil {
+// 		log.Panic(err)
+// 	}
+
+// 	// driver, connStr := "sqlite3", "database/meritms.db"
+// 	// tdb := fatal1(sql.Open(driver, connStr)).(*sql.DB)
+// 	// if tdb == nil {
+// 	// 	log.Fatal("given database handle is `nil`")
+// 	// }
+// 	// db := tdb
+// }
+
+// // fatal1 expects a value and an error value as its arguments.
+// func fatal1(val1 interface{}, err error) interface{} {
+// 	if err != nil {
+// 		fmt.Println("%v", err)
+// 	}
+// 	return val1
+// }
 
 //错误描述：当controllers中的func中没有使用models中的func时，提示没有定义default数据库。
 //也就是controllers中不使用models时，models中的init()不起作用
