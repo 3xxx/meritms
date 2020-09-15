@@ -27,6 +27,7 @@ type AdminMeritController struct {
 //根据数字id或空查询分类，如果有pid，则查询下级，如果pid为空，则查询类别
 func (c *AdminMeritController) Merit() {
 	id := c.Ctx.Input.Param(":id")
+	beego.Info(id)
 	c.Data["Id"] = id
 	c.Data["Ip"] = c.Ctx.Input.IP()
 	// var categories []*models.AdminCategory
@@ -34,6 +35,7 @@ func (c *AdminMeritController) Merit() {
 	if id == "" { //如果id为空，则查询类别
 		id = "0"
 	}
+	beego.Info(id)
 	//pid转成64为
 	idNum, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
@@ -263,12 +265,18 @@ func (c *AdminMeritController) DeleteMerit() {
 	}
 	ids := c.GetString("ids")
 	array := strings.Split(ids, ",")
+	if ids == "" || len(array) == 0 {
+		return
+	}
 	for _, v := range array {
 		// pid = strconv.FormatInt(v1, 10)
 		//id转成64位
 		idNum, err := strconv.ParseInt(v, 10, 64)
 		if err != nil {
 			beego.Error(err)
+		}
+		if idNum == 0 {
+			return
 		}
 		//查询下级，即分级
 		categories, err := models.GetAdminMerit(idNum)

@@ -37,6 +37,7 @@
   <link rel="stylesheet" href="/static/froala/css/plugins/special_characters.css">
   <link rel="stylesheet" href="/static/froala/js/codemirror.min.css">
   <link rel="stylesheet" href="/static/froala/css/themes/red.css">
+
 </head>
 <div class="col-lg-12">
   <h2>{{.UserNickname}}</h2>

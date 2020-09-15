@@ -174,7 +174,7 @@
         dataType: 'json',
         queryParams: { id: parentid },
         ajaxOptions: { id: parentid },
-        clickToSelect: true,
+        clickToSelect: false,
         //height: 500,
         detailView: true, //父子表
         uniqueId: "id",
@@ -287,17 +287,26 @@
           alert("请先勾选！");
           return false;
         }
-        var title = $.map(selectRow, function(row) {
-          return row.Title;
-        })
+        // var title = $.map(selectRow, function(row) {
+        //   return row.Title;
+        // })
+        
         var ids = "";
         for (var i = 0; i < selectRow.length; i++) {
           if (i == 0) {
-            ids = selectRow[i].Id;
+            ids = selectRow[i].id;
           } else {
-            ids = ids + "," + selectRow[i].Id;
+            ids = ids + "," + selectRow[i].id;
           }
         }
+        if (ids==""){
+          alert("选中数据为空或不能删除根价值分类！")
+          return
+        }
+        //删除用ids2
+        var ids2 = $.map($('#table0').bootstrapTable('getSelections'), function(row) {
+          return row.id
+        })
         $.ajax({
           type: "post",
           url: "/admin/merit/deletemerit",
@@ -306,8 +315,8 @@
             alert("删除“" + data + "”成功！(status:" + status + ".)");
             //删除已选数据
             $('#table0').bootstrapTable('remove', {
-              field: 'Title',
-              values: title
+              field: 'id',
+              values: ids2
             });
           }
         });
@@ -631,11 +640,13 @@ field：点击列的 field 名称 -->
       var ids = "";
       for (var i = 0; i < selectRow.length; i++) {
         if (i == 0) {
-          ids = selectRow[i].Id;
+          ids = selectRow[i].id;
         } else {
-          ids = ids + "," + selectRow[i].Id;
+          ids = ids + "," + selectRow[i].id;
         }
       }
+      // alert(ids)
+      // return
       //删除用ids2
       var ids2 = $.map($('#table1').bootstrapTable('getSelections'), function(row) {
         return row.id

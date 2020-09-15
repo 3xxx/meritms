@@ -30,7 +30,7 @@ func (c *AdminController) Get() {
 	c.Data["IsAdmin"] = isadmin
 	c.Data["IsLogin"] = islogin
 	c.Data["Uid"] = uid
-
+	beego.Info(role)
 	if role != "1" {
 		route := c.Ctx.Request.URL.String()
 		c.Data["Url"] = route

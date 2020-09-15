@@ -123,7 +123,7 @@ func init() {
 	beego.Router("/admin/department/deletedepartment", &controllers.AdminController{}, "*:DeleteDepartment")
 	//*******价值****
 	//填充MERIT表格数据
-	beego.Router("/admin/merit", &controllers.AdminMeritController{}, "*:Merit")
+	// beego.Router("/admin/merit", &controllers.AdminMeritController{}, "*:Merit")
 	//根据数字id查询这个分类下的价值
 	beego.Router("/admin/merit/?:id:string", &controllers.AdminMeritController{}, "*:Merit")
 	//根据数字id查询这个科室id下的价值分类

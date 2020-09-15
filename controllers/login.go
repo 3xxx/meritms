@@ -351,7 +351,7 @@ func checkRole(ctx *context.Context) (role string, err error) { //这里返回�
 //ip区段，casbin中表示，比如9楼ip区段作为用户，赋予了角色，这个角色具有访问项目目录权限
 func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin, islogin bool) {
 	v := ctx.Input.CruSession.Get("uname") //用来获取存储在服务器端中的数据??。
-	// beego.Info(v)                          //qin.xc
+	beego.Info(v)                          //qin.xc
 	var userrole string
 	var user models.User
 	var err error
@@ -382,9 +382,11 @@ func checkprodRole(ctx *context.Context) (uname, role string, uid int64, isadmin
 		uname = ctx.Input.IP()
 		// beego.Info(uname)
 		user, err = models.GetUserByIp(uname)
+		beego.Info(user)
 		if err != nil { //如果查不到，则用户名就是ip，role再根据ip地址段权限查询
 			// beego.Error(err)
 			iprole = Getiprole(ctx.Input.IP()) //查不到，则是5——这个应该取消，采用casbin里的ip区段
+			beego.Info(iprole)
 			userrole = strconv.Itoa(iprole)
 		} else { //如果查到，则role和用户名
 			if user.Role == "1" {

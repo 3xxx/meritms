@@ -48,6 +48,15 @@
   <link rel="stylesheet" href="/static/froala/css/plugins/special_characters.css">
   <link rel="stylesheet" href="/static/froala/js/codemirror.min.css">
   <link rel="stylesheet" href="/static/froala/css/themes/red.css">
+  <style type="text/css">
+  div#addmodal {
+    /*.modal .fade .in*/
+    z-index: 3;
+  }
+  div#detailmodal{
+    z-index: 3;
+  }
+  </style>
 </head>
 <!-- <div class="form-group"> -->
 <div class="col-lg-12">
@@ -632,6 +641,17 @@
           type: "post",
           url: "/merit/addmerit",
           data: { meritid: choose, title: title, content: html,active:active },
+          success: function(data, status) {
+            alert("添加“" + data + "”成功！(status:" + status + ".)");
+            $('#addmodal').modal('hide');
+            $('#table').bootstrapTable('refresh', { url: '/merit/send/1' });
+          },
+        });
+      }else if(title){
+        $.ajax({
+          type: "post",
+          url: "/merit/addmerit",
+          data: { meritid: meritid, title: title, content: html,active:active },
           success: function(data, status) {
             alert("添加“" + data + "”成功！(status:" + status + ".)");
             $('#addmodal').modal('hide');

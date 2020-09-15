@@ -427,7 +427,8 @@ func UpdateAdminMerit(id int64, title string, mark int) error {
 
 		if mark != 0 {
 			mmark := &AdminMeritMark{MeritId: id}
-			if o.Read(mmark) == nil {
+			//不是主键的话，要在read里加上字段名才行！！！
+			if o.Read(mmark, "MeritId") == nil {
 				mmark.Mark = mark
 				mmark.Updated = time.Now()
 				_, err = o.Update(mmark)
@@ -486,7 +487,7 @@ func DeleteAdminMerit(id int64) error { //应该在controllers中显示警告
 	merit := AdminMerit{Id: id}
 	var err error
 	if o.Read(&merit) == nil {
-		_, err = o.Delete(&merit) //删除分院
+		_, err = o.Delete(&merit)
 		if err != nil {
 			return err
 		}

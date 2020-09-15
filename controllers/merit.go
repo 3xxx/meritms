@@ -1109,13 +1109,13 @@ func (c *MeritController) MeritSend() {
 		return
 	}
 
-	user, err := models.GetUserByUsername(username)
-	if err != nil {
-		beego.Error(err)
-	}
+	// user, err := models.GetUserByUsername(username)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
 	// beego.Info(idint)
 	// beego.Info(user.Id)
-	merittopics, err := models.GetMeritTopic(midNum, user.Id, idint)
+	merittopics, err := models.GetMeritTopic(midNum, uid, idint)
 	if err != nil {
 		beego.Error(err)
 	}

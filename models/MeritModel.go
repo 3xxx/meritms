@@ -98,7 +98,7 @@ type UserMeritTopic struct {
 //根据用户id和价值分类2级，取得所有这个用户的价值
 func GetMeritTopic(mid, uid int64, state int) (usermerittopics []*UserMeritTopic, err error) {
 	db := GetDB()
-	// 必须要写权select，坑爹啊
+	// 必须要写权select，坑爹啊 OR admin_merit.id=?
 	err = db.Table("admin_merit").
 		Select("merit_topic.id as id,t1.title as merit_title,t2.title as merit_cate,admin_merit.title as choose,admin_merit_mark.mark as mark,merit_topic.title as topic_title,merit_topic.content as content,merit_topic.state as state,merit_topic.updated as updated,merit_topic.active as active").
 		Where("admin_merit.parent_id=?", mid).
