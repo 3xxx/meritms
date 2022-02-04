@@ -47,7 +47,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/.AddAdminCategory"
+                            "$ref": "#/definitions/models.AddAdminCategory"
                         }
                     }
                 }
@@ -72,7 +72,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/.GetAdminCategory"
+                            "$ref": "#/definitions/models.GetAdminCategory"
                         }
                     }
                 }
@@ -97,7 +97,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/.GetAdminCategory"
+                            "$ref": "#/definitions/models.GetAdminCategory"
                         }
                     }
                 }
@@ -114,7 +114,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/.success"
+                            "$ref": "#/definitions/success"
                         }
                     },
                     "400": {
@@ -137,7 +137,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/.success"
+                            "$ref": "#/definitions/success"
                         }
                     },
                     "400": {
@@ -190,7 +190,53 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/.SUCCESS"
+                            "$ref": "#/definitions/SUCCESS"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "merit not found"
+                    }
+                }
+            }
+        },
+        "/wx/getmerittreejson": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get merit tree json",
+                "operationId": "MeritController.get merit tree json",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/SUCCESS"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid page supplied"
+                    },
+                    "404": {
+                        "description": "merit not found"
+                    }
+                }
+            }
+        },
+        "/wx/meritjson": {
+            "get": {
+                "tags": [
+                    "wx"
+                ],
+                "description": "get merit tree jsoneditor",
+                "operationId": "MeritController.get merit tree jsoneditor",
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/models.GetAllMerit"
                         }
                     },
                     "400": {
@@ -213,7 +259,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/.GetProductsPage"
+                            "$ref": "#/definitions/models.GetProductsPage"
                         }
                     },
                     "400": {
@@ -245,7 +291,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/.SUCCESS"
+                            "$ref": "#/definitions/SUCCESS"
                         }
                     },
                     "400": {
@@ -284,7 +330,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/.success"
+                            "$ref": "#/definitions/success"
                         }
                     },
                     "400": {
@@ -337,7 +383,7 @@
                     "200": {
                         "description": "",
                         "schema": {
-                            "$ref": "#/definitions/.SaveUser"
+                            "$ref": "#/definitions/models.SaveUser"
                         }
                     },
                     "400": {
@@ -351,22 +397,32 @@
         }
     },
     "definitions": {
-        ".AddAdminCategory": {
+        "SUCCESS": {
+            "title": "SUCCESS",
             "type": "object"
         },
-        ".GetAdminCategory": {
+        "models.AddAdminCategory": {
+            "title": "AddAdminCategory",
             "type": "object"
         },
-        ".GetProductsPage": {
+        "models.GetAdminCategory": {
+            "title": "GetAdminCategory",
             "type": "object"
         },
-        ".SUCCESS": {
+        "models.GetAllMerit": {
+            "title": "GetAllMerit",
             "type": "object"
         },
-        ".SaveUser": {
+        "models.GetProductsPage": {
+            "title": "GetProductsPage",
             "type": "object"
         },
-        ".success": {
+        "models.SaveUser": {
+            "title": "SaveUser",
+            "type": "object"
+        },
+        "success": {
+            "title": "success",
             "type": "object"
         }
     },

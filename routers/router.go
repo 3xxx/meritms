@@ -27,6 +27,7 @@ func init() {
 			beego.NSNamespace("/admin",
 				beego.NSInclude(
 					&controllers.AdminController{},
+					&controllers.AdminMeritController{},
 					// &controllers.CustomerCookieCheckerController{},
 				),
 			),

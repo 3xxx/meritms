@@ -197,7 +197,7 @@ func (c *MeritController) GetMerit() {
 	if err != nil {
 		beego.Error(err)
 	}
-	// beego.Info(role)
+
 	//读取用户id
 	//查询用户分院名称和科室名称
 	//查出分院id和科室id
@@ -931,7 +931,7 @@ func (c *MeritController) SecofficeData() {
 	// employeevalue := make([]models.Employeeachievement, 0)
 	//根据科室id查所有员工
 	users, _, err := models.GetUsersbySecId(secid) //得到员工姓名
-	beego.Info(users)
+	// beego.Info(users)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -943,12 +943,12 @@ func (c *MeritController) SecofficeData() {
 		//根据价值id和用户id，得到成果，统计数量和分值
 		//取得用户的价值topic数量和分值
 		// merits, err := models.GetMerit(0, users[i1].Id, 3)
-		beego.Info(v1.Id)
+		// beego.Info(v1.Id)
 		merittopics, err := models.GetMeritTopics(v1.Id, 3, true)
 		if err != nil {
 			beego.Error(err)
 		}
-		beego.Info(merittopics)
+		// beego.Info(merittopics)
 		slice1 = append(slice1, merittopics...)
 		// for _, v := range merits {
 		//根据choose取得adminmerit分值
@@ -1116,6 +1116,7 @@ func (c *MeritController) MeritSend() {
 	// beego.Info(idint)
 	// beego.Info(user.Id)
 	merittopics, err := models.GetMeritTopic(midNum, uid, idint)
+	beego.Info(merittopics)
 	if err != nil {
 		beego.Error(err)
 	}
@@ -1418,6 +1419,82 @@ func (c *MeritController) Delete() {
 		c.Data["json"] = "ok"
 		c.ServeJSON()
 	}
+}
+
+// @Title get merit tree jsoneditor
+// @Description get merit tree jsoneditor
+// @Success 200 {object} models.GetAllMerit
+// @Failure 400 Invalid page supplied
+// @Failure 404 merit not found
+// @router /meritjson [get]
+// 给jsoneditor返回json数据
+func (c *MeritController) Jsoneditor() {
+	c.TplName = "merit/jsoneditor.tpl"
+}
+
+//树状目录数据
+type FileNode struct {
+	// Id        int64       `json:"id"`
+	Title     string      `json:"text"`
+	Mark      int         `json:"mark"`
+	FileNodes []*FileNode `json:"nodes"`
+}
+
+// @Title get merit tree json
+// @Description get merit tree json
+// @Success 200 {object} SUCCESS
+// @Failure 400 Invalid page supplied
+// @Failure 404 merit not found
+// @router /getmerittreejson [get]
+func (c *MeritController) GetMeritTreeJson() {
+	//取项目本身
+	// category, err := models.GetProj(idNum)
+	// if err != nil {
+	// 	beego.Error(err)
+	// }
+	//取项目所有子孙
+	categories, err := models.GetAllMerit()
+	if err != nil {
+		beego.Error(err)
+	}
+	//根据id取出下级
+	cates := getsons(0, categories)
+	//递归生成目录json
+	root := FileNode{"价值分类", 0, []*FileNode{}}
+	// walk(category.Id, &root)
+	maketreejson(cates, categories, &root)
+	c.Data["json"] = root //data
+	c.ServeJSON()
+}
+
+//递归构造项目树状目录
+func maketreejson(cates, categories []*models.Merit, node *FileNode) {
+	// 遍历目录
+	for _, proj := range cates {
+		id := proj.Id
+		title := proj.Title
+		mark := proj.Mark
+		// 将当前名和id作为子节点添加到目录下
+		child := FileNode{title, mark, []*FileNode{}}
+		node.FileNodes = append(node.FileNodes, &child)
+		slice := getsons(id, categories)
+		// 如果遍历的当前节点下还有节点，则进入该节点进行递归
+		if len(slice) > 0 {
+			maketreejson(slice, categories, &child)
+		}
+	}
+	return
+}
+
+//取得数组的下级目录
+func getsons(idNum int64, categories []*models.Merit) (slice []*models.Merit) {
+	// slice := make([]*models.Project, 0)
+	for _, k := range categories {
+		if k.ParentId == idNum {
+			slice = append(slice, k)
+		}
+	}
+	return slice
 }
 
 //显示——修改价值结构中的项目
@@ -1798,13 +1875,13 @@ func (c *MeritController) Delete() {
 //         ,"device_hid": "xxxx"
 // }]
 // , "count":0}
-//     很快按上述想法写好了带码，但是以外发生了，编译不过，看一看代码逻辑没有
+//     很快按上述想法写好了代码，但是以外发生了，编译不过，看一看代码逻辑没有
 // 问题，问题出在哪里呢？
 //     原来是interface{} Array方法返回的是一个interface{}类型的，我们都在golang
 // 里interface是一个万能的接受者可以保存任意类型的参数，但是却忽略了一点，它是
 // 不可以想当然的当任意类型来用，在使用之前一定要对interface类型进行判断。我开始
 // 就忽略了这点，想当然的使用interface变量造成了错误。
-//     下面写了个小例子
+// 下面写了个小例子
 
 // package main
 
@@ -1856,7 +1933,7 @@ func (c *MeritController) Delete() {
 // contents, _ := ioutil.ReadAll(res.Body)
 // js, js_err := simplejson.NewJson(contents)
 
-// 第二部，根据json的格式，选择使用array或者map储存数据
+// 第二步，根据json的格式，选择使用array或者map储存数据
 // var nodes = make(map[string]interface{})
 // nodes, _ = js.Map()
 

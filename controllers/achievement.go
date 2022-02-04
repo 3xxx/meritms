@@ -184,7 +184,10 @@ func (c *Achievement) GetAchievement() {
 	}
 	// user:=models.GetUserByUserId(uid)
 	//取出用户权限
-	roles := e.GetRolesForUser(strconv.FormatInt(uid, 10))
+	roles, err := e.GetRolesForUser(strconv.FormatInt(uid, 10))
+	if err != nil {
+		beego.Error(err)
+	}
 	var secids []string
 	tempMap := make(map[string]int)
 	// tempMap := map[string]int  // 存放不重复主键

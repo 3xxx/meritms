@@ -232,7 +232,10 @@ func (c *RoleController) Get() {
 		// 	beego.Error(err)
 		// }
 		//查出用户的角色，处于勾选状态，来自casbin\rbac_api.go
-		userroles := e.GetRolesForUser(id)
+		userroles, err := e.GetRolesForUser(id)
+		if err != nil {
+			beego.Error(err)
+		}
 		userrole := make([]Userrole, 0)
 		var level string
 		level = "2"

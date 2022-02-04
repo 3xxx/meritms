@@ -10,13 +10,13 @@ import (
 )
 
 type MeritTopic struct {
-	Id      int64  `PK`
+	Id      int64  `json:"id"`
 	MeritId int64  `orm:"null"`
 	UserId  int64  `orm:"null"`
 	Title   string `form:"title;text;title:",valid:"MinSize(1);MaxSize(20)" json:"title"` //orm:"unique",
 	// Choose  string `orm:"null"`
 	Content string `orm:"null" json:"content"`
-	State   int    //1编写状态，未提交；2编写者提交，等待审核确认;3,已经审核确认
+	State   int    `json:"state"` //1编写状态，未提交；2编写者提交，等待审核确认;3,已经审核确认
 	Active  bool   `default(true) json:"active"`
 	// Mark     string    `orm:"null"` //设置分数
 	Created time.Time `orm:"auto_now_add;type(datetime)"`
@@ -150,8 +150,8 @@ type MyMeritTopic struct {
 	Choose       string `json:"choose"` //大型、中型
 	Content      string `json:"content"`
 	Active       bool   `json:"active"`
-	// State        int       //1编写状态，未提交；2编写者提交，等待审核确认;3,已经审核确认
-	Mark int `json:"mark"`
+	State        int    `json:"state"` //1编写状态，未提交；2编写者提交，等待审核确认;3,已经审核确认
+	Mark         int    `json:"mark"`
 	// Created      time.Time `orm:"index","auto_now_add;type(datetime)"`
 	Updated time.Time `json:"updated"`
 }
@@ -162,8 +162,8 @@ func GetMyselfMeritTopic(uid int64, state int, active bool) (merittopics []*MyMe
 	db := GetDB()
 	// 必须要写权select，坑爹啊
 	err = db.Table("merit_topic").
-		Select("merit_topic.id as id,merit_topic.title as topic_title,merit_topic.content as content,merit_topic.updated as updated,merit_topic.active as active,t1.title as merit_title,t2.title as merit_cate,admin_merit_mark.mark as mark,admin_merit.title as choose,user.nickname as user_nick_name").
-		Where("merit_topic.user_id = ? AND merit_topic.state=?AND merit_topic.active=?", uid, state, active).
+		Select("merit_topic.id as id,merit_topic.title as topic_title,merit_topic.content as content,merit_topic.updated as updated,merit_topic.active as active,merit_topic.state as state,t1.title as merit_title,t2.title as merit_cate,admin_merit_mark.mark as mark,admin_merit.title as choose,user.nickname as user_nick_name").
+		Where("merit_topic.user_id = ? AND merit_topic.state = ? AND merit_topic.active = ?", uid, state, active).
 		Joins("INNER JOIN admin_merit AS t1 ON t1.id = admin_merit.parent_id").
 		Joins("INNER JOIN admin_merit AS t2 ON t2.id = t1.parent_id").
 		Joins("left JOIN admin_merit_mark on admin_merit_mark.merit_id = merit_topic.merit_id").
@@ -438,6 +438,26 @@ func GetUserMeritMark(uid, mid int64, state int, active bool) (mark int, err err
 	// 多连接及参数
 	// db.Joins("JOIN pays ON pays.user_id = users.id", "jinzhu@example.org").Joins("JOIN credit_cards ON credit_cards.user_id = users.id").Where("user_id = ?", uid).Find(&pays)
 }
+
+//根据价值分类3级，得到meritid
+func GetMeritIdbyTitles(title_1, title_2, title_3 string) (merit AdminMerit, err error) {
+	db := GetDB()
+	// 必须要写权select，坑爹啊 OR admin_merit.id=?
+	err = db.Table("admin_merit").
+		Select("admin_merit.id").
+		Where("admin_merit.title = ?", title_3).
+		Joins("INNER JOIN admin_merit AS t1 ON t1.title = ? AND t1.id=admin_merit.parent_id", title_2).
+		Joins("INNER JOIN admin_merit AS t2 ON t2.title = ? AND t2.id=t1.parent_id", title_1).
+		First(&merit).Error
+	return merit, err
+}
+
+// 带参数的多表连接
+// db.
+// Joins("JOIN emails ON emails.user_id = users.id AND emails.email = ?", "jinzhu@example.org").
+// Joins("JOIN credit_cards ON credit_cards.user_id = users.id").
+// Where("credit_cards.number = ?", "411111111111").
+// Find(&user)
 
 //测试用
 type MeritTopicUser struct {

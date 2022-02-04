@@ -15,6 +15,7 @@
   <script type="text/javascript" src="/static/js/jquery.tablesorter.min.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/font-awesome-4.7.0/css/font-awesome.min.css" />
   <script src="/static/js/tableExport.js"></script>
+  <script src="/static/js/jquery.form.js"></script>
 </head>
 
 <body>
@@ -52,6 +53,8 @@
       </button>
       <button type="button" data-name="deleteButton" id="deleteButton" class="btn btn-default">
         <i class="fa fa-trash">删除</i>
+      </button>
+      <button type="button" data-name="importButton" id="importButton" class="btn btn-default"> <i class="fa fa-plus">导入</i>
       </button>
     </div>
     <!-- data-toggle="table"
@@ -365,6 +368,13 @@
       $('#modalTable1').modal('hide');
       $('#table0').bootstrapTable('refresh', { url: '/admin/merit' });
     }
+
+    $("#importButton").click(function() {
+        $('#importmerittopics').modal({
+          show: true,
+          backdrop: 'static'
+        });
+      })
     </script>
     <!-- 添加价值分类或价值 -->
     <div class="container form-horizontal">
@@ -575,6 +585,42 @@
       </div>
       <!-- </form> -->
     </div>
+
+    <!-- 导入用户数据 -->
+    <div class="container form-horizontal">
+      <div class="modal fade" id="importmerittopics">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h3 class="modal-title">导入用户价值</h3>
+            </div>
+            <div class="modal-body">
+              <div class="modal-body-content">
+                <div class="form-group">
+                  <form method="post" id="form1" action="/v1/admin/importmerit" enctype="multipart/form-data">
+                    <div class="form-inline" class="form-group">
+                      <label>选择用户价值数据文件(Excel)：
+                        <input type="file" class="form-control" name="usersexcel" id="usersexcel" /> </label>
+                      <br />
+                    </div>
+                    <!-- <button type="submit" class="btn btn-default">提交</button> -->
+                  </form>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+              <button type="submit" class="btn btn-primary" onclick="return importmerittopics();">导入</button>
+              <!-- <button type="submit" class="btn btn-primary" onclick="return import_xls_catalog();">提交</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <br />
   </div>
   <!-- onClickRow  click-row.bs.table  row, $element 当用户点击某一行的时候触发，参数包括：
@@ -592,7 +638,7 @@ field：点击列的 field 名称 -->
     }
   }
 
-  $(document).ready(function() {
+  // $(document).ready(function() {
     $("#addButton1").click(function() {
       $("input#pid").remove();
       var th1 = "<input id='pid' type='hidden' name='pid' value='" + rowid + "'/>"
@@ -666,7 +712,7 @@ field：点击列的 field 名称 -->
         }
       });
     })
-  })
+  // })
 
   function save1() {
     var Title = $('#Title2').val();
@@ -711,6 +757,26 @@ field：点击列的 field 名称 -->
     $('#modalTable3').modal('hide');
     $('#table1').bootstrapTable('refresh', { url: '/admin/merit/' + rowid });
   }
+
+    //导入用户价值数据表
+    function importmerittopics() {
+      var file = $("#usersexcel").val();
+      if (file != "") {
+        var form = $("form[id=form1]");
+        var options = {
+          url: '/v1/admin/importmerittopics',
+          type: 'post',
+          success: function(data) {
+            alert("导入数据：" + data + "！")
+          }
+        };
+        form.ajaxSubmit(options);
+        return false;
+      } else {
+        alert("请选择文件！");
+        return false;
+      }
+    }
   </script>
 </body>
 

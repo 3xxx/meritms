@@ -15,6 +15,8 @@ import (
 	"strconv"
 	"strings"
 	// "time"
+	"github.com/tealeg/xlsx"
+	"os"
 )
 
 // CMSADMIN API
@@ -302,5 +304,93 @@ func (c *AdminMeritController) DeleteMerit() {
 			logs.Info(c.Ctx.Input.IP() + " " + "删除价值" + ids)
 			logs.Close()
 		}
+	}
+}
+
+// @Title post import merittopic excel
+// @Description post import merit excel
+// @Success 200 {object} SUCCESS
+// @Failure 400 Invalid page supplied
+// @Failure 404 file not found
+// @router /importmerittopics [post]
+// 上传excel文件，格式：第一行，序号-名称-编号，都打上格子
+func (c *AdminMeritController) ImportMeritTopics() {
+	//获取上传的文件
+	//获取上传的文件
+	_, h, err := c.GetFile("usersexcel")
+	if err != nil {
+		beego.Error(err)
+	}
+	// beego.Info(h.path)
+	// var attachment string
+	var path string
+
+	// var filesize int64
+	if h != nil {
+		//保存附件
+		path = "./attachment/" + h.Filename    // 关闭上传的文件，不然的话会出现临时文件不能清除的情况
+		err = c.SaveToFile("usersexcel", path) //.Join("attachment", attachment)) //存文件    WaterMark(path)    //给文件加水印
+		if err != nil {
+			beego.Error(err)
+			c.Data["json"] = "err保存文件失败"
+			c.ServeJSON()
+		} else {
+			var user models.User
+			//读出excel内容写入数据库
+			xlFile, err := xlsx.OpenFile(path) //
+			if err != nil {
+				beego.Error(err)
+			}
+
+			for _, sheet := range xlFile.Sheets {
+				for i, row := range sheet.Rows {
+					if i != 0 {
+						// 这里要判断单元格列数，如果超过单元格使用范围的列数，则出错for j := 2; j < 7; j += 5 {
+						j := 1
+						usernickname := row.Cells[j].String()
+						// if err != nil {
+						// 	beego.Error(err)
+						// }
+						user = models.GetUserByNickname(usernickname)
+
+						meritcate_1 := row.Cells[j+1].String()
+						// if err != nil {
+						// 	beego.Error(err)
+						// }
+						meritcate_2 := row.Cells[j+2].String()
+						meritcate_3 := row.Cells[j+3].String()
+						merit, err := models.GetMeritIdbyTitles(meritcate_1, meritcate_2, meritcate_3)
+						if err != nil {
+							beego.Error(err)
+						}
+
+						title := row.Cells[j+4].String()
+						content := row.Cells[j+5].String()
+						active := row.Cells[j+6].String()
+						// beego.Info(active)
+						var activebool bool
+						if active == "true" || active == "TRUE" {
+							activebool = true
+						} else {
+							activebool = false
+						}
+						_, err = models.AddMerit(merit.Id, user.Id, title, content, activebool)
+						if err != nil {
+							beego.Error(err)
+						}
+					}
+				}
+			}
+			//删除附件
+			err = os.Remove(path)
+			if err != nil {
+				beego.Error(err)
+			}
+			c.Data["json"] = "ok"
+			c.ServeJSON()
+		}
+	} else {
+		c.Data["json"] = map[string]interface{}{"state": "ERROR", "link": "", "title": "", "original": ""}
+		c.ServeJSON()
 	}
 }

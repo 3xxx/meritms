@@ -495,6 +495,27 @@ func DeleteAdminMerit(id int64) error { //应该在controllers中显示警告
 	return err
 }
 
+//价值表带mark分值
+type Merit struct {
+	// gorm.Model
+	Id       int64  `json:"id"`
+	Title    string `json:"title"`
+	ParentId int64  `json:"parentid"`
+	Mark     int    `json:"mark"`
+	// Children []UserMerit
+}
+
+//取得所有的价值
+func GetAllMerit() (merits []*Merit, err error) {
+	db := GetDB()
+	// 必须要写权select，坑爹啊 OR admin_merit.id=?
+	err = db.Table("admin_merit").
+		Select("admin_merit.id as id,admin_merit.title as title,admin_merit.parent_id as parent_id,admin_merit_mark.mark as mark").
+		Joins("left JOIN admin_merit_mark on admin_merit_mark.merit_id = admin_merit.id").
+		Scan(&merits).Error
+	return merits, err
+}
+
 //****************IP******************
 //添加ip地址段
 func AddAdminIpsegment(title, startip, endip string, iprole int) (id int64, err error) {
